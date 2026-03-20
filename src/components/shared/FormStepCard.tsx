@@ -1,17 +1,17 @@
 "use client";
 
+import { useOnboardingStep } from "@/stores/useOnboardingStep";
 import { motion } from "motion/react";
 import { ReactNode } from "react";
 
 export default function FormStepCard({
   title,
   children,
-  direction
 }: {
-  title: ReactNode,
-  children: ReactNode,
-  direction: "forward" | "backward"
+  title: ReactNode;
+  children: ReactNode;
 }) {
+  const { direction } = useOnboardingStep();
   const container = {
     hidden: {},
     visible: {
@@ -25,20 +25,20 @@ export default function FormStepCard({
         staggerDirection: -1,
       },
     },
-  }
+  };
 
   const variants = {
     initial: (dir: "forward" | "backward") => ({
       opacity: 0,
-      x: dir === "forward" ? 200 : -200
+      x: dir === "forward" ? 200 : -200,
     }),
     animate: {
       opacity: 1,
-      x: 0
+      x: 0,
     },
     exit: (dir: "forward" | "backward") => ({
       opacity: 0,
-      x: dir === "forward" ? -200 : 200
+      x: dir === "forward" ? -200 : 200,
     }),
   };
 
@@ -86,7 +86,7 @@ export default function FormStepCard({
           }}
           className="text-4xl sm:text-5xl md:text-[64px] leading-tight font-semibold text-center"
         >
-          { title }
+          {title}
         </motion.h2>
 
         <motion.div
@@ -113,7 +113,7 @@ export default function FormStepCard({
           }}
           className="w-full max-w-137.75"
         >
-          { children }
+          {children}
         </motion.div>
       </motion.div>
     </motion.main>

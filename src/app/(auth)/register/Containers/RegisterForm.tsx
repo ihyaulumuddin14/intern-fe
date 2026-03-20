@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRegister } from "@/hooks/auth.hooks";
 import { RegisterCredentials, RegisterSchema } from "@/schemas/auth.schema";
+import { useOnboardingForm } from "@/stores/useOnboardingForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ import { useForm } from "react-hook-form";
 
 const RegisterForm = () => {
   const { mutateAsync, isPending } = useRegister()
+  const { formStore } = useOnboardingForm()
   const {
     register,
     handleSubmit,
@@ -57,6 +59,7 @@ const RegisterForm = () => {
               id="fullname"
               type="text"
               placeholder="Masukkan nama kamu"
+              value={formStore.fullName || ""}
             />
             {errors.fullName && (
               <FieldError>{errors.fullName.message}</FieldError>

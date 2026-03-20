@@ -8,7 +8,7 @@ const ForgotPasswordPage = () => {
       description="Lorem ipsum dolor sit amet"
       footerText=""
       footerLink="Syarat dan ketentuan • Kebijakan Privasi"
-      footerLinkTarget={`/terms-privacy`}
+      footerLinkTarget={`#`}
     >
       <ForgotPasswordForm />
     </AuthCard>

@@ -1,6 +1,8 @@
 "use client";
 
+import { DropdownTrigger } from "@/components/shared/DropdownTrigger";
 import FormStepCard from "@/components/shared/FormStepCard";
+import Skeleton from "@/components/shared/Skeleton";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,45 +10,67 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Field, FieldGroup } from "@/components/ui/field";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { cn } from "@/lib/utils";
+import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { getCareers } from "@/services/career.services";
 import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
-import { ArrowRight, ChevronDown } from 'lucide-react';
-import { StepDirection } from "@/types/common.type";
-import { cn } from "@/lib/utils";
-import { DropdownTrigger } from "@/components/shared/DropdownTrigger";
-import { useState } from "react";
-import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 
-export default function InputCareerStep({
-  direction
-}: {
-  direction: StepDirection
-}) {
+export default function InputCareerStep() {
   const [isOpen, setIsOpen] = useState(false);
-  const { control } = useFormContext<OnboardingCredentials>()
-  const career = useWatch({ control, name: "career" })
-  const { data: careers, isPending, error } = useQuery({
+  const {
+    control,
+    trigger,
+    formState: { errors, touchedFields, dirtyFields },
+  } = useFormContext<OnboardingCredentials>();
+
+  const career = useWatch({
+    control,
+    name: "career",
+  });
+
+  useEffect(() => {
+    if (dirtyFields.career || touchedFields.career) {
+      trigger("career");
+    }
+  }, [trigger, dirtyFields.career, touchedFields.career]);
+
+  const {
+    data: careers,
+    isPending,
+    error,
+  } = useQuery({
     queryKey: ["careers"],
     queryFn: getCareers,
     retry: false,
-    refetchOnWindowFocus: false
-  })
+    refetchOnWindowFocus: false,
+  });
 
   return (
-    <FormStepCard direction={direction} title={
-      <>Karir Apa yang Ingin Kamu <span className="text-primary">Capai</span>?</>
-    }
-        >
-          <FieldGroup>
-            <Field>
-              <Controller
-                name="career"
-                control={control}
-                render={({ field }) => (
-              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-                <DropdownMenuTrigger asChild className="text-start relative cursor-pointer">
+    <FormStepCard
+      title={
+        <>
+          Karir Apa yang Ingin Kamu <span className="text-primary">Capai?</span>
+        </>
+      }
+    >
+      <FieldGroup>
+        <Field>
+          <Controller
+            name="career"
+            control={control}
+            render={({ field }) => (
+              <DropdownMenu
+                open={isOpen}
+                onOpenChange={setIsOpen}
+              >
+                <DropdownMenuTrigger
+                  asChild
+                  className="text-start relative cursor-pointer"
+                >
                   <DropdownTrigger
                     value={career}
                     placeholder="Pilih minat karir kamu"
@@ -54,7 +78,7 @@ export default function InputCareerStep({
                   >
                     <ChevronDown className="h-5 w-5 opacity-50" />
                   </DropdownTrigger>
-                    </DropdownMenuTrigger>
+                </DropdownMenuTrigger>
                 <DropdownMenuContent
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-(--radix-dropdown-menu-trigger-width) p-0 rounded-t-none"
                   align="start"
@@ -68,48 +92,46 @@ export default function InputCareerStep({
 
                   {isPending ? (
                     <>
-                      <div className="w-full h-14 border-b flex items-center px-4">
-                        <div className="bg-neutral-50 w-1/2 h-6 rounded-md animate-pulse"/>
-                      </div>
-                      <div className="w-full h-14 border-b flex items-center px-4">
-                        <div className="bg-neutral-50 w-1/2 h-6 rounded-md animate-pulse"/>
-                      </div>
-                      <div className="w-full h-14 border-b flex items-center px-4">
-                        <div className="bg-neutral-50 w-1/2 h-6 rounded-md animate-pulse"/>
-                      </div>
+                      {[...Array(3)].map(_ => (
+                        <div className="w-full h-14 border-b flex items-center px-4">
+                          <Skeleton />
+                        </div>
+                      ))}
                     </>
                   ) : (
                     careers?.map((career) => (
-                        <DropdownMenuItem
+                      <DropdownMenuItem
                         key={career.id}
                         className={cn(
                           "px-4 py-4 text-base md:text-lg cursor-pointer transition-colors",
-                          "focus:bg-accent focus:text-accent-foreground border-b"
+                          "focus:bg-accent focus:text-accent-foreground border-b",
                         )}
-                          onSelect={() => field.onChange(career.name)}
-                        >
-                          {career.name}
-                        </DropdownMenuItem>
+                        onSelect={() => field.onChange(career.name)}
+                      >
+                        {career.name}
+                      </DropdownMenuItem>
                     ))
                   )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              ></Controller>
-            </Field>
-            <Field>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          ></Controller>
+          {errors.career && <FieldError>{errors.career.message}</FieldError>}
+        </Field>
+        <Field>
           <Button
+            disabled={!career || !!errors.career}
             size="lg"
             className="max-w-fit mx-auto"
             type="submit"
           >
-              Lanjut
-              <ArrowRight/>
+            Lanjut
+            <ArrowRight />
           </Button>
-            </Field>
-          </FieldGroup>
+        </Field>
+      </FieldGroup>
     </FormStepCard>
-  )
+  );
 }
 
 
