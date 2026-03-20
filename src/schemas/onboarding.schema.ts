@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const EducationSchema = z
   .object({
-    education_level: z.enum(
-      ["SMA", "SMK", "Diploma 3", "Diploma 4", "Sarjana (S1)"],
-      { message: "Pilih salah satu tingkat pendidikan" },
+    educationLevel: z.enum(
+      ["SMA / SMK", "Diploma 3", "Diploma 4", "Sarjana (S1)"],
+      { message: "Tingkat pendidikan harus diisi" },
     ),
     major: z.string().trim().optional(),
     institution: z.string().trim().optional(),
@@ -14,13 +14,13 @@ export const EducationSchema = z
       "Diploma 3",
       "Diploma 4",
       "Sarjana (S1)",
-    ].includes(data.education_level);
+    ].includes(data.educationLevel);
 
     if (needMajorAndInstitution && !data.major) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["major"],
-        message: "Jurusan wajib diisi",
+        message: "Jurusan harus diisi",
       });
     }
 
@@ -28,15 +28,15 @@ export const EducationSchema = z
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["institution"],
-        message: "Institusi wajib diisi",
+        message: "Institusi harus diisi",
       });
     }
   });
 
 export const OnboardingSchema = z.object({
-  full_name: z.string().min(1, "Nama lengkap wajib diisi"),
+  fullName: z.string().min(1, "Nama lengkap harus diisi"),
   education: EducationSchema,
-  career: z.string().min(1, "Minat karir wajib diisi"),
+  career: z.string().min(1, "Minat karir harus diisi"),
 });
 
 export type OnboardingCredentials = z.infer<typeof OnboardingSchema>

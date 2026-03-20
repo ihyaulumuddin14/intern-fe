@@ -1,5 +1,6 @@
 "use client";
 
+import FormStepCard from "@/components/shared/FormStepCard";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,144 +10,78 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  EducationCredentials,
-  OnboardingCredentials,
-} from "@/schemas/onboarding.schema";
+import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { useOnboardingStep } from "@/stores/useOnboardingStep";
-import { motion } from "motion/react";
-import { useFormContext, useWatch, Controller } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { StepDirection } from "@/types/common.type";
+import { cn } from "@/lib/utils";
+import { DropdownTrigger } from "@/components/shared/DropdownTrigger";
 
-const education_levels = [
-  "SMA",
-  "SMK",
+const educationLevels = [
+  "SMA / SMK",
   "Diploma 3",
   "Diploma 4",
   "Sarjana (S1)",
 ];
 
-export default function InputEducationStep() {
-  const { direction } = useOnboardingStep()
-  const { register, control } = useFormContext()
-  const education = useWatch({
+export default function InputEducationStep({
+  direction
+}: {
+  direction: StepDirection
+}) {
+  const { nextStep } = useOnboardingStep()
+  const [isOpen, setIsOpen] = useState(false);
+  const {
+    register,
     control,
-    name: "education"
-  })
+    trigger,
+    formState: { errors }
+  } = useFormContext<OnboardingCredentials>();
 
-  const container = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.18,
-      },
-    },
-    exit: {
-      transition: {
-        staggerChildren: 0.12,
-        staggerDirection: -1,
-      },
-    },
-  };
+  const educationData = useWatch({
+    control,
+    name: "education",
+  });
+
+  useEffect(() => {
+    if (educationData) {
+      trigger("education");
+    }
+  }, [educationData, trigger]);
 
   return (
-    <motion.main
-      initial={{
-        opacity: 0,
-        x: direction === "forward" ? 200 : -200,
-        scale: 0.6,
-      }}
-      animate={{
-        opacity: 1,
-        x: 0,
-        scale: 1,
-      }}
-      exit={{
-        opacity: 0,
-        x: direction === "forward" ? -200 : 200,
-        scale: 0.6,
-      }}
-      transition={{
-        duration: 1.5,
-        ease: [0.9, 0, 0.1, 1],
-        type: "tween",
-      }}
-    >
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        className="w-full max-w-lg mx-auto flex flex-col items-center gap-10"
-      >
-        <motion.h2
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 1.3,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-            exit: {
-              opacity: 0,
-              y: -20,
-              transition: {
-                duration: 1.3,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-          }}
-          className="text-7xl font-bold text-center"
-        >
-          Boleh tau tingkat pendidikan kamu?
-        </motion.h2>
-
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.7,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-            exit: {
-              opacity: 0,
-              y: -20,
-              transition: {
-                duration: 0.5,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-          }}
-          className="w-full max-w-sm"
-        >
+    <FormStepCard direction={direction} title={
+      <>Apa Tingkat <span className="text-primary">Pendidikan</span> Terakhirmu</>
+    }>
           <FieldGroup>
             <Field>
               <Controller
-                name="education.education_level"
+            name="education.educationLevel"
                 control={control}
                 render={({ field }) => (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button>
-                        {education?.education_level
-                          ? education.education_level
-                          : "Tingkat Pendidikan"}
-                      </Button>
+              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild tabIndex={1} className="text-start relative cursor-pointer">
+                  <DropdownTrigger 
+                    value={educationData.educationLevel} 
+                    placeholder="Pilih tingkat pendidikan kamu" 
+                    isOpen={isOpen}
+                  >
+                    <ChevronDown className="h-5 w-5 opacity-50" />
+                  </DropdownTrigger>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {education_levels.map((level) => (
+                <DropdownMenuContent 
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-(--radix-dropdown-menu-trigger-width) p-0 rounded-t-none"
+                  align="start"
+                >
+                  {educationLevels.map((level) => (
                         <DropdownMenuItem
                           key={level}
+                      className={cn(
+                        "px-4 py-4 text-base md:text-lg cursor-pointer transition-colors",
+                        "focus:bg-accent focus:text-accent-foreground border-b"
+                      )}
                           onSelect={() => field.onChange(level)}
                         >
                           {level}
@@ -159,22 +94,38 @@ export default function InputEducationStep() {
               <Input
                 className="w-full"
                 id="major-input"
-                placeholder="Teknik Informatika"
+            placeholder="Jurusan"
                 {...register("education.major")}
               />
               <Input
                 className="w-full"
                 id="institution-input"
-                placeholder="Universitas Brawijaya"
+            placeholder="Nama Sekolah / Universitas"
                 {...register("education.institution")}
               />
+
+          {errors.education && (
+            <p className="text-base text-right text-error-hover -mt-1">
+              *{errors.education.educationLevel?.message || 
+                errors.education.major?.message || 
+                errors.education.institution?.message}
+            </p>
+          )}
+
             </Field>
-            {/* <Field>
-              <Button>Continue</Button>
-            </Field> */}
+        <Field>
+          <Button
+            size="lg"
+            className="max-w-fit mx-auto"
+            type="button"
+            disabled={!!errors.education}
+            onClick={nextStep}
+          >
+              Lanjut
+              <ArrowRight/>
+          </Button>
+        </Field>
           </FieldGroup>
-        </motion.div>
-      </motion.div>
-    </motion.main>
+    </FormStepCard>
   );
 }

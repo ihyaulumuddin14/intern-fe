@@ -5,74 +5,176 @@ import {
   OnboardingCredentials,
   OnboardingSchema,
 } from "@/schemas/onboarding.schema";
+import { useOnboardingForm } from "@/stores/useOnboardingForm";
 import { useOnboardingStep } from "@/stores/useOnboardingStep";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "motion/react";
-import { useForm, FormProvider } from "react-hook-form";
-import { useShallow } from "zustand/react/shallow";
-import InputNameStep from "../Components/InputNameStep";
-import InputEducationStep from "../Components/InputEducationStep";
-import InputCareerStep from "../Components/InputCareerStep";
-import { Career } from "@/types/type";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useOnboardingForm } from "@/stores/useOnboardingForm";
+import { FormProvider, Path, useForm } from "react-hook-form";
+import { useShallow } from 'zustand/react/shallow';
+import ConfirmationCallbackModal from "../Components/ConfirmationCallbackModal";
+import InputCareerStep from "../Components/InputCareerStep";
+import InputEducationStep from "../Components/InputEducationStep";
+import InputNameStep from "../Components/InputNameStep";
 
-export default function OnboardingClient({ careers }: { careers: Career[] }) {
-  const { noStep, nextStep, prevStep } = useOnboardingStep(
-    useShallow((state) => ({
+export const MAX_ONBOARDING_STEP = 3;
+
+export function getValidStep(raw: string | null): number {
+  const parsed = Number(raw);
+  if (!raw || isNaN(parsed) || parsed < 1 || parsed > MAX_ONBOARDING_STEP) return 1;
+  return parsed;
+}
+
+export default function OnboardingClient() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // manage params
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status");
+
+  // syncronize RHF form and zustand state
+  const {
+    formStore,
+    setForm,
+    hasHydrated: formHasHydrated
+  } = useOnboardingForm(useShallow(state => ({
+    formStore: state.formStore,
+    setForm: state.setForm,
+    hasHydrated: state.hasHydrated
+  })));
+
+  const {
+    noStep,
+    direction,
+    setStep,
+    hasHydrated: stepHasHydrated
+  } = useOnboardingStep(useShallow(state => ({
       noStep: state.noStep,
-      nextStep: state.nextStep,
-      prevStep: state.prevStep,
-    })),
-  );
-  const { formStore, setForm, resetForm, hasHydrated } = useOnboardingForm()
+    direction: state.direction,
+    setStep: state.setStep,
+    hasHydrated: state.hasHydrated
+  })))
 
   const form = useForm<OnboardingCredentials>({
     resolver: zodResolver(OnboardingSchema),
     mode: "onChange",
-    defaultValues: formStore
+    defaultValues: formStore,
   });
 
+  /**
+   * Auto hydrate form field from zustand persist at mount
+   */
   useEffect(() => {
-    if (hasHydrated) {
-      form.reset(formStore as OnboardingCredentials)
+    if (formHasHydrated) {
+      form.reset(formStore);
     }
-  }, [hasHydrated])
+  }, [formHasHydrated]);
 
+  /**
+   * Set the form field with subscription of
+   * watch so that zustand persist always
+   * get a fresh data, and not leaked of memory
+   */
   useEffect(() => {
     const subscription = form.watch((values) => {
-      setForm(values as OnboardingCredentials)
-    })
+      setForm(values as OnboardingCredentials);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-    return () => subscription.unsubscribe()
-  }, [form, setForm])
+  /**
+   * Edge case of step url hacking
+   * set it into state management zustand
+   */
+  useEffect(() => {
+    if (!stepHasHydrated) return;
 
-  const handleOnboardingSubmit = (credentials: OnboardingCredentials) => {
-    console.log(credentials);
+    const fullNameField = form.getValues("fullName");
+    if (!fullNameField?.trim() && noStep > 1) {
+      router.replace(`${pathname}?step=1`);
+      return;
+    }
 
-    form.reset()
-    resetForm()
+    const educationField = form.getValues("education");
+    if (!educationField?.educationLevel && noStep > 2) {
+      router.replace(`${pathname}?step=2`);
+      return;
+    }
+
+    setStep(noStep);
+  }, [stepHasHydrated]);
+
+  /**
+   * Make sure that ui has rendered from the same data
+   * as zustand persist localStorage
+   */
+  if (!formHasHydrated || !stepHasHydrated) return null;
+
+  const getConfirmationCallback = (credentials: OnboardingCredentials) => {
+    router.push(`${pathname}?${searchParams.toString()}&status=confirmation`);
   };
 
   return (
     <>
-      <main className="w-full">
         <FormProvider {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleOnboardingSubmit)}
+        <form onSubmit={form.handleSubmit(getConfirmationCallback)} className="w-fit h-full flex items-center">
+          <AnimatePresence
+            mode="wait"
+            custom={direction}
           >
-            <AnimatePresence mode="wait">
-              {noStep == 1 && <InputNameStep/>}
-              {noStep == 2 && <InputEducationStep/>}
-              {noStep == 3 && <InputCareerStep careers={careers}/>}
+            {noStep == 1 && (
+              <InputNameStep
+                key="step-1"
+                direction={direction}
+                />
+              )}
+            {noStep == 2 && (
+              <InputEducationStep
+                key="step-2"
+                direction={direction}
+              />
+            )}
+            {noStep == 3 && (
+              <InputCareerStep
+                key="step-3"
+                direction={direction}
+              />
+            )}
             </AnimatePresence>
           </form>
         </FormProvider>
-      </main>
-      <footer className="flex gap-10">
-        <Button onClick={prevStep}>Prev</Button>
-        <Button onClick={nextStep}>Next</Button>
-      </footer>
+
+      <nav className="mx-auto my-10">
+        <ol className="w-full flex gap-3">
+          {(Object.keys(formStore) as Array<keyof OnboardingCredentials>).map((state, index) => {
+            return (
+              <Link
+                className={`
+                  w-4 aspect-square rounded-full
+                  ${(index + 1) > noStep ? "bg-primary-surface pointer-events-none" : "bg-primary hover:bg-primary-hover"} hover:scale-110 transition-all duration-100 ease-in-out 
+                   ${form.formState.errors[state] ? "outline-2 outline-error bg-primary-surface animate-bounce" : ""}
+                `}
+                key={index}
+                replace
+                href={pathname}
+                onClick={() => setStep(index + 1)}
+              />
+            )
+          })}
+        </ol>
+      </nav>
+
+
+      <ConfirmationCallbackModal
+        open={status === "confirmation"}
+        onOpenChange={() => {
+          if (status === "confirmation") router.replace(pathname);
+        }}
+        namePlaceholder={form.watch("fullName")}
+      />
     </>
   );
 }

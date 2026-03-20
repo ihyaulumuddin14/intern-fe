@@ -1,11 +1,16 @@
+import { MAX_ONBOARDING_STEP } from "@/app/(guest)/onboarding/Containers/OnboardingClient";
+import { StepDirection } from "@/types/common.type";
 import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { createJSONStorage, persist } from "zustand/middleware";
 
 type OnboardingStepType = {
   noStep: number,
-  direction: "forward" | "backward"
+  direction: StepDirection,
+  hasHydrated: boolean,
+  setStep: (noStep: number) => void
   nextStep: () => void,
   prevStep: () => void,
+  setHasHydrated: (state: boolean) => void
 }
 
 export const useOnboardingStep = create<OnboardingStepType>()(
@@ -13,20 +18,29 @@ export const useOnboardingStep = create<OnboardingStepType>()(
     (set) => ({
       noStep: 1,
       direction: "forward",
+      hasHydrated: false,
+
+      setStep: (noStep) => set( state => ({
+        noStep,
+        direction: state.noStep > noStep ? "backward" : "forward"
+      })),
       nextStep: () => set(state => ({
-        noStep: state.noStep === 3 ? state.noStep : state.noStep + 1,
-        direction: state.noStep === 3 ? state.direction : "forward"
+        noStep: state.noStep === MAX_ONBOARDING_STEP ? state.noStep : state.noStep + 1,
+        direction: "forward"
       })),
       prevStep: () => set(state => ({
         noStep: state.noStep === 1 ? state.noStep : state.noStep - 1,
-        direction: state.noStep === 1 ? state.direction : "backward"
+        direction: "backward"
       })),
+
+      setHasHydrated: (state) => set({ hasHydrated: state })
     }),
     {
       name: "onboarding-step",
-      partialize: state => ({
-        noStep: state.noStep
-      })
+      storage: createJSONStorage(() => sessionStorage),
+      onRehydrateStorage: () => state => {
+        state?.setHasHydrated(true)
+      }
     }
   )
 )
