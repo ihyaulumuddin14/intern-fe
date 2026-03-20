@@ -2,9 +2,9 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 type OnboardingFormType = {
-  full_name?: string,
+  fullName?: string,
   education?: {
-    education_level?: "SMA" | "SMK" | "Diploma 3" | "Diploma 4" | "Sarjana (S1)",
+    educationLevel?: "SMA / SMK" | "Diploma 3" | "Diploma 4" | "Sarjana (S1)",
     major?: string,
     institution?: string,
   },
@@ -22,7 +22,11 @@ type Store = {
 export const useOnboardingForm = create<Store>()(
   persist(
     (set) => ({
-      formStore: {},
+      formStore: {
+        fullName: "",
+        education: {},
+        career: ""
+      },
       hasHydrated: false,
 
       setForm: (data) =>
