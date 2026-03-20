@@ -1,21 +1,25 @@
 'use client'
 
+import RegisterForm from "@/app/(auth)/register/Containers/RegisterForm";
+import AuthCard from "@/components/shared/AuthCard";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const RegisterPageInterceptor = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const isOpen = pathname.startsWith("/signin");
+  const isOpen = pathname.startsWith("/register");
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
-      router.replace("/home");
+      router.back();
   };
 
   if (!isOpen) return null;
@@ -23,22 +27,15 @@ const RegisterPageInterceptor = () => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Register</DialogTitle>
-        </DialogHeader>
-        {/* <AuthLayout
-          level="dialog"
-          welcomeTitle="Hello Toeankoe"
-          subtitle="Ready to get your best haircut today?"
-          footer="Don't have an account yet?"
-          footerUrl="/signup"
+        <AuthCard
+          title="Register"
+          description="Lorem ipsum dolor sit amet"
+          footerText="Sudah punya akun?"
+          footerLink="Login"
+          footerLinkTarget={`/login${callbackUrl ? `?callbackUrl${callbackUrl}` : ``}`}
         >
-          <div className="w-full h-fit sticky top-0">
-            <Suspense fallback={<div className='flex justify-center items-center p-10'><Spinner/></div>}>
-              <SignInForm />
-            </Suspense>
-          </div>
-        </AuthLayout> */}
+          <RegisterForm />
+        </AuthCard>
       </DialogContent>
     </Dialog>
   )

@@ -1,21 +1,25 @@
 'use client'
 
+import LoginForm from "@/app/(auth)/login/Containers/LoginForm";
+import AuthCard from "@/components/shared/AuthCard";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const LoginPageInterceptor = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/login");
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
-    router.replace("/home");
+    router.back();
   };
 
   if (!isOpen) return null;
@@ -23,22 +27,15 @@ const LoginPageInterceptor = () => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Login</DialogTitle>
-        </DialogHeader>
-        {/* <AuthLayout
-          level="dialog"
-          welcomeTitle="Hello Toeankoe"
-          subtitle="Ready to get your best haircut today?"
-          footer="Don't have an account yet?"
-          footerUrl="/signup"
+        <AuthCard
+          title="Login"
+          description="Lorem ipsum dolor sit amet"
+          footerText="Belum punya akun?"
+          footerLink="Daftar"
+          footerLinkTarget={`/register${callbackUrl ? `?callbackUrl${callbackUrl}` : ``}`}
         >
-          <div className="w-full h-fit sticky top-0">
-            <Suspense fallback={<div className='flex justify-center items-center p-10'><Spinner/></div>}>
-              <SignInForm />
-            </Suspense>
-          </div>
-        </AuthLayout> */}
+          <LoginForm />
+        </AuthCard>
       </DialogContent>
     </Dialog>
   )
