@@ -1,28 +1,39 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { OnboardingSchema } from "@/schemas/onboarding.schema";
+import { useOnboardingForm } from "@/stores/useOnboardingForm";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const ConfirmationCallbackModal = ({
-  open,
-  onOpenChange,
   namePlaceholder,
 }: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
   namePlaceholder: string;
 }) => {
-  const router = useRouter()
+  const router = useRouter();
+  const [isValid, setIsValid] = useState(false);
+  const { formStore, hasHydrated } = useOnboardingForm();
+
+  useEffect(() => {
+    if (hasHydrated) {
+      const result = OnboardingSchema.safeParse(formStore);
+
+      if (!result.success) {
+        toast.error("Tolong lengkapi data dulu ya");
+        router.replace("/onboarding");
+      } else {
+        setIsValid(true);
+      }
+    }
+  }, [hasHydrated]);
+
+  if (!hasHydrated) return null;
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={isValid}>
       <DialogContent
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
@@ -52,9 +63,14 @@ const ConfirmationCallbackModal = ({
 
         <DialogFooter className="flex flex-col sm:flex-col">
           <Button
+            size="lg"
             onClick={() => router.push("/assessment")}
-            className="w-full">Ya, analisis sekarang</Button>
+            className="w-full"
+          >
+            Ya, analisis sekarang
+          </Button>
           <Button
+            size="lg"
             onClick={() => router.push("/dashboard")}
             className="w-full"
             variant="ghost"
