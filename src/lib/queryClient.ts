@@ -1,4 +1,4 @@
-import { QueryClient, defaultShouldDehydrateQuery } from '@tanstack/react-query';
+import { QueryClient, defaultShouldDehydrateQuery, isServer } from '@tanstack/react-query';
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -17,4 +17,22 @@ export function makeQueryClient() {
       },
     }
   })
+}
+
+let browserQueryClient: QueryClient | undefined = undefined
+
+export function getQueryClient() {
+  if (isServer) {
+    /**
+     * Server: always make a new query client
+     */
+    return makeQueryClient()
+  } else {
+    /**
+     * In order to not re-make a new client if React
+     * suspends has resolved after during the initial render
+     */
+    if (!browserQueryClient) browserQueryClient = makeQueryClient()
+    return browserQueryClient
+  }
 }

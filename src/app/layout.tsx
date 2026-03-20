@@ -1,12 +1,12 @@
+import ClientProvider from "@/components/providers/ClientProvider";
+import { Toaster } from "@/components/ui/sonner";
+import { toCamel } from "@/lib/case";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
-import "./globals.css";
-import ClientProvider from "@/app/providers";
-import { makeQueryClient } from "@/lib/queryClient";
-import { Toaster } from "@/components/ui/sonner"
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { cookies } from "next/headers";
-import { toCamel } from "@/lib/case";
+import "./globals.css";
+import { getQueryClient } from "@/lib/queryClient";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,7 +36,7 @@ export default async function RootLayout({
   /**
    * because it must run on the server
    */
-  const queryClient = makeQueryClient()
+  const queryClient = getQueryClient()
   const cookieStore = await cookies()
 
   await queryClient.prefetchQuery({
@@ -49,7 +49,9 @@ export default async function RootLayout({
         }
       })
       
-      if (!res.ok) return null
+      if (!res.ok) {
+        throw new Error("Unauthorized");
+      }
       const data = await res.json()
       console.log("dari server", toCamel(data.data))
       return toCamel(data.data)
