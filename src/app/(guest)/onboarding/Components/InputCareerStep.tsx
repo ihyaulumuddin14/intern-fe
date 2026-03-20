@@ -1,5 +1,6 @@
 "use client";
 
+import FormStepCard from "@/components/shared/FormStepCard";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,118 +9,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { useOnboardingStep } from "@/stores/useOnboardingStep";
-import { Career } from "@/types/type";
-import { motion } from "motion/react";
-import { Controller, useWatch, useFormContext } from "react-hook-form";
+import { getCareers } from "@/services/career.services";
+import { useQuery } from "@tanstack/react-query";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { ArrowRight, ChevronDown } from 'lucide-react';
+import { StepDirection } from "@/types/common.type";
+import { cn } from "@/lib/utils";
+import { DropdownTrigger } from "@/components/shared/DropdownTrigger";
+import { useState } from "react";
+import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 
 export default function InputCareerStep({
-  careers
+  direction
 }: {
-  careers: Career[]
+  direction: StepDirection
 }) {
-  const { direction } = useOnboardingStep()
-  const { control } = useFormContext()
-  const career = useWatch({
-    control,
-    name: "career"
+  const [isOpen, setIsOpen] = useState(false);
+  const { control } = useFormContext<OnboardingCredentials>()
+  const career = useWatch({ control, name: "career" })
+  const { data: careers, isPending, error } = useQuery({
+    queryKey: ["careers"],
+    queryFn: getCareers,
+    retry: false,
+    refetchOnWindowFocus: false
   })
 
-  const container = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.18,
-      },
-    },
-    exit: {
-      transition: {
-        staggerChildren: 0.12,
-        staggerDirection: -1,
-      },
-    },
-  };
-
   return (
-    <motion.main
-      initial={{
-        opacity: 0,
-        x: direction === "forward" ? 200 : -200,
-        scale: 0.6,
-      }}
-      animate={{
-        opacity: 1,
-        x: 0,
-        scale: 1,
-      }}
-      exit={{
-        opacity: 0,
-        x: direction === "forward" ? -200 : 200,
-        scale: 0.6,
-      }}
-      transition={{
-        duration: 1.5,
-        ease: [0.9, 0, 0.1, 1],
-        type: "tween",
-      }}
-    >
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        className="w-full max-w-lg mx-auto flex flex-col items-center gap-10"
-      >
-        <motion.h2
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 1.3,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-            exit: {
-              opacity: 0,
-              y: -20,
-              transition: {
-                duration: 1.3,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-          }}
-          className="text-7xl font-bold text-center"
-        >
-          Apa karir yang kamu inginkan?
-        </motion.h2>
-
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.7,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-            exit: {
-              opacity: 0,
-              y: -20,
-              transition: {
-                duration: 0.5,
-                ease: [0.9, 0, 0.1, 1],
-                type: "tween",
-              },
-            },
-          }}
-          className="w-full max-w-sm"
+    <FormStepCard direction={direction} title={
+      <>Karir Apa yang Ingin Kamu <span className="text-primary">Capai</span>?</>
+    }
         >
           <FieldGroup>
             <Field>
@@ -127,30 +45,71 @@ export default function InputCareerStep({
                 name="career"
                 control={control}
                 render={({ field }) => (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button>{career ? career : "Pilihan Karir"}</Button>
+              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger asChild className="text-start relative cursor-pointer">
+                  <DropdownTrigger
+                    value={career}
+                    placeholder="Pilih minat karir kamu"
+                    isOpen={isOpen}
+                  >
+                    <ChevronDown className="h-5 w-5 opacity-50" />
+                  </DropdownTrigger>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {careers.map((career) => (
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-(--radix-dropdown-menu-trigger-width) p-0 rounded-t-none"
+                  align="start"
+                  avoidCollisions={false}
+                >
+                  {error && (
+                    <div className="border border-error-border bg-error-surface p-4 text-error text-base">
+                      {error.message}
+                    </div>
+                  )}
+
+                  {isPending ? (
+                    <>
+                      <div className="w-full h-14 border-b flex items-center px-4">
+                        <div className="bg-neutral-50 w-1/2 h-6 rounded-md animate-pulse"/>
+                      </div>
+                      <div className="w-full h-14 border-b flex items-center px-4">
+                        <div className="bg-neutral-50 w-1/2 h-6 rounded-md animate-pulse"/>
+                      </div>
+                      <div className="w-full h-14 border-b flex items-center px-4">
+                        <div className="bg-neutral-50 w-1/2 h-6 rounded-md animate-pulse"/>
+                      </div>
+                    </>
+                  ) : (
+                    careers?.map((career) => (
                         <DropdownMenuItem
-                          key={career.name}
+                        key={career.id}
+                        className={cn(
+                          "px-4 py-4 text-base md:text-lg cursor-pointer transition-colors",
+                          "focus:bg-accent focus:text-accent-foreground border-b"
+                        )}
                           onSelect={() => field.onChange(career.name)}
                         >
                           {career.name}
                         </DropdownMenuItem>
-                      ))}
+                    ))
+                  )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
               ></Controller>
             </Field>
             <Field>
-              <Button type="submit">Submit</Button>
+          <Button
+            size="lg"
+            className="max-w-fit mx-auto"
+            type="submit"
+          >
+              Lanjut
+              <ArrowRight/>
+          </Button>
             </Field>
           </FieldGroup>
-        </motion.div>
-      </motion.div>
-    </motion.main>
-  );
+    </FormStepCard>
+  )
 }
+
+
