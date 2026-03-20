@@ -142,7 +142,7 @@ export default function OnboardingClient() {
         </form>
       </FormProvider>
 
-      <nav className="mx-auto my-10">
+      <nav className="absolute top-10 right-10">
         <ol className="w-full flex gap-3">
           {(Object.keys(formStore) as Array<keyof OnboardingCredentials>).map(
             (state, index) => {
@@ -150,7 +150,7 @@ export default function OnboardingClient() {
                 <Link
                   className={`
                   w-4 aspect-square rounded-full
-                  ${index + 1 > noStep ? "bg-primary-surface pointer-events-none" : "bg-primary hover:bg-primary-hover"} hover:scale-110 transition-all duration-100 ease-in-out 
+                  ${index + 1 > noStep ? "bg-primary-surface pointer-events-none" : "bg-primary-pressed hover:bg-primary-hover"} hover:scale-110 transition-all duration-100 ease-in-out 
                    ${form.formState.errors[state] ? "outline-2 outline-error bg-primary-surface animate-bounce" : ""}
                 `}
                   key={index}

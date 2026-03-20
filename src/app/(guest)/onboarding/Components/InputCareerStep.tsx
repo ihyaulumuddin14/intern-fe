@@ -53,7 +53,7 @@ export default function InputCareerStep() {
     <FormStepCard
       title={
         <>
-          Karir Apa yang Ingin Kamu <span className="text-primary">Capai</span>?
+          Karir Apa yang Ingin Kamu <span className="text-primary">Capai?</span>
         </>
       }
     >

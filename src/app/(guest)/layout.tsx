@@ -10,7 +10,7 @@ const OnboardingLayout = ({
       <header className='flex p-[clamp(12px,5vw,30px)] justify-between text-2xl'>
         <h1 className='bg-linear-to-r from-primary-pressed to-primary/50 bg-clip-text text-transparent font-semibold'><span className='font-lora'>Skill</span>Gap</h1>
       </header>
-      <main className="sm:mt-10 pt-[clamp(75px,5vw,125px)] px-[clamp(12px,5vw,56px)] w-full sm:w-[90vw] h-full mx-auto flex flex-col justify-between items-center bg-white rounded-xl shadow-xl transition-all duration-500 ease-in-out overflow-hidden">
+      <main className="sm:mt-10 p-[clamp(12px,5vw,56px)] w-full sm:w-[90vw] h-full mx-auto flex flex-col justify-between items-center bg-white rounded-xl shadow-xl transition-all duration-500 ease-in-out overflow-hidden relative">
         {children}
       </main>
     </section>

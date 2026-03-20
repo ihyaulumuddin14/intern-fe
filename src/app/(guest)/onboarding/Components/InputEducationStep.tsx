@@ -46,7 +46,7 @@ export default function InputEducationStep() {
       title={
         <>
           Apa Tingkat <span className="text-primary">Pendidikan</span>{" "}
-          Terakhirmu
+          Terakhirmu?
         </>
       }
     >
