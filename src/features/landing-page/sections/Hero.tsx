@@ -1,48 +1,47 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import CardIcon from "../components/CardIcon";
-import CardImageDesc from "../components/CardImageDesc";
-import CardTextOnly from "../components/CardTextOnly";
+import CardCTA from "../components/CardCTA";
 
 const HeroSection = () => {
   return (
-    <section className="w-full py-[clamp(2rem,6vw,5rem)]">
+    <section className="w-full py-[clamp(3rem,6vw,6rem)] flex flex-col gap-13">
       {/* MAIN HOOK */}
       <div className="w-full flex flex-col items-center gap-8 lg:gap-5 text-center">
         <h1 className="text-3xl  sm:text-5xl lg:text-[64px] font-semibold px-[clamp(10px,5vw,50px)] leading-[1.2]">
           Ketahui Seberapa Siap{" "}
-          <span className="font-bold font-lora text-primary">Skill</span>{" "}
-          Kamu untuk{" "}
-          <span className="text-primary">Karir Impian</span>
+          <span className="font-bold font-lora text-primary">Skill</span> Kamu
+          untuk <span className="text-primary">Karir Impian</span>
         </h1>
 
         <p className="text-base sm:text-lg lg:text-2xl text-neutral-70 max-w-219.5 font-normal">
-          SkillGap membantu kamu menganalisis skill yang sudah dimiliki, menemukan skill yang masih kurang, dan memberikan rekomendasi untuk berkembang.
+          SkillGap membantu kamu menganalisis skill yang sudah dimiliki,
+          menemukan skill yang masih kurang, dan memberikan rekomendasi untuk
+          berkembang.
         </p>
 
         <Button
+          withArrow
           size={"lg"}
         >
           Get Started
-          <ArrowRight />
         </Button>
       </div>
 
       {/* CAREER CARD */}
-      <div>
-        <CardIcon
-          title="someTitle"
-          description="LoremIpsum"
+      <div className="w-full grid gap-6 grid-cols-[repeat(auto-fill,minmax(310px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(397px,1fr))]">
+        <CardCTA
+          title="Frontend Developer"
+          imageSrc="/assets/frontend-hooks.webp"
+          targetUrl="#"
         />
-        <CardImageDesc
-          imageSrc="/assets/data-analyst-career.webp"
-          title="Data Analyst"
-          description="Mengolah dan menganalisis data untuk menghasilkan insight yang dapat membantu perusahaan dalam mengambil keputusan."
-          skills={["SQL", "Python Programming", "Data Analysist"]}
+        <CardCTA
+          title="UI/UX Design"
+          imageSrc="/assets/uiux-hooks.webp"
+          targetUrl="#"
         />
-        <CardTextOnly
-          title="Pilih Target Karier"
-          description="Pengguna memilih karier yang ingin dicapai, seperti Data Analyst, UI/UX Designer, atau Frontend Developer."
+        <CardCTA
+          title="Product Management"
+          imageSrc="/assets/pm-hooks.webp"
+          targetUrl="#"
         />
       </div>
     </section>

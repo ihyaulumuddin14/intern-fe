@@ -3,9 +3,10 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { ArrowRight } from "iconsax-reactjs"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 hover:cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:translate-y-0.5 font-semibold",
+  "inline-flex group relative overflow-hidden shrink-0 hover:cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:translate-y-0.5 font-semibold",
   {
     variants: {
       variant: {
@@ -45,10 +46,12 @@ function Button({
   variant = "default",
   size = "default",
   asChild = false,
+  withArrow = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
+    asChild?: boolean,
+    withArrow?: boolean
   }) {
   const Comp = asChild ? Slot.Root : "button"
 
@@ -59,7 +62,21 @@ function Button({
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {asChild ? (
+        props.children
+      ) : (
+        <>
+          {props.children}
+          {withArrow && (
+            <>
+              <ArrowRight className="opacity-100 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:opacity-0 absolute right-7" />
+              <ArrowRight className="opacity-0 -translate-x-3 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:opacity-100 group-hover:translate-x-0" />
+            </>
+          )}
+        </>
+      )}
+    </Comp>
   )
 }
 
