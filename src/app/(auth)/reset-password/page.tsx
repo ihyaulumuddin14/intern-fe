@@ -1,5 +1,5 @@
-import AuthCard from "@/components/shared/AuthCard"
-import ResetPasswordForm from "./Containers/ResetPasswordForm"
+import AuthCard from "@/features/auth/components/AuthCard";
+import ResetPasswordForm from "../../../features/auth/reset-password/ResetPasswordForm";
 
 const ResetPasswordPage = () => {
   return (
@@ -12,7 +12,7 @@ const ResetPasswordPage = () => {
     >
       <ResetPasswordForm />
     </AuthCard>
-  )
-}
+  );
+};
 
-export default ResetPasswordPage
+export default ResetPasswordPage;

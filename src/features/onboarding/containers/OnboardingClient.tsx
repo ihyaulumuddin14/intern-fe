@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   OnboardingCredentials,
   OnboardingSchema,
@@ -12,12 +11,12 @@ import { AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { FormProvider, Path, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useShallow } from "zustand/react/shallow";
-import ConfirmationCallbackModal from "../Components/ConfirmationCallbackModal";
-import InputCareerStep from "../Components/InputCareerStep";
-import InputEducationStep from "../Components/InputEducationStep";
-import InputNameStep from "../Components/InputNameStep";
+import ConfirmationCallbackModal from "../components/ConfirmationCallbackModal";
+import InputCareerStep from "../components/InputCareerStep";
+import InputEducationStep from "../components/InputEducationStep";
+import InputNameStep from "../components/InputNameStep";
 
 export const MAX_ONBOARDING_STEP = 3;
 

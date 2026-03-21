@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import LoginForm from "@/app/(auth)/login/Containers/LoginForm";
-import AuthCard from "@/components/shared/AuthCard";
+import LoginForm from "@/features/auth/login/LoginForm";
+import AuthCard from "@/features/auth/components/AuthCard";
 import {
   Dialog,
   DialogContent,
@@ -14,8 +14,8 @@ const LoginPageInterceptor = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/login");
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl")
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
@@ -25,7 +25,10 @@ const LoginPageInterceptor = () => {
   if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+    >
       <DialogContent>
         <AuthCard
           title="Login"
@@ -38,7 +41,7 @@ const LoginPageInterceptor = () => {
         </AuthCard>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default LoginPageInterceptor
+export default LoginPageInterceptor;

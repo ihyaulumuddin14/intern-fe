@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProblemSection = () => {
   return (
-    <div>ProblemSection</div>
+    <div className='min-h-[300vh]'>ProblemSection</div>
   )
 }
 

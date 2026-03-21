@@ -45,7 +45,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
   return (
     <div
       id="wrapper"
-      className="w-full min-h-dvh"
+      className="w-full min-h-dvh relative"
     >
       {children}
     </div>

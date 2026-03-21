@@ -1,5 +1,5 @@
-import AuthCard from "@/components/shared/AuthCard"
-import ForgotPasswordForm from "./Containers/ForgotPasswordForm"
+import AuthCard from "@/features/auth/components/AuthCard";
+import ForgotPasswordForm from "../../../features/auth/forgot-password/ForgotPasswordForm";
 
 const ForgotPasswordPage = () => {
   return (
@@ -12,7 +12,7 @@ const ForgotPasswordPage = () => {
     >
       <ForgotPasswordForm />
     </AuthCard>
-  )
-}
+  );
+};
 
-export default ForgotPasswordPage
+export default ForgotPasswordPage;

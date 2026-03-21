@@ -1,5 +1,5 @@
-import AuthCard from "@/components/shared/AuthCard"
-import VerifyEmailClient from "./Containers/VerifyEmailClient"
+import AuthCard from "@/features/auth/components/AuthCard";
+import VerifyEmailClient from "../../../features/auth/verify-email/VerifyEmailClient";
 
 const VerifyEmailPage = () => {
   return (
@@ -12,7 +12,7 @@ const VerifyEmailPage = () => {
     >
       <VerifyEmailClient />
     </AuthCard>
-  )
-}
+  );
+};
 
-export default VerifyEmailPage
+export default VerifyEmailPage;
