@@ -29,14 +29,12 @@ const LandingPage = () => {
     <ScrollProvider>
       <Navbar />
       <main className='w-full'>
-        <Container>
-          <Hero />
-          <About />
-          <Problem />
-          <Career />
-          <Step />
-          <Feature />
-        </Container>
+        <Hero />
+        <About />
+        <Problem />
+        <Career />
+        <Step />
+        <Feature />
       </main>
       <Footer />
       {/* <section className='w-full h-[300dvh]'>

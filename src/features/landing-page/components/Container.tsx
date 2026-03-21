@@ -1,13 +1,15 @@
 import { ReactNode } from 'react'
 
 const Container = ({
-  children
+  children,
+  className
 }: {
-  children: ReactNode
+  children: ReactNode,
+  className?: string
 }) => {
   return (
     <div id='container' className='w-full px-[clamp(1.25rem,5vw,5rem)]'>
-      <div id='wrapper' className='w-full max-w-310 mx-auto'>
+      <div id='wrapper' className={`w-full max-w-310 mx-auto ${className}`}>
         { children }
       </div>
     </div>
