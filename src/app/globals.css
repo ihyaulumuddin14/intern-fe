@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+    --breakpoint-xs: 30rem;
+}
+
 @theme inline {
     --font-inter: var(--font-inter), sans-serif;
     --font-lora: var(--font-lora), serif;
@@ -253,6 +257,6 @@
     @apply border-border outline-ring/50;
     }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
     }
 }
