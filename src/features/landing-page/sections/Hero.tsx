@@ -29,7 +29,8 @@ const HeroSection = () => {
         </div>
 
         {/* CAREER CARD */}
-        <div className="w-full grid gap-6 grid-cols-[repeat(auto-fill,minmax(310px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(397px,1fr))]">
+        {/* <div className="w-full grid gap-6 grid-cols-[repeat(auto-fill,minmax(310px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(397px,1fr))]"> */}
+        <div className="w-full gap-6 flex flex-wrap">
           <CardCTA
             title="Frontend Developer"
             imageSrc="/assets/frontend-hooks.webp"

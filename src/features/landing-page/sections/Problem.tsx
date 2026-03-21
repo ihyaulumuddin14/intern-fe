@@ -35,6 +35,7 @@ const ProblemSection = () => {
           <ol className='w-full grid grid-cols-[repeat(auto-fill,minmax(292px,1fr))] gap-6'>
             {problems.map(problem => (
               <CardIcon
+                key={problem.title}
                 title={problem.title}
                 description={problem.description}
               />

@@ -92,8 +92,8 @@ export default function InputCareerStep() {
 
                   {isPending ? (
                     <>
-                      {[...Array(3)].map(_ => (
-                        <div className="w-full h-14 border-b flex items-center px-4">
+                      {[...Array(3)].map((_,index) => (
+                        <div key={index} className="w-full h-14 border-b flex items-center px-4">
                           <Skeleton />
                         </div>
                       ))}

@@ -4,7 +4,7 @@ import Container from "../components/Container";
 const About = () => {
   return (
     <section className="w-full py-[clamp(3rem,6vw,6rem)]">
-      <Container className=" grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Container className="flex flex-col-reverse md:grid md:flex-row md:grid-cols-2 gap-6">
         <div className="w-full relative overflow-hidden rounded-xl aspect-video">
           <Image
             src={"/assets/skillgap-about.webp"}

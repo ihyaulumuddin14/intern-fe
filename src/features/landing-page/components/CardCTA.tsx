@@ -12,10 +12,7 @@ const CardCTA = ({
   targetUrl: string;
 }) => {
   return (
-    <div className="group/parent relative w-full h-81.25 overflow-hidden rounded-xl p-[30.5px] flex items-end hover:shadow-[0px_0px_0px_15px_rgba(213,234,236,1)] transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]">
-      <div>
-
-      </div>
+    <div className="group/parent relative flex-1 w-full min-w-77.5 h-81.25 overflow-hidden rounded-xl p-[30.5px] flex items-end hover:shadow-[0px_0px_0px_15px_rgba(213,234,236,1)] transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)]">
       <Image
         src={imageSrc}
         alt="career.webp"

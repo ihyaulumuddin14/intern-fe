@@ -42,6 +42,7 @@ const CareerSection = () => {
           <ol className='w-full grid grid-cols-[repeat(auto-fill,minmax(292px,1fr))] gap-6'>
             {careers.map(career => (
               <CardImageDesc
+                key={career.title}
                 title={career.title}
                 description={career.description}
                 skills={career.skills}
