@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import Container from './Container'
+import Container from '../../components/Container'
 
 const Footer = () => {
   return (
-    <footer className='w-[97.2vw] max-w-350 h-fit py-[clamp(3rem,6vw,6rem)] bg-primary-hover rounded-t-3xl mx-auto text-primary-foreground'>
+    <footer className='w-[97.2vw] h-fit py-[clamp(3rem,6vw,6rem)] bg-primary-hover rounded-t-3xl mx-auto text-primary-foreground'>
       <Container className='flex flex-col gap-15'>
         {/* UPPER */}
         <div className='flex flex-col gap-8 lg:flex-row justify-between'>

@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import CardCTA from "../components/CardCTA";
-import Container from "../components/Container";
+import Container from "../../components/Container";
+import CardCTA from "../../components/CardCTA";
 
 const HeroSection = () => {
   return (
-    <section className="w-full py-[clamp(3rem,6vw,6rem)]">
+    <section id="home" className="w-full py-[clamp(3rem,6vw,6rem)]">
       <Container className="flex flex-col gap-13">
         {/* MAIN HOOK */}
         <div className="w-full flex flex-col items-center gap-8 lg:gap-5 text-center">

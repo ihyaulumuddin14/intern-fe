@@ -1,4 +1,4 @@
-import { MAX_ONBOARDING_STEP } from "@/app/(guest)/onboarding/Containers/OnboardingClient";
+import { MAX_ONBOARDING_STEP } from "@/features/onboarding/containers/OnboardingClient";
 import { StepDirection } from "@/types/common.type";
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware";
