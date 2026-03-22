@@ -10,6 +10,9 @@ export default function useUser() {
       console.log("dari hooks", toCamel(response.data.data))
       return toCamel(response.data.data)
     },
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false
   })
 
   return {

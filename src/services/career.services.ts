@@ -8,7 +8,7 @@ export async function getCareers() {
   await new Promise(res => setTimeout(res, 2000))
 
   if (!response.data.success) {
-    throw new Error(response.data.error?.message || "Data karir gagal diambil");
+    throw new Error(response.data.error?.message || "Data karier gagal diambil");
   }
 
   return toCamel(response.data.data) as Career[];

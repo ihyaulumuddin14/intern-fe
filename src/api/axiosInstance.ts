@@ -1,9 +1,9 @@
 import { refreshAccessToken } from "@/helper/authRefresh"
 import axios from "axios"
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+import { API_URL } from "@/config/env"
 
 export const authApi = axios.create({
+  // comment for using Nextjs route handler, without api url domain
   // baseURL: API_URL
 })
 

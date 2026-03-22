@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import RegisterForm from "@/app/(auth)/register/Containers/RegisterForm";
-import AuthCard from "@/components/shared/AuthCard";
+import RegisterForm from "@/features/auth/register/RegisterForm";
+import AuthCard from "@/features/auth/components/AuthCard";
 import {
   Dialog,
   DialogContent,
@@ -14,18 +14,21 @@ const RegisterPageInterceptor = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/register");
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl")
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
-      router.back();
+    router.back();
   };
 
   if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+    >
       <DialogContent>
         <AuthCard
           title="Register"
@@ -38,7 +41,7 @@ const RegisterPageInterceptor = () => {
         </AuthCard>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default RegisterPageInterceptor
+export default RegisterPageInterceptor;

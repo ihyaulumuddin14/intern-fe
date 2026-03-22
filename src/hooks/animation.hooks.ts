@@ -1,17 +1,45 @@
-import { useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
-import { getValidStep } from "@/app/(guest)/onboarding/Containers/OnboardingClient";
+import { useEffect, useState } from "react";
 
-export function useStepDirection() {
-  const searchParams = useSearchParams();
-  const requestedStep = getValidStep(searchParams.get("step"));
-  const prevStepRef = useRef(requestedStep);
-
-  const direction = requestedStep > prevStepRef.current ? "forward" : "backward";
+export function useActiveSection (sectionIds: string[]) {
+  const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
-    prevStepRef.current = requestedStep;
-  }, [requestedStep]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            setActiveSection(entry.target.id)
+          }
+        })
+      },
+      { threshold: 0.5 }
+    )
 
-  return direction;
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [sectionIds])
+
+  return activeSection
+}
+
+const MOBILE_BREAKPOINT = 1024
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const update = () => setIsMobile(mql.matches)
+
+    update()
+    mql.addEventListener("change", update)
+
+    return () => mql.removeEventListener("change", update)
+  }, [])
+
+  return !!isMobile
 }

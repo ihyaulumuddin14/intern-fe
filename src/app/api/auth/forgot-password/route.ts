@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
     await new Promise(res => setTimeout(res, 2000))
     
     console.log("email forgot password", body)
-    console.log("link reset: http://localhost:3000/reset-password?token=FDSefqo87c43yrUGYU8968")
 
     const isSuccess = true;
 
