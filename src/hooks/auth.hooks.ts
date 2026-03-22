@@ -4,13 +4,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
+import { API_URL } from "@/config/env"
 
 export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
     onSuccess: (response) => {
       // dummy
-      console.log("link verify: http://localhost:3000/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard")
+      console.log(`link verify: ${API_URL}/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard`)
       toast.success(response.message || "Register berhasil")
     },
     onError: (error) => {
@@ -108,7 +109,7 @@ export const useForgotPassword = () => {
     onSuccess: (response) => {
       toast.success(response.message || "Tautan reset berhasil dikirim")
       // dummy
-      console.log("link reset: http://localhost:3000/reset-password?token=FDSefqo87c43yrUGYU8968")
+      console.log(`link reset: ${API_URL}/reset-password?token=FDSefqo87c43yrUGYU8968`)
     },
     onError: (error) => {
       toast.error(

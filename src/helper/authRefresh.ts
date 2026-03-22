@@ -1,10 +1,11 @@
 'use client'
 
 import axios from "axios"
+import { API_URL } from "@/config/env"
 
 const refreshApi = axios.create({
   // comment for using Nextjs route handler, without api url domain
-  // baseURL: process.env.NEXT_PUBLIC_API_URL,
+  // baseURL: API_URL,
   withCredentials: true
 })
 
