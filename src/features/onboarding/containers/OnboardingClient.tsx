@@ -65,7 +65,7 @@ export default function OnboardingClient() {
   const form = useForm<OnboardingCredentials>({
     resolver: zodResolver(OnboardingSchema),
     mode: "onChange",
-    defaultValues: formStore,
+    defaultValues: formStore as OnboardingCredentials,
   });
 
   /**

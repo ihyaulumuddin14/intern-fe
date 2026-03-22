@@ -8,11 +8,10 @@ import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { ArrowRight } from "lucide-react";
 import { useEffect } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 export default function InputNameStep() {
   const {
-    register,
     trigger,
     control,
     formState: { errors, touchedFields, dirtyFields },
@@ -40,11 +39,17 @@ export default function InputNameStep() {
     >
       <FieldGroup>
         <Field>
-          <Input
-            className="w-full"
-            id="name-input"
-            placeholder="Masukkan nama lengkap kamu..."
-            {...register("fullName")}
+          <Controller
+            control={control}
+            name="fullName"
+            render={({ field }) => (
+              <Input
+                className="w-full"
+                id="name-input"
+                placeholder="Masukkan nama lengkap kamu..."
+                {...field}
+              />
+            )}
           />
           {errors.fullName && (
             <FieldError>{errors.fullName.message}</FieldError>

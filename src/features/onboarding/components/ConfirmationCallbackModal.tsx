@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { OnboardingSchema } from "@/schemas/onboarding.schema";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { useRouter } from "next/navigation";
@@ -39,6 +39,9 @@ const ConfirmationCallbackModal = ({
         onEscapeKeyDown={(e) => e.preventDefault()}
         className="[&>button]:hidden"
       >
+        <DialogHeader>
+          <DialogTitle>Konfirmasi</DialogTitle>
+        </DialogHeader>
         <div className="w-full">
           <img
             className="w-1/2 mx-auto"

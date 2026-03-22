@@ -30,6 +30,9 @@ const LoginPageInterceptor = () => {
       onOpenChange={handleOpenChange}
     >
       <DialogContent>
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <AuthCard
           title="Login"
           description="Lorem ipsum dolor sit amet"
