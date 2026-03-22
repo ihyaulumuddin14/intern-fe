@@ -16,7 +16,7 @@ export async function GET() {
 
   return NextResponse.json({
     success: true,
-    message: "Daftar karir berhasil diambil",
+    message: "Daftar karier berhasil diambil",
     data: careers,
   });
 }

@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import AuthCard from "@/components/shared/AuthCard"
-import RegisterForm from "./Containers/RegisterForm"
-import { useSearchParams } from "next/navigation"
+import AuthCard from "@/features/auth/components/AuthCard";
+import RegisterForm from "../../../features/auth/register/RegisterForm";
+import { useSearchParams } from "next/navigation";
 
 const RegisterPage = () => {
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl")
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   return (
     <AuthCard
@@ -18,7 +18,7 @@ const RegisterPage = () => {
     >
       <RegisterForm />
     </AuthCard>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;

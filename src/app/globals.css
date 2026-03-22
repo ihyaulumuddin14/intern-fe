@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+    --breakpoint-xs: 30rem;
+}
+
 @theme inline {
     --font-inter: var(--font-inter), sans-serif;
     --font-lora: var(--font-lora), serif;
@@ -120,9 +124,9 @@
 :root {
     /* RAW */
     --primary-main: #2E98A2;
-    --primary-surface: #D5EAEC;
+    --primary-surface: rgb(213, 234, 236);
     --primary-border: #B9DDE0;
-    --primary-hover: #267F87;
+    --primary-hover: rgb(38, 127, 135);
     --primary-pressed: #174C51;
     --primary-focus: #2E98A2;
 
@@ -164,7 +168,7 @@
 
     --neutral-10: #FFFFFF;
     --neutral-20: #F5F5F5;
-    --neutral-30: #EDEDED;
+    --neutral-30: rgb(237, 237, 237);
     --neutral-40: #D6D6D6;
     --neutral-50: #C2C2C2;
     --neutral-60: #878787;
@@ -253,6 +257,6 @@
     @apply border-border outline-ring/50;
     }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter selection:bg-primary selection:text-primary-foreground;
     }
 }

@@ -3,9 +3,10 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { ArrowRight } from "iconsax-reactjs"
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 hover:cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:translate-y-0.5 font-semibold",
+  "inline-flex group relative overflow-hidden shrink-0 hover:cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring disabled:pointer-events-none disabled:bg-muted disabled:text-muted-foreground aria-invalid:border-destructive aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:translate-y-0.5 font-semibold",
   {
     variants: {
       variant: {
@@ -22,11 +23,11 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        tn: "h-3 gap-1.5 rounded-md p-3 text-[10px] has-[>svg]:px-2.5",
-        sm: "h-8 gap-1 rounded-md px-3 py-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
-        default: "h-10 rounded-lg px-4 py-3 has-[>svg]:px-3",
-        lg: "h-12 rounded-xl px-5 py-3.5 text-base has-[>svg]:px-4",
-        gt: "h-14 rounded-xl px-6 py-4 text-lg",
+        tn: "h-3 gap-1.5 rounded-[8px] py-1.5 px-4 text-[10px] has-[>svg]:px-4",
+        sm: "h-8 gap-1 rounded-[8px] px-5 py-2 text-xs has-[>svg]:px-5 [&_svg:not([class*='size-'])]:size-3",
+        default: "h-10 rounded-[12px] px-6 py-3 has-[>svg]:px-6",
+        lg: "h-12 rounded-[12px] px-7 py-3.5 text-base has-[>svg]:px-7",
+        gt: "h-14 rounded-[12px] px-8 py-4 text-lg",
         icon: "size-9",
         "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-8",
@@ -45,10 +46,12 @@ function Button({
   variant = "default",
   size = "default",
   asChild = false,
+  withArrow = false,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
+    asChild?: boolean,
+    withArrow?: boolean
   }) {
   const Comp = asChild ? Slot.Root : "button"
 
@@ -59,7 +62,21 @@ function Button({
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {asChild ? (
+        props.children
+      ) : (
+        <>
+          {props.children}
+          {withArrow && (
+            <>
+              <ArrowRight className="opacity-100 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:opacity-0 absolute right-7" />
+              <ArrowRight className="opacity-0 -translate-x-3 transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:opacity-100 group-hover:translate-x-0" />
+            </>
+          )}
+        </>
+      )}
+    </Comp>
   )
 }
 

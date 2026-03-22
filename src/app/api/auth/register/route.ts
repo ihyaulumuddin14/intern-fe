@@ -8,7 +8,6 @@ export async function POST(req: Request) {
     await new Promise(res => setTimeout(res, 2000))
 
     console.log("register", body)
-    console.log("link reset: http://localhost:3000/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard")
 
     const isSuccess = true
 

@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import AuthCard from "@/components/shared/AuthCard"
-import LoginForm from "./Containers/LoginForm"
-import { useSearchParams } from "next/navigation"
+import AuthCard from "@/features/auth/components/AuthCard";
+import LoginForm from "../../../features/auth/login/LoginForm";
+import { useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl")
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   return (
     <AuthCard
@@ -18,7 +18,7 @@ const LoginPage = () => {
     >
       <LoginForm />
     </AuthCard>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

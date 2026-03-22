@@ -36,7 +36,7 @@ export const EducationSchema = z
 export const OnboardingSchema = z.object({
   fullName: z.string().min(1, "Nama lengkap harus diisi"),
   education: EducationSchema,
-  career: z.string().min(1, "Minat karir harus diisi"),
+  career: z.string().min(1, "Minat karier harus diisi"),
 });
 
 export type OnboardingCredentials = z.infer<typeof OnboardingSchema>
