@@ -30,6 +30,9 @@ const RegisterPageInterceptor = () => {
       onOpenChange={handleOpenChange}
     >
       <DialogContent>
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <AuthCard
           title="Register"
           description="Lorem ipsum dolor sit amet"

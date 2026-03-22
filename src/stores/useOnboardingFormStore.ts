@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type OnboardingFormType = {
-  fullName?: string;
-  education?: {
+  fullName: string;
+  education: {
     educationLevel?: "SMA / SMK" | "Diploma 3" | "Diploma 4" | "Sarjana (S1)";
     major?: string;
     institution?: string;
   };
-  career?: string;
+  career: string;
 };
 
 type Store = {
@@ -34,7 +34,13 @@ export const useOnboardingFormStore = create<Store>()(
           formStore: { ...state.formStore, ...data },
         })),
 
-      resetForm: () => set({ formStore: {} }),
+      resetForm: () => set({
+        formStore: {
+          fullName: "",
+          education: {},
+          career: "",
+        }
+      }),
 
       setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
