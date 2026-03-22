@@ -1,19 +1,17 @@
 'use client'
 
 import ScrollProvider from '@/components/providers/ScrollProvider'
-import { Button } from '@/components/ui/button'
 import { useLogout } from '@/hooks/auth.hooks'
 import useUser from '@/hooks/users.hooks'
 import { useRouter } from 'next/navigation'
+import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
-import Hero from '../sections/Hero'
 import About from '../sections/About'
-import Problem from '../sections/Problem'
 import Career from '../sections/Career'
-import Step from '../sections/Step'
 import Feature from '../sections/Feature'
-import Footer from '../sections/Footer'
-import Container from '../components/Container'
+import Hero from '../sections/Hero'
+import Problem from '../sections/Problem'
+import Step from '../sections/Step'
 
 const LandingPage = () => {
   const router = useRouter()

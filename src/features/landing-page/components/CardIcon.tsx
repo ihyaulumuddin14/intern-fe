@@ -13,9 +13,9 @@ const CardIcon = ({
         <div className="rounded-full w-fit p-3 border border-neutral-30 text-primary">
           <Star1 size="32" className="p-1"/>
         </div>
-        <h3 className="text-2xl font-semibold leading-normal">{ title }</h3>
+        <h3 className="text-xl md:text-2xl font-semibold leading-normal">{ title }</h3>
       </div>
-      <p className="text-xl font-normal text-neutral-70">{ description }</p>
+      <p className="text-base md:text-xl font-normal text-neutral-70">{ description }</p>
     </div>
   )
 }

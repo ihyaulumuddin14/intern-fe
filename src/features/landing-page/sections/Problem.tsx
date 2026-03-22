@@ -32,7 +32,7 @@ const ProblemSection = () => {
           </p>
         </div>
         <div className='w-full'>
-          <ol className='w-full grid grid-cols-[repeat(auto-fill,minmax(292px,1fr))] gap-6'>
+          <ul className='w-full grid grid-cols-[repeat(auto-fill,minmax(292px,1fr))] gap-6'>
             {problems.map(problem => (
               <CardIcon
                 key={problem.title}
@@ -40,7 +40,7 @@ const ProblemSection = () => {
                 description={problem.description}
               />
             ))}
-          </ol>
+          </ul>
         </div>
       </Container>
     </section>

@@ -39,7 +39,7 @@ const CareerSection = () => {
           </p>
         </div>
         <div className='w-full'>
-          <ol className='w-full grid grid-cols-[repeat(auto-fill,minmax(292px,1fr))] gap-6'>
+          <ul className='w-full grid grid-cols-[repeat(auto-fill,minmax(292px,1fr))] gap-6'>
             {careers.map(career => (
               <CardImageDesc
                 key={career.title}
@@ -49,7 +49,7 @@ const CareerSection = () => {
                 imageSrc={career.imageSrc}
               />
             ))}
-          </ol>
+          </ul>
         </div>
       </Container>
     </section>

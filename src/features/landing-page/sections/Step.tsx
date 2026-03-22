@@ -35,9 +35,10 @@ const StepSection = () => {
           </p>
         </div>
         <div className='w-full'>
-          <ol className='w-full grid grid-cols-[repeat(auto-fill,minmax(608px,1fr))] gap-6'>
+          <ol className='w-full grid grid-cols-1 lg:grid-cols-2 lg:gap-y-10 gap-6'>
             {steps.map(step => (
               <CardTextOnly
+                key={step.id}
                 title={step.stepName}
                 description={step.description}
               />
