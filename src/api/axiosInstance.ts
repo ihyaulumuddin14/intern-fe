@@ -4,6 +4,7 @@ import axios from "axios"
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const authApi = axios.create({
+  // comment for using Nextjs route handler, without api url domain
   // baseURL: API_URL
 })
 

@@ -12,20 +12,23 @@ import Career from "../sections/Career";
 import Step from "../sections/Step";
 import Feature from "../sections/Feature";
 import Footer from "../sections/Footer";
+import { ReactLenis } from 'lenis/react'
 
 const LandingPage = () => {
   return (
     <ScrollProvider>
-      <Navbar />
-      <main className="w-full">
-        <Hero />
-        <About />
-        <Problem />
-        <Career />
-        <Step />
-        <Feature />
-      </main>
-      <Footer />
+      <ReactLenis root>
+        <Navbar />
+        <main className="w-full">
+          <Hero />
+          <About />
+          <Problem />
+          <Career />
+          <Step />
+          <Feature />
+        </main>
+        <Footer />
+      </ReactLenis>
     </ScrollProvider>
   );
 };

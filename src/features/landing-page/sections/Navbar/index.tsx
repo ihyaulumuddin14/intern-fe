@@ -1,6 +1,6 @@
 import Hamburger from "@/components/shared/Hamburger";
-import { Button } from "@/components/ui/button";
 import Container from "../../components/Container";
+import NavButtonGroup from "./NavButtonGroup";
 import NavLinkGroup from "./NavLinkGroup";
 
 const Navbar = () => {
@@ -17,10 +17,7 @@ const Navbar = () => {
 
           <NavLinkGroup />
 
-          <ul className="flex gap-4 items-center">
-            <Button variant={"outline"}>Masuk</Button>
-            <Button className="hidden xl:inline-flex">Register</Button>
-          </ul>
+          <NavButtonGroup />
         </nav>
       </Container>
     </header>

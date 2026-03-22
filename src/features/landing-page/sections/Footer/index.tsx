@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Container from '../../components/Container'
+import NavLinkFooter from './NavLinkFooter'
 
 const Footer = () => {
   return (
@@ -17,23 +18,23 @@ const Footer = () => {
           <div className='w-fit flex flex-wrap gap-10 leading-normal font-medium text-sm md:text-base'>
             <ol className='flex-1 w-full min-w-46.5 flex flex-col gap-5'>
               <h3 className='text-md md:text-lg'>Menu</h3>
-              <Link href={"#about"}>Tentang</Link>
-              <Link href={"#career"}>Karier</Link>
-              <Link href={"#assessment-step"}>Assessment</Link>
-              <Link href={"#feature"}>Fitur</Link>
+              <NavLinkFooter href={"#about"}>Tentang</NavLinkFooter>
+              <NavLinkFooter href={"#career"}>Karier</NavLinkFooter>
+              <NavLinkFooter href={"#assessment-step"}>Assessment</NavLinkFooter>
+              <NavLinkFooter href={"#feature"}>Fitur</NavLinkFooter>
             </ol>
             <ol className='flex-1 w-full min-w-46.75 flex flex-col gap-5'>
               <h3 className='text-md md:text-lg'>Fitur</h3>
-              <Link href={"#"}>Skill Self-Assessment</Link>
-              <Link href={"#"}>Skill Quiz</Link>
-              <Link href={"#"}>Skill Gap Analysis</Link>
-              <Link href={"#"}>Learning Recomendation</Link>
+              <li>Skill Self-Assessment</li>
+              <li>Skill Quiz</li>
+              <li>Skill Gap Analysis</li>
+              <li>Learning Recomendation</li>
             </ol>
             <ol className='flex-1 w-full min-w-73 flex flex-col gap-5'>
               <h3 className='text-md md:text-lg'>Contact Info</h3>
-              <Link href={"#"}>skillgap@space.id</Link>
-              <Link href={"#"}>(62) 8123456789</Link>
-              <Link href={"#"}>East Java, Indonesia</Link>
+              <li>skillgap@space.id</li>
+              <li>(62) 8123456789</li>
+              <li>East Java, Indonesia</li>
             </ol>
           </div>
         </div>

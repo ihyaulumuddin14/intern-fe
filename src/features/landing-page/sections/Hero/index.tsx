@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Container from "../../components/Container";
 import CardCTA from "../../components/CardCTA";
+import StartedButton from "./StartedButton";
 
 const HeroSection = () => {
   return (
@@ -20,12 +21,7 @@ const HeroSection = () => {
             berkembang.
           </p>
 
-          <Button
-            withArrow
-            size={"lg"}
-          >
-            Get Started
-          </Button>
+          <StartedButton />
         </div>
 
         {/* CAREER CARD */}

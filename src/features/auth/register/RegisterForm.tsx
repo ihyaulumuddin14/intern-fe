@@ -59,7 +59,7 @@ const RegisterForm = () => {
               id="fullname"
               type="text"
               placeholder="Masukkan nama kamu"
-              value={formStore.fullName || ""}
+              {...(formStore.fullName ? { value: formStore.fullName } : {})}
             />
             {errors.fullName && (
               <FieldError>{errors.fullName.message}</FieldError>

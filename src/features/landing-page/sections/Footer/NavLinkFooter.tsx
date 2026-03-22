@@ -2,16 +2,14 @@
 
 import { useLenis } from "lenis/react";
 import Link from "next/link";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 
-const NavLink = ({
+const NavLinkFooter = ({
   children,
   href,
-  isActive = false,
 }: {
   children: ReactNode;
   href: string;
-  isActive?: boolean;
 }) => {
   const lenis = useLenis();
 
@@ -25,7 +23,7 @@ const NavLink = ({
   return (
     <Link
       onClick={(e) => handleScroll(e)}
-      className={`text-md xl:text-xl font-normal ${isActive ? "font-semibold" : ""} transition-all duration-200 ease-[cubic-bezier(0.19,1,0.22,1)]`}
+      className=""
       href={href}
     >
       {children}
@@ -33,4 +31,4 @@ const NavLink = ({
   );
 };
 
-export default NavLink;
+export default NavLinkFooter;

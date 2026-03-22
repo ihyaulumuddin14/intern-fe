@@ -9,6 +9,8 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
     onSuccess: (response) => {
+      // dummy
+      console.log("link verify: http://localhost:3000/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard")
       toast.success(response.message || "Register berhasil")
     },
     onError: (error) => {
@@ -105,6 +107,8 @@ export const useForgotPassword = () => {
     mutationFn: forgotPassword,
     onSuccess: (response) => {
       toast.success(response.message || "Tautan reset berhasil dikirim")
+      // dummy
+      console.log("link reset: http://localhost:3000/reset-password?token=FDSefqo87c43yrUGYU8968")
     },
     onError: (error) => {
       toast.error(
