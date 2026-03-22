@@ -1,18 +1,19 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
-import Lenis from "lenis";
+import { useLandingPageMenuStore } from "@/stores/useLandingPageMenuStore";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLenis } from "lenis/react";
+import { ReactNode, useEffect } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
+  const lenis = useLenis()
+  const { isOpen } = useLandingPageMenuStore()
+
   useEffect(() => {
-    /**
-     * Initialize lenis
-     */
-    const lenis = new Lenis();
+    if (!lenis) return
 
     /**
      * Synchronize Lenis scrolling with GSAP's ScrollTrigger
@@ -40,7 +41,26 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       gsap.ticker.remove(gsapTicker);
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, []);
+  }, [lenis]);
+
+  useEffect(() => {
+    if (!lenis) return;
+
+    if (isOpen) {
+      lenis.stop();
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none'; 
+    } else {
+      lenis.start();
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    }
+    
+    return () => {
+      lenis.start();
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, lenis]);
 
   return (
     <div

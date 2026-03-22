@@ -17,6 +17,9 @@ const NavLink = ({
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!lenis) return;
+    if (lenis.isStopped) {
+      lenis.start();
+    }
 
     e.preventDefault();
     lenis.scrollTo(href, { offset: -80 });

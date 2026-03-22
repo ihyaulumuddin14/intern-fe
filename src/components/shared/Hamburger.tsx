@@ -1,17 +1,33 @@
-import React from 'react';
-import styled from 'styled-components';
+"use client";
+
+import { useLandingPageMenuStore } from "@/stores/useLandingPageMenuStore";
+import styled from "styled-components";
 
 const Hamburger = ({ className }: { className?: string }) => {
+  const { isOpen, open, close } = useLandingPageMenuStore();
+
   return (
     <StyledWrapper>
       <div className={`burger-icon ${className}`}>
-        <label className="burger" htmlFor="burger">
-          <input className="line" type="checkbox" id="burger" />
+        <label
+          className="burger"
+          htmlFor="burger"
+        >
+          <input
+            className="line"
+            type="checkbox"
+            onChange={(e) => {
+              e.target.checked ? open() : close();
+            }}
+            autoComplete="off"
+            checked={isOpen}
+            id="burger"
+          />
         </label>
       </div>
     </StyledWrapper>
   );
-}
+};
 
 const StyledWrapper = styled.div`
   .burger {
@@ -101,6 +117,7 @@ const StyledWrapper = styled.div`
     100% {
       transform: translateY(0px) rotate(-45deg);
     }
-  }`;
+  }
+`;
 
 export default Hamburger;

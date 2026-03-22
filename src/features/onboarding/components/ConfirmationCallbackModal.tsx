@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { OnboardingSchema } from "@/schemas/onboarding.schema";
-import { useOnboardingForm } from "@/stores/useOnboardingForm";
+import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ const ConfirmationCallbackModal = ({
 }) => {
   const router = useRouter();
   const [isValid, setIsValid] = useState(false);
-  const { formStore, hasHydrated } = useOnboardingForm();
+  const { formStore, hasHydrated } = useOnboardingFormStore();
 
   useEffect(() => {
     if (hasHydrated) {

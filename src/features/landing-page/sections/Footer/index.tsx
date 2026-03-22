@@ -17,21 +17,21 @@ const Footer = () => {
           {/* SHORTCUT NAVIGATION */}
           <div className='w-fit flex flex-wrap gap-10 leading-normal font-medium text-sm md:text-base'>
             <ol className='flex-1 w-full min-w-46.5 flex flex-col gap-5'>
-              <h3 className='text-md md:text-lg'>Menu</h3>
+              <h3 className='text-lg'>Menu</h3>
               <NavLinkFooter href={"#about"}>Tentang</NavLinkFooter>
               <NavLinkFooter href={"#career"}>Karier</NavLinkFooter>
               <NavLinkFooter href={"#assessment-step"}>Assessment</NavLinkFooter>
               <NavLinkFooter href={"#feature"}>Fitur</NavLinkFooter>
             </ol>
             <ol className='flex-1 w-full min-w-46.75 flex flex-col gap-5'>
-              <h3 className='text-md md:text-lg'>Fitur</h3>
+              <h3 className='text-lg'>Fitur</h3>
               <li>Skill Self-Assessment</li>
               <li>Skill Quiz</li>
               <li>Skill Gap Analysis</li>
               <li>Learning Recomendation</li>
             </ol>
             <ol className='flex-1 w-full min-w-73 flex flex-col gap-5'>
-              <h3 className='text-md md:text-lg'>Contact Info</h3>
+              <h3 className='text-lg'>Contact Info</h3>
               <li>skillgap@space.id</li>
               <li>(62) 8123456789</li>
               <li>East Java, Indonesia</li>

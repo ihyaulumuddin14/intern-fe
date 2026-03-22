@@ -1,26 +1,32 @@
 "use client";
 
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldError,
-  FieldGroup,
-  FieldLabel,
+  FieldGroup
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRegister } from "@/hooks/auth.hooks";
 import { RegisterCredentials, RegisterSchema } from "@/schemas/auth.schema";
-import { useOnboardingForm } from "@/stores/useOnboardingForm";
+import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const RegisterForm = () => {
-  const { mutateAsync, isPending } = useRegister()
-  const { formStore } = useOnboardingForm()
+  const { mutateAsync, isPending } = useRegister();
+  const { formStore } = useOnboardingFormStore();
   const {
     register,
     handleSubmit,
@@ -30,7 +36,7 @@ const RegisterForm = () => {
     resolver: zodResolver(RegisterSchema),
     mode: "onChange",
   });
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleRegisterSubmit = async (credentials: RegisterCredentials) => {
     await mutateAsync(credentials)
@@ -38,11 +44,11 @@ const RegisterForm = () => {
         reset({
           fullName: "",
           email: "",
-          password: ""
+          password: "",
         });
-        setIsOpen(true)
+        setIsOpen(true);
       })
-      .catch(() => {})
+      .catch(() => {});
   };
 
   return (
@@ -72,9 +78,7 @@ const RegisterForm = () => {
               type="email"
               placeholder="Masukkan alamat email kamu"
             />
-            {errors.email && (
-              <FieldError>{errors.email.message}</FieldError>
-            )}
+            {errors.email && <FieldError>{errors.email.message}</FieldError>}
           </Field>
           <Field>
             <Input
@@ -100,27 +104,28 @@ const RegisterForm = () => {
         </FieldGroup>
       </form>
 
-      <EmailSentAlert isOpen={isOpen} setIsOpen={setIsOpen}/>
+      <EmailSentAlert
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </>
   );
 };
 
 export default RegisterForm;
 
-
-
 const EmailSentAlert = ({
   isOpen,
-  setIsOpen
+  setIsOpen,
 }: {
-  isOpen: boolean,
-  setIsOpen: (isOpen: boolean) => void
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }) => {
-  const [countRedirect, setCountRedirect] = useState(30)
-  const router = useRouter()
+  const [countRedirect, setCountRedirect] = useState(30);
+  const router = useRouter();
 
   useEffect(() => {
-    setCountRedirect(30)
+    setCountRedirect(30);
 
     const interval = setInterval(() => {
       setCountRedirect((prev) => {
@@ -134,13 +139,16 @@ const EmailSentAlert = ({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [router])
+  }, [router]);
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={(isOpen) => {
-      if (!isOpen) router.replace("/login")
-    }}>
-      <AlertDialogContent >
+    <AlertDialog
+      open={isOpen}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) router.replace("/login");
+      }}
+    >
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
             <div className="w-full">
@@ -149,7 +157,7 @@ const EmailSentAlert = ({
                 src="/gif/email.gif"
                 alt="email.gif"
               />
-              <h1 className='text-center text-2xl font-semibold'>
+              <h1 className="text-center text-2xl font-semibold">
                 Tautan verifikasi telah terkirim
               </h1>
             </div>
@@ -157,8 +165,8 @@ const EmailSentAlert = ({
           <AlertDialogDescription className="text-center">
             <>
               Akun kamu berhasil terdaftar, silakan cek email kamu untuk dapat
-              melakukan verifikasi akun. Kamu akan diarahkan kembali ke
-              Beranda secara otomatis dalam ({countRedirect}) detik.
+              melakukan verifikasi akun. Kamu akan diarahkan kembali ke Beranda
+              secara otomatis dalam ({countRedirect}) detik.
             </>
           </AlertDialogDescription>
           <AlertDialogFooter className="my-3 w-full">
@@ -174,5 +182,5 @@ const EmailSentAlert = ({
         </AlertDialogHeader>
       </AlertDialogContent>
     </AlertDialog>
-  )
-}
+  );
+};

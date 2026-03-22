@@ -4,8 +4,6 @@ import {
   OnboardingCredentials,
   OnboardingSchema,
 } from "@/schemas/onboarding.schema";
-import { useOnboardingForm } from "@/stores/useOnboardingForm";
-import { useOnboardingStep } from "@/stores/useOnboardingStep";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "motion/react";
 import Link from "next/link";
@@ -17,6 +15,8 @@ import ConfirmationCallbackModal from "../components/ConfirmationCallbackModal";
 import InputCareerStep from "../components/InputCareerStep";
 import InputEducationStep from "../components/InputEducationStep";
 import InputNameStep from "../components/InputNameStep";
+import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
+import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 
 export const MAX_ONBOARDING_STEP = 3;
 
@@ -40,7 +40,7 @@ export default function OnboardingClient() {
     formStore,
     setForm,
     hasHydrated: formHasHydrated,
-  } = useOnboardingForm(
+  } = useOnboardingFormStore(
     useShallow((state) => ({
       formStore: state.formStore,
       setForm: state.setForm,
@@ -53,7 +53,7 @@ export default function OnboardingClient() {
     direction,
     setStep,
     hasHydrated: stepHasHydrated,
-  } = useOnboardingStep(
+  } = useOnboardingStepStore(
     useShallow((state) => ({
       noStep: state.noStep,
       direction: state.direction,

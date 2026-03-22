@@ -12,7 +12,7 @@ const HeroSection = () => {
           <h1 className="text-3xl  sm:text-5xl lg:text-[64px] font-semibold px-[clamp(10px,5vw,50px)] leading-[1.2]">
             Ketahui Seberapa Siap{" "}
             <span className="font-bold font-lora text-primary">Skill</span> Kamu
-            untuk <span className="text-primary">Karir Impian</span>
+            untuk <span className="text-primary">Karier Impian</span>
           </h1>
 
           <p className="text-base sm:text-lg lg:text-2xl text-neutral-70 max-w-219.5 font-normal">

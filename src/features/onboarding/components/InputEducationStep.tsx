@@ -13,7 +13,7 @@ import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { OnboardingCredentials } from "@/schemas/onboarding.schema";
-import { useOnboardingStep } from "@/stores/useOnboardingStep";
+import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
@@ -21,7 +21,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 const educationLevels = ["SMA / SMK", "Diploma 3", "Diploma 4", "Sarjana (S1)"];
 
 export default function InputEducationStep() {
-  const { nextStep } = useOnboardingStep();
+  const { nextStep } = useOnboardingStepStore();
   const [isOpen, setIsOpen] = useState(false);
   const {
     register,

@@ -4,7 +4,7 @@ export const NAVBAR_LINKS = [
   {id: 3, label: "Karier", href: "#career"},
   {id: 4, label: "Asssessment", href: "#assessment-step"},
   {id: 5, label: "Fitur", href: "#feature"},
-] as const;
+]
 
 export const CAREER_LIST = [
   {

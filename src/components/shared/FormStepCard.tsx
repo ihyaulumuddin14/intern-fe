@@ -1,6 +1,6 @@
 "use client";
 
-import { useOnboardingStep } from "@/stores/useOnboardingStep";
+import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { motion } from "motion/react";
 import { ReactNode } from "react";
 
@@ -11,7 +11,7 @@ export default function FormStepCard({
   title: ReactNode;
   children: ReactNode;
 }) {
-  const { direction } = useOnboardingStep();
+  const { direction } = useOnboardingStepStore();
   const container = {
     hidden: {},
     visible: {

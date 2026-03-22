@@ -53,7 +53,7 @@ export default function InputCareerStep() {
     <FormStepCard
       title={
         <>
-          Karir Apa yang Ingin Kamu <span className="text-primary">Capai?</span>
+          Karier Apa yang Ingin Kamu <span className="text-primary">Capai?</span>
         </>
       }
     >
@@ -73,7 +73,7 @@ export default function InputCareerStep() {
                 >
                   <DropdownTrigger
                     value={career}
-                    placeholder="Pilih minat karir kamu"
+                    placeholder="Pilih minat karier kamu"
                     isOpen={isOpen}
                   >
                     <ChevronDown className="h-5 w-5 opacity-50" />

@@ -1,20 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { getValidStep } from "@/features/onboarding/containers/OnboardingClient";
-
-export function useStepDirection() {
-  const searchParams = useSearchParams();
-  const requestedStep = getValidStep(searchParams.get("step"));
-  const prevStepRef = useRef(requestedStep);
-
-  const direction = requestedStep > prevStepRef.current ? "forward" : "backward";
-
-  useEffect(() => {
-    prevStepRef.current = requestedStep;
-  }, [requestedStep]);
-
-  return direction;
-}
+import { useEffect, useState } from "react";
 
 export function useActiveSection (sectionIds: string[]) {
   const [activeSection, setActiveSection] = useState('')
@@ -40,4 +24,22 @@ export function useActiveSection (sectionIds: string[]) {
   }, [sectionIds])
 
   return activeSection
+}
+
+const MOBILE_BREAKPOINT = 1024
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const update = () => setIsMobile(mql.matches)
+
+    update()
+    mql.addEventListener("change", update)
+
+    return () => mql.removeEventListener("change", update)
+  }, [])
+
+  return !!isMobile
 }
