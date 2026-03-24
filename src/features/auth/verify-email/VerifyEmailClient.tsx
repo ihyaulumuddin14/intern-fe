@@ -44,6 +44,10 @@ const VerifyEmailClient = () => {
         await mutateAsyncVerify(credentials)
         setIsVerified(true)
 
+        /**
+         * When user account has verified, its will be redirected to login with
+         * the callback url from the previous login if there is a callback url
+         */
         await new Promise(res => setTimeout(() => {
           router.replace(`/login?callbackUrl=${callbackUrl}`)
           toast.dismiss()

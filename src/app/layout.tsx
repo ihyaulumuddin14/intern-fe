@@ -44,10 +44,13 @@ export default async function RootLayout({
     queryKey: ['users'],
     queryFn: async () => {
       const res = await fetch(`${API_URL}/api/users/profile`, {
-        cache: 'no-store',
+        cache: 'force-cache',
         headers: {
           Cookie: cookieStore.toString()
-        }
+        },
+        // next: {
+        //   revalidate: 60 * 1000
+        // }
       })
       
       if (!res.ok) {

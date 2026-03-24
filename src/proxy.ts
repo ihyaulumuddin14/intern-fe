@@ -6,6 +6,11 @@ export function proxy(request: NextRequest) {
   
   const { pathname, search } = request.nextUrl
   
+  /**
+   * User has no session and accessing protected route (dashboard/admin/assessment)
+   * will be redirected to login with callback url to the previous route
+   * to keep the flow stable
+   */
   if (!session && !pathname.startsWith("/onboarding")) {
     const fullCallbackUrl = `${pathname}${search}`
     const encodedCallback = encodeURIComponent(fullCallbackUrl)
@@ -13,8 +18,12 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(
       new URL(`/login?callbackUrl=${encodedCallback}`, request.url)
     )
-  } 
+  }
   
+  /**
+   * User don't access onboarding when they have a login session
+   * onboarding is intended for guest only
+   */
   if (session && pathname.startsWith("/onboarding")) {
     const targetPath = role === "admin" ? "/admin" : "/dashboard"
     return NextResponse.redirect(new URL(targetPath, request.url))
