@@ -16,30 +16,32 @@ import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
-
-const educationLevels = ["SMA / SMK", "Diploma 3", "Diploma 4", "Sarjana (S1)"];
+import {
+  Controller,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
+import { EDUCATION_LEVELS } from "../constants";
 
 export default function InputEducationStep() {
   const { nextStep } = useOnboardingStepStore();
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    register,
-    control,
-    trigger,
-    formState: { errors },
-  } = useFormContext<OnboardingCredentials>();
+  const { register, control, trigger, getValues } =
+    useFormContext<OnboardingCredentials>();
+  const { errors } = useFormState({ control, name: "education" });
 
-  const educationData = useWatch({
+  const education = useWatch({
     control,
     name: "education",
   });
 
+  /**
+   * Must manually trigger for nested object + superRefine
+   */
   useEffect(() => {
-    if (educationData) {
-      trigger("education");
-    }
-  }, [educationData, trigger]);
+    trigger("education");
+  }, [education, trigger]);
 
   return (
     <FormStepCard
@@ -66,7 +68,7 @@ export default function InputEducationStep() {
                   className="text-start relative cursor-pointer"
                 >
                   <DropdownTrigger
-                    value={educationData.educationLevel}
+                    value={getValues("education.educationLevel")}
                     placeholder="Pilih tingkat pendidikan kamu"
                     isOpen={isOpen}
                   >
@@ -77,7 +79,7 @@ export default function InputEducationStep() {
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-(--radix-dropdown-menu-trigger-width) p-0 rounded-t-none"
                   align="start"
                 >
-                  {educationLevels.map((level) => (
+                  {EDUCATION_LEVELS.map((level) => (
                     <DropdownMenuItem
                       key={level}
                       className={cn(

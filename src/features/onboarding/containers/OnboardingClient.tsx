@@ -4,9 +4,10 @@ import {
   OnboardingCredentials,
   OnboardingSchema,
 } from "@/schemas/onboarding.schema";
+import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
+import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "motion/react";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -15,10 +16,8 @@ import ConfirmationCallbackModal from "../components/ConfirmationCallbackModal";
 import InputCareerStep from "../components/InputCareerStep";
 import InputEducationStep from "../components/InputEducationStep";
 import InputNameStep from "../components/InputNameStep";
-import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
-import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
-
-export const MAX_ONBOARDING_STEP = 3;
+import { StepIndicator } from "../components/StepIndicator";
+import { MAX_ONBOARDING_STEP } from "../constants";
 
 export function getValidStep(raw: string | null): number {
   const parsed = Number(raw);
@@ -35,7 +34,7 @@ export default function OnboardingClient() {
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
 
-  // syncronize RHF form and zustand state
+  // synchronize RHF form and zustand state from localStorage
   const {
     formStore,
     setForm,
@@ -48,6 +47,7 @@ export default function OnboardingClient() {
     })),
   );
 
+  // synchronize number of step from sessionStorage persist
   const {
     noStep,
     direction,
@@ -99,13 +99,13 @@ export default function OnboardingClient() {
 
     const fullNameField = form.getValues("fullName");
     if (!fullNameField?.trim() && noStep > 1) {
-      router.replace(`${pathname}?step=1`);
+      setStep(1);
       return;
     }
 
     const educationField = form.getValues("education");
     if (!educationField?.educationLevel && noStep > 2) {
-      router.replace(`${pathname}?step=2`);
+      setStep(2);
       return;
     }
 
@@ -118,7 +118,7 @@ export default function OnboardingClient() {
    */
   if (!formHasHydrated || !stepHasHydrated) return null;
 
-  const getConfirmationCallback = (credentials: OnboardingCredentials) => {
+  const getConfirmationCallback = (_credentials: OnboardingCredentials) => {
     setForm(form.getValues());
     router.push(`${pathname}?${searchParams.toString()}&status=confirmation`);
   };
@@ -139,32 +139,26 @@ export default function OnboardingClient() {
             {noStep == 3 && <InputCareerStep key="step-3" />}
           </AnimatePresence>
         </form>
+
+        <nav className="absolute top-10 right-10">
+          <ol className="w-full flex gap-3">
+            {(Object.keys(formStore) as Array<keyof OnboardingCredentials>).map(
+              (state, index) => (
+                <StepIndicator
+                  key={index}
+                  stateKey={state}
+                  index={index}
+                />
+              ),
+            )}
+          </ol>
+        </nav>
       </FormProvider>
 
-      <nav className="absolute top-10 right-10">
-        <ol className="w-full flex gap-3">
-          {(Object.keys(formStore) as Array<keyof OnboardingCredentials>).map(
-            (state, index) => {
-              return (
-                <Link
-                  className={`
-                  w-4 aspect-square rounded-full
-                  ${index + 1 > noStep ? "bg-primary-surface pointer-events-none" : "bg-primary-pressed hover:bg-primary-hover"} hover:scale-110 transition-all duration-100 ease-in-out 
-                   ${form.formState.errors[state] ? "outline-2 outline-error bg-primary-surface animate-bounce" : ""}
-                `}
-                  key={index}
-                  replace
-                  href={pathname}
-                  onClick={() => setStep(index + 1)}
-                />
-              );
-            },
-          )}
-        </ol>
-      </nav>
-
       {status === "confirmation" && (
-        <ConfirmationCallbackModal namePlaceholder={form.watch("fullName")} />
+        <ConfirmationCallbackModal
+          namePlaceholder={form.getValues("fullName")}
+        />
       )}
     </>
   );

@@ -16,27 +16,21 @@ import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { getCareers } from "@/services/career.services";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { useState } from "react";
+import { Controller, useFormContext, useFormState, useWatch } from "react-hook-form";
 
 export default function InputCareerStep() {
   const [isOpen, setIsOpen] = useState(false);
   const {
     control,
-    trigger,
-    formState: { errors, touchedFields, dirtyFields },
+    getValues
   } = useFormContext<OnboardingCredentials>();
+  const { errors } = useFormState({ control, name: "career" });
 
   const career = useWatch({
     control,
     name: "career",
   });
-
-  useEffect(() => {
-    if (dirtyFields.career || touchedFields.career) {
-      trigger("career");
-    }
-  }, [trigger, dirtyFields.career, touchedFields.career]);
 
   const {
     data: careers,
@@ -72,7 +66,7 @@ export default function InputCareerStep() {
                   className="text-start relative cursor-pointer"
                 >
                   <DropdownTrigger
-                    value={career}
+                    value={getValues("career")}
                     placeholder="Pilih minat karier kamu"
                     isOpen={isOpen}
                   >

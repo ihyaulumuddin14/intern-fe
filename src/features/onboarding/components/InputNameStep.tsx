@@ -7,27 +7,22 @@ import { Input } from "@/components/ui/input";
 import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { ArrowRight } from "lucide-react";
-import { useEffect } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import {
+  Controller,
+  useFormContext,
+  useFormState,
+  useWatch
+} from "react-hook-form";
 
 export default function InputNameStep() {
-  const {
-    trigger,
-    control,
-    formState: { errors, touchedFields, dirtyFields },
-  } = useFormContext<OnboardingCredentials>();
+  const { control } = useFormContext<OnboardingCredentials>();
+  const { errors } = useFormState({ control, name: "fullName" });
   const { nextStep } = useOnboardingStepStore();
 
   const fullName = useWatch({
     control,
     name: "fullName",
   });
-
-  useEffect(() => {
-    if (dirtyFields.fullName || touchedFields.fullName) {
-      trigger("fullName");
-    }
-  }, [trigger, dirtyFields.fullName, touchedFields.fullName]);
 
   return (
     <FormStepCard
