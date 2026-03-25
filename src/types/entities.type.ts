@@ -13,6 +13,13 @@ export type User = {
 };
 
 export type Career = {
-  id: number,
-  name: string
+  id: string,
+  name: string,
+  description: string
+}
+
+export type Skill = {
+  id: string,
+  name: string,
+  description: string
 }
