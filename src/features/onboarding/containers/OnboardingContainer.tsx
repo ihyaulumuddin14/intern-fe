@@ -17,16 +17,8 @@ import InputCareerStep from "../components/InputCareerStep";
 import InputEducationStep from "../components/InputEducationStep";
 import InputNameStep from "../components/InputNameStep";
 import { StepIndicator } from "../components/StepIndicator";
-import { MAX_ONBOARDING_STEP } from "../constants";
 
-export function getValidStep(raw: string | null): number {
-  const parsed = Number(raw);
-  if (!raw || isNaN(parsed) || parsed < 1 || parsed > MAX_ONBOARDING_STEP)
-    return 1;
-  return parsed;
-}
-
-export default function OnboardingClient() {
+export default function OnboardingContainer() {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -83,12 +75,14 @@ export default function OnboardingClient() {
    * reducing parent rerender
    */
   useEffect(() => {
+    if (!formHasHydrated) return
+
     const handleStepChange = (noStep: number) => {
       setForm(form.getValues());
       setStep(noStep);
     };
     handleStepChange(noStep);
-  }, [noStep]);
+  }, [noStep, formHasHydrated]);
 
   /**
    * Edge case of step url hacking
@@ -144,10 +138,12 @@ export default function OnboardingClient() {
           <ol className="w-full flex gap-3">
             {(Object.keys(formStore) as Array<keyof OnboardingCredentials>).map(
               (state, index) => (
-                <StepIndicator
+                <StepIndicator<OnboardingCredentials>
                   key={index}
                   stateKey={state}
                   index={index}
+                  currentStep={noStep}
+                  setStep={setStep}
                 />
               ),
             )}

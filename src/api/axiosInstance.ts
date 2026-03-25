@@ -8,6 +8,7 @@ export const authApi = axios.create({
 })
 
 export const privateApi = axios.create({
+  // comment for using Nextjs route handler, without api url domain
   // baseURL: API_URL,
   withCredentials: true
 })

@@ -1,3 +1,4 @@
+import { Career } from "@/types/entities.type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -8,7 +9,7 @@ type OnboardingFormType = {
     major?: string;
     institution?: string;
   };
-  career: string;
+  career: Career;
 };
 
 type Store = {
@@ -25,7 +26,11 @@ export const useOnboardingFormStore = create<Store>()(
       formStore: {
         fullName: "",
         education: {},
-        career: "",
+        career: {
+          id: "",
+          name: "",
+          description: ""
+        },
       },
       hasHydrated: false,
 
@@ -38,7 +43,11 @@ export const useOnboardingFormStore = create<Store>()(
         formStore: {
           fullName: "",
           education: {},
-          career: "",
+          career: {
+            id: "",
+            name: "",
+            description: ""
+          },
         }
       }),
 
