@@ -16,7 +16,7 @@ const NavButtonGroup = () => {
             router.push(user.role === "ADMIN" ? "/admin" : "/dashboard")
           }
         >
-          Go to Dashboard
+          Dashboard
         </Button>
       ) : (
         <>

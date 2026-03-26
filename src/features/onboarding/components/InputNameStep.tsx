@@ -13,11 +13,15 @@ import {
   useFormState,
   useWatch
 } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
 export default function InputNameStep() {
   const { control } = useFormContext<OnboardingCredentials>();
   const { errors } = useFormState({ control, name: "fullName" });
-  const { nextStep } = useOnboardingStepStore();
+  const { nextStep, direction } = useOnboardingStepStore(useShallow(state => ({
+    nextStep: state.nextStep,
+    direction: state.direction
+  })));
 
   const fullName = useWatch({
     control,
@@ -26,13 +30,14 @@ export default function InputNameStep() {
 
   return (
     <FormStepCard
+      direction={direction}
       title={
-        <>
+        <div className="w-full max-w-3xl text-center">
           Mari Mulai dari <span className="text-primary">Namamu</span>
-        </>
+        </div>
       }
     >
-      <FieldGroup>
+      <FieldGroup className="w-full max-w-137.75 flex flex-col gap-8">
         <Field>
           <Controller
             control={control}

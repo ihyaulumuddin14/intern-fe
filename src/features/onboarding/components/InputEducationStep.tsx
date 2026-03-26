@@ -23,13 +23,16 @@ import {
   useWatch,
 } from "react-hook-form";
 import { EDUCATION_LEVELS } from "../constants";
+import { useShallow } from "zustand/react/shallow";
 
 export default function InputEducationStep() {
-  const { nextStep } = useOnboardingStepStore();
   const [isOpen, setIsOpen] = useState(false);
-  const { register, control, trigger, getValues } =
-    useFormContext<OnboardingCredentials>();
+  const { register, control, trigger, getValues } = useFormContext<OnboardingCredentials>();
   const { errors } = useFormState({ control, name: "education" });
+  const { nextStep, direction } = useOnboardingStepStore(useShallow(state => ({
+    nextStep: state.nextStep,
+    direction: state.direction
+  })));
 
   const education = useWatch({
     control,
@@ -45,14 +48,15 @@ export default function InputEducationStep() {
 
   return (
     <FormStepCard
+      direction={direction}
       title={
-        <>
+        <div className="w-full max-w-3xl text-center">
           Apa Tingkat <span className="text-primary">Pendidikan</span>{" "}
           Terakhirmu?
-        </>
+        </div>
       }
     >
-      <FieldGroup>
+      <FieldGroup className="w-full max-w-137.75 flex flex-col gap-8">
         <Field>
           <Controller
             name="education.educationLevel"
