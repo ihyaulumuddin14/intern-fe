@@ -12,15 +12,16 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground hover:bg-primary-hover focus:bg-primary-focus active:bg-primary-pressed",
-          destructive:
+        destructive:
           "bg-error text-error-foreground hover:bg-error-hover focus:bg-error-focus active:bg-error-pressed",
         outline:
-          "border-primary border-[1.5px] bg-transparent hover:bg-primary-surface text-primary disabled:border-muted-foreground disabled:bg-transparent",
+          "border-primary border-[1.5px] bg-transparent hover:bg-primary-surface text-primary disabled:border-neutral-40 disabled:bg-transparent disabled:text-muted-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
           "bg-transparent hover:bg-primary-surface focus:shadow-input text-primary disabled:bg-transparent",
         link: "text-primary underline-offset-4 hover:underline",
+        muted: "border-[1.5px] text-muted-foreground border-neutral-40 bg-transparent hover:opacity-70"
       },
       size: {
         tn: "h-3 gap-1.5 rounded-[8px] py-1.5 px-4 text-[10px] has-[>svg]:px-4",
