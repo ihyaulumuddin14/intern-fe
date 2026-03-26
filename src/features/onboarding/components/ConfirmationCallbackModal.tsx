@@ -58,7 +58,7 @@ const ConfirmationCallbackModal = ({
           <h2 className="text-2xl sm:text-3xl font-semibold my-2">
             Mau analisis skill sekarang?
           </h2>
-          <p className="text-sm text-muted-foreground text-left mt-5">
+          <p className="text-sm text-muted-foreground text-left sm:text-center mt-5">
             Tip: Di tahap analisis skill kamu akan menjalani beberapa assessment, jika pilih nanti aja kamu akan diarahkan ke dashboard
           </p>
         </main>

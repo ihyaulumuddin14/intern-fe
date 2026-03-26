@@ -60,7 +60,7 @@ const ConfirmationQuizModal = ({
         </div>
 
         <main className="text-center mb-7">
-          <p className="text-sm text-muted-foreground text-left mt-5">
+          <p className="text-sm text-muted-foreground text-left sm:text-center mt-5">
             Tip: Sangat tidak disarankan untuk keluar ketika sesi kuis berlangsung. Tapi tenang, setiap jawaban akan otomatis tersimpan ketika lanjut ke soal berikutnya.
           </p>
         </main>

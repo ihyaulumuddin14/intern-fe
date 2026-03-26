@@ -1,8 +1,26 @@
-const Loader = ({ size = "sm" }: { size?: "sm" | "md" | "lg" }) => {
+'use client'; // Tambahkan ini jika menggunakan Next.js App Router
+
+import { useState, useEffect } from 'react';
+
+export default function Loader ({ size = "sm" }: { size?: "sm" | "md" | "lg" }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
+  const widthMap = {
+    sm: "1em",
+    lg: "2em",
+    md: "4em"
+  };
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={size === "sm" ? "1em" : size === "lg" ? "2em" : "4em"}
+      width={widthMap[size]}
       height="3em"
       viewBox="0 0 24 24"
     >
@@ -144,5 +162,3 @@ const Loader = ({ size = "sm" }: { size?: "sm" | "md" | "lg" }) => {
     </svg>
   );
 };
-
-export default Loader;

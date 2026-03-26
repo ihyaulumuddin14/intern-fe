@@ -177,7 +177,7 @@ export default function InputSkillLevel({ skills }: { skills: Skill[] }) {
             type="submit"
             size={isMobile ? "default" : "lg"}
             disabled={
-              !!errors.skillRatings || currentIndex !== fields.length - 1
+              !!errors.skillRatings || currentIndex !== selectedSkills.length - 1
             }
           >
             Mulai Kuis

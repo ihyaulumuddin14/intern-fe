@@ -1,7 +1,13 @@
 
-const QuizPage = () => {
+const QuizPage = async ({
+  params
+}: {
+  params: Promise<{ id: number }>
+}) => {
+  const { id } = await params
+
   return (
-    <div>page</div>
+    <div>{ id }</div>
   )
 }
 
