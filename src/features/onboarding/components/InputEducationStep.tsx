@@ -39,6 +39,13 @@ export default function InputEducationStep() {
     name: "education",
   });
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !errors.education) {
+      e.preventDefault();
+      nextStep();
+    }
+  };
+
   /**
    * Must manually trigger for nested object + superRefine
    */
@@ -56,7 +63,9 @@ export default function InputEducationStep() {
         </div>
       }
     >
-      <FieldGroup className="w-full max-w-137.75 flex flex-col gap-8">
+      <FieldGroup
+        className="w-full max-w-137.75 flex flex-col gap-8"
+        >
         <Field>
           <Controller
             name="education.educationLevel"
@@ -100,12 +109,14 @@ export default function InputEducationStep() {
             )}
           ></Controller>
           <Input
+            onKeyDown={handleKeyDown}
             className="w-full"
             id="major-input"
             placeholder="Jurusan"
             {...register("education.major")}
           />
           <Input
+            onKeyDown={handleKeyDown}
             className="w-full"
             id="institution-input"
             placeholder="Nama Sekolah / Universitas"

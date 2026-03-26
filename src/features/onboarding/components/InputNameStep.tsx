@@ -28,6 +28,13 @@ export default function InputNameStep() {
     name: "fullName",
   });
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && fullName && !errors.fullName) {
+      e.preventDefault()
+      nextStep()
+    }
+  }
+
   return (
     <FormStepCard
       direction={direction}
@@ -47,6 +54,7 @@ export default function InputNameStep() {
                 className="w-full"
                 id="name-input"
                 placeholder="Masukkan nama lengkap kamu..."
+                onKeyDown={handleKeyDown}
                 {...field}
               />
             )}

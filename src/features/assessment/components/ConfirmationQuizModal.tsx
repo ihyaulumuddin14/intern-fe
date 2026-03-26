@@ -3,11 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCreateSelfAssessment } from "@/hooks/career-sessions.hooks";
-import { SelfAssessmentCredentials, SelfAssessmentSchema, SkillRating } from "@/schemas/career-sessions.schema";
-import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
+import { SelfAssessmentCredentials, SkillRating } from "@/schemas/career-sessions.schema";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 const ConfirmationQuizModal = ({
   skillRatings,
@@ -15,22 +12,7 @@ const ConfirmationQuizModal = ({
   skillRatings: SkillRating[];
 }) => {
   const router = useRouter();
-  const [isValid, setIsValid] = useState(false);
-  const { formStore, hasHydrated } = useSelfAssessmentFormStore();
   const { mutate, isPending } = useCreateSelfAssessment()
-
-  useEffect(() => {
-    if (hasHydrated) {
-      const result = SelfAssessmentSchema.safeParse(formStore);
-
-      if (!result.success) {
-        toast.warning("Tolong lengkapi data dulu ya");
-        router.back();
-      } else {
-        setIsValid(true);
-      }
-    }
-  }, [hasHydrated]);
 
   const handleSelfAssessmentSubmit = async () => {
     const credentials: SelfAssessmentCredentials["skillRatings"] = {
@@ -39,17 +21,15 @@ const ConfirmationQuizModal = ({
     mutate(credentials)
   }
 
-  if (!hasHydrated) return null;
-
   return (
-    <Dialog open={isValid}>
+    <Dialog defaultOpen>
       <DialogContent
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
         className="[&>button]:hidden"
       >
         <DialogHeader>
-          <DialogTitle>Konfirmasi</DialogTitle>
+          <DialogTitle>Konfirmasi Kuis</DialogTitle>
         </DialogHeader>
         <div className="w-full">
           <img
