@@ -1,7 +1,7 @@
-import OnboardingClient from "@/features/onboarding/containers/OnboardingClient"
+import OnboardingContainer from "@/features/onboarding/containers/OnboardingContainer"
 
 const OnboardingPage = () => {
-  return <OnboardingClient/>
+  return <OnboardingContainer/>
 }
 
 export default OnboardingPage

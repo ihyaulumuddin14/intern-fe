@@ -1,13 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const body = await req.json();
+    // career session id
+    const { id } = await params
 
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
-    console.log("career id", body)
+    console.log("career session id", id)
 
     const isSuccess = true
 
@@ -16,7 +20,7 @@ export async function POST(req: NextRequest) {
         {
           success: false,
           error: {
-            message: "(Mock) Gagal Membuat sesi karier",
+            message: "(Mock) Gagal Menyimpan hasil assessment",
             status: 400
           }
         },
@@ -24,14 +28,16 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // return the career session id back to start the quiz
     return NextResponse.json(
       {
         success: true,
-        message: "(Mock) Berhasil membuat sesi karier",
+        message: "(Mock) Berhasil menyimpan data assessment",
         data: {
-          user_career_session_id: "asdfa67663dwesdyguq2e3bssj"
+          user_career_session_id: "idorgil"
         }
-      })
+      }
+    )
   } catch (error) {
     return NextResponse.json(
       { message: "Internal server error" },
