@@ -1,18 +1,4 @@
-import { Skill } from "@/types/entities.type";
 import { NextRequest, NextResponse } from "next/server";
-
-const skills: Skill[] = [
-  { id: "1", name: "HTML", description: "Lorem ipsum" },
-  { id: "2", name: "CSS", description: "Lorem ipsum" },
-  { id: "3", name: "JavaScript Programming", description: "Lorem ipsum" },
-  { id: "4", name: "React.js", description: "Lorem ipsum" },
-  { id: "5", name: "Next.js", description: "Lorem ipsum" },
-  { id: "6", name: "Responsive Design", description: "Lorem ipsum" },
-  { id: "7", name: "Git Version Control", description: "Lorem ipsum" },
-  { id: "8", name: "REST API", description: "Lorem ipsum" },
-  { id: "9", name: "Debugging", description: "Lorem ipsum" },
-  { id: "10", name: "Typescript Programming", description: "Lorem ipsum" },
-]
 
 export async function GET(
   _req: NextRequest,
@@ -33,10 +19,7 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Gagal Mengambil data skills",
-            status: 400
-          }
+          message: "(Mock) Gagal Mengambil detail career session",
         },
         { status: 400 }
       )
@@ -46,8 +29,14 @@ export async function GET(
     return NextResponse.json(
       {
         success: true,
-        message: "(Mock) Berhasil ambil data skills",
-        data: skills
+        message: "(Mock) Berhasil ambil detail career session",
+        data: {
+          id: "uuid-session",
+          user_id: "uuid-user",
+          career_id: "uuid-career",
+          status: "on_process",
+          started_at: "2026-03-26T16:00:00Z"
+        }
       }
     )
   } catch (error) {

@@ -2,10 +2,10 @@ import FormStepCard from "@/components/shared/FormStepCard";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import {
-  NUMBER_TO_SKILL_LEVEL,
+  NUMBER_TO_USER_LEVEL,
   SelfAssessmentCredentials,
-  SKILL_LEVEL_TO_NUMBER,
-  SkillLevel,
+  USER_LEVEL_TO_NUMBER,
+  UserLevel,
 } from "@/schemas/career-sessions.schema";
 import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
 import { Skill } from "@/types/entities.type";
@@ -19,7 +19,7 @@ import {
 import { SliderLevel } from "./SliderLevel";
 import { useIsMobile } from "@/hooks/animation.hooks";
 
-export default function InputSkillLevel({ skills }: { skills: Skill[] }) {
+export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   // index of skills
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -64,9 +64,9 @@ export default function InputSkillLevel({ skills }: { skills: Skill[] }) {
     if (fields.length === 0) {
       const initialRatings = skills.map((skill) => ({
         skillId: skill.id,
-        level: selectedSkillIds.includes(skill.id)
+        userLevel: selectedSkillIds.includes(skill.id)
           ? "beginner"
-          : ("no_experience" as SkillLevel),
+          : ("no_experience" as UserLevel),
       }));
       replace(initialRatings);
     } else {
@@ -74,17 +74,17 @@ export default function InputSkillLevel({ skills }: { skills: Skill[] }) {
       const hasChanged = fields.some(
         (skillRating) =>
           selectedSkillIds.includes(skillRating.skillId) &&
-          skillRating.level === "no_experience",
+          skillRating.userLevel === "no_experience",
       );
 
       if (hasChanged) {
         const newRatings = fields.map((skillRating) => ({
           ...skillRating,
           level:
-            skillRating.level === "no_experience" &&
+            skillRating.userLevel === "no_experience" &&
             selectedSkillIds.includes(skillRating.skillId)
               ? "beginner"
-              : skillRating.level,
+              : skillRating.userLevel,
         }));
         replace(newRatings);
       }
@@ -97,23 +97,22 @@ export default function InputSkillLevel({ skills }: { skills: Skill[] }) {
    */
   useEffect(() => {
     const currentField = fields[currentIndex];
-    if (currentField?.level) {
-      const mappedValue = SKILL_LEVEL_TO_NUMBER[currentField.level] || 1;
+    if (currentField?.userLevel) {
+      const mappedValue = USER_LEVEL_TO_NUMBER[currentField.userLevel || 1];
       setValue([mappedValue]);
     }
   }, [currentIndex, fields]);
 
   /**
-   * Immediately update skill level
-   * when the slider has changing value
+   * Immediately update skill userL   * when the slider has changing value
    */
   const handleSliderChange = (newValue: number[]) => {
     setValue(newValue);
-    const skillLevel = NUMBER_TO_SKILL_LEVEL[newValue[0]];
+    const UserLevel = NUMBER_TO_USER_LEVEL[newValue[0]];
 
     update(currentIndex, {
       ...fields[currentIndex],
-      level: skillLevel,
+      userLevel: UserLevel,
     });
   };
 

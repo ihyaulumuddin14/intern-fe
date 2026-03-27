@@ -8,8 +8,10 @@ import { useRouter } from "next/navigation";
 
 const ConfirmationQuizModal = ({
   skillRatings,
+  careerSessionId
 }: {
   skillRatings: SkillRating[];
+  careerSessionId: string
 }) => {
   const router = useRouter();
   const { mutate, isPending } = useCreateSelfAssessment()
@@ -18,7 +20,7 @@ const ConfirmationQuizModal = ({
     const credentials: SelfAssessmentCredentials["skillRatings"] = {
       ...skillRatings
     }
-    mutate(credentials)
+    mutate({credentials, careerSessionId})
   }
 
   return (

@@ -16,9 +16,11 @@ import { StepIndicator } from '@/features/onboarding/components/StepIndicator'
 import ConfirmationQuizModal from '../components/ConfirmationQuizModal'
 
 export default function SelfAssessmentContainer({
-  skills
+  skills,
+  careerSessionId
 }: {
-  skills: Skill[]
+  skills: Skill[],
+  careerSessionId: string
 }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -145,6 +147,7 @@ export default function SelfAssessmentContainer({
 
       {status === "confirmation" && (
         <ConfirmationQuizModal
+          careerSessionId={careerSessionId}
           skillRatings={form.getValues("skillRatings")}
         />
       )}

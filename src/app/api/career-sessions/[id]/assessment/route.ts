@@ -5,12 +5,10 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // career session id
-    const { id } = await params
-
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
+    const { id } = await params
     console.log("career session id", id)
 
     const isSuccess = true
@@ -19,10 +17,7 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Gagal Menyimpan hasil assessment",
-            status: 400
-          }
+          message: "(Mock) Gagal Menyimpan hasil assessment",
         },
         { status: 400 }
       )
@@ -34,7 +29,7 @@ export async function POST(
         success: true,
         message: "(Mock) Berhasil menyimpan data assessment",
         data: {
-          user_career_session_id: "idorgil"
+          user_career_session_id: "uuid-career-session"
         }
       }
     )

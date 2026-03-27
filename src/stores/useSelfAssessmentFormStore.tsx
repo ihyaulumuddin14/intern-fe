@@ -1,4 +1,4 @@
-import { SkillLevel } from "@/schemas/career-sessions.schema";
+import { UserLevel } from "@/schemas/career-sessions.schema";
 import { Skill } from "@/types/entities.type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -7,7 +7,7 @@ type SelfAsssessmentFormType = {
   selectedSkills: Skill[]
   skillRatings: {
     skillId: string,
-    level: SkillLevel
+    userLevel: UserLevel
   }[]
 };
 
