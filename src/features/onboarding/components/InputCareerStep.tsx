@@ -22,10 +22,7 @@ import { Controller, useFormContext, useFormState, useWatch } from "react-hook-f
 
 export default function InputCareerStep() {
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    control,
-    getValues
-  } = useFormContext<OnboardingCredentials>();
+  const { control } = useFormContext<OnboardingCredentials>();
   const { errors } = useFormState({ control, name: "career" });
   const { direction } = useOnboardingStepStore()
 
@@ -69,7 +66,7 @@ export default function InputCareerStep() {
                   className="text-start relative cursor-pointer"
                 >
                   <DropdownTrigger
-                    value={getValues("career.name")}
+                    value={career?.name ?? ""}
                     placeholder="Pilih minat karier kamu"
                     isOpen={isOpen}
                   >

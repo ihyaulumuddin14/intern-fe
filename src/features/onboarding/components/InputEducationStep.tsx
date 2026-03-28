@@ -12,7 +12,7 @@ import {
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { OnboardingCredentials } from "@/schemas/onboarding.schema";
+import { EDUCATION_LEVEL_LABEL, EDUCATION_LEVEL_OPTIONS, OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -22,12 +22,11 @@ import {
   useFormState,
   useWatch,
 } from "react-hook-form";
-import { EDUCATION_LEVELS } from "../constants";
 import { useShallow } from "zustand/react/shallow";
 
 export default function InputEducationStep() {
   const [isOpen, setIsOpen] = useState(false);
-  const { register, control, trigger, getValues } = useFormContext<OnboardingCredentials>();
+  const { register, control, trigger } = useFormContext<OnboardingCredentials>();
   const { errors } = useFormState({ control, name: "education" });
   const { nextStep, direction } = useOnboardingStepStore(useShallow(state => ({
     nextStep: state.nextStep,
@@ -81,7 +80,7 @@ export default function InputEducationStep() {
                   className="text-start relative cursor-pointer"
                 >
                   <DropdownTrigger
-                    value={getValues("education.educationLevel")}
+                    value={EDUCATION_LEVEL_LABEL[education?.educationLevel] ?? ""}
                     placeholder="Pilih tingkat pendidikan kamu"
                     isOpen={isOpen}
                   >
@@ -92,7 +91,7 @@ export default function InputEducationStep() {
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-(--radix-dropdown-menu-trigger-width) p-0 rounded-t-none"
                   align="start"
                 >
-                  {EDUCATION_LEVELS.map((level) => (
+                  {EDUCATION_LEVEL_OPTIONS.map((level) => (
                     <DropdownMenuItem
                       key={level}
                       className={cn(
@@ -101,7 +100,7 @@ export default function InputEducationStep() {
                       )}
                       onSelect={() => field.onChange(level)}
                     >
-                      {level}
+                      {EDUCATION_LEVEL_LABEL[level]}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>

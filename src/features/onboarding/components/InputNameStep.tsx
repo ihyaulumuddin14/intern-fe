@@ -17,19 +17,19 @@ import { useShallow } from "zustand/react/shallow";
 
 export default function InputNameStep() {
   const { control } = useFormContext<OnboardingCredentials>();
-  const { errors } = useFormState({ control, name: "fullName" });
+  const { errors } = useFormState({ control, name: "fullname" });
   const { nextStep, direction } = useOnboardingStepStore(useShallow(state => ({
     nextStep: state.nextStep,
     direction: state.direction
   })));
 
-  const fullName = useWatch({
+  const fullname = useWatch({
     control,
-    name: "fullName",
+    name: "fullname",
   });
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && fullName && !errors.fullName) {
+    if (e.key === "Enter" && fullname && !errors.fullname) {
       e.preventDefault()
       nextStep()
     }
@@ -48,7 +48,7 @@ export default function InputNameStep() {
         <Field>
           <Controller
             control={control}
-            name="fullName"
+            name="fullname"
             render={({ field }) => (
               <Input
                 className="w-full"
@@ -59,8 +59,8 @@ export default function InputNameStep() {
               />
             )}
           />
-          {errors.fullName && (
-            <FieldError>{errors.fullName.message}</FieldError>
+          {errors.fullname && (
+            <FieldError>{errors.fullname.message}</FieldError>
           )}
         </Field>
         <Field>
@@ -68,7 +68,7 @@ export default function InputNameStep() {
             size="lg"
             className="max-w-fit mx-auto"
             type="button"
-            disabled={!fullName || !!errors.fullName}
+            disabled={!fullname || !!errors.fullname}
             onClick={nextStep}
           >
             Lanjut
