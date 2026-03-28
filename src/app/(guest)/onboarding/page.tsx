@@ -1,7 +1,7 @@
-import OnboardingClient from "@/features/onboarding/containers/OnboardingClient"
+import OnboardingContainer from "@/features/onboarding/containers/OnboardingContainer"
 
-const OnboardingPage = async () => {
-  return <OnboardingClient/>
+const OnboardingPage = () => {
+  return <OnboardingContainer/>
 }
 
 export default OnboardingPage

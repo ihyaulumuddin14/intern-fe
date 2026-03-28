@@ -6,8 +6,7 @@ export default function useUser() {
   const { data, isPending, isFetching, error } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const response = await privateApi.get("/api/users/profile")
-      console.log("dari hooks", toCamel(response.data.data))
+      const response = await privateApi.get("/users/profile")
       return toCamel(response.data.data)
     },
     retry: false,

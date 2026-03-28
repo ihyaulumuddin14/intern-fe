@@ -1,17 +1,18 @@
 "use client";
 
-import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
+import { StepDirection } from "@/types/common.type";
 import { motion } from "motion/react";
 import { ReactNode } from "react";
 
 export default function FormStepCard({
   title,
   children,
+  direction
 }: {
   title: ReactNode;
   children: ReactNode;
+  direction: StepDirection
 }) {
-  const { direction } = useOnboardingStepStore();
   const container = {
     hidden: {},
     visible: {
@@ -28,13 +29,13 @@ export default function FormStepCard({
   };
 
   const variants = {
-    initial: (dir: "forward" | "backward") => ({
+    initial: () => ({
       opacity: 0,
-      x: dir === "forward" ? 200 : -200,
+      y: 100,
     }),
     animate: {
       opacity: 1,
-      x: 0,
+      y: 0,
     },
     exit: (dir: "forward" | "backward") => ({
       opacity: 0,
@@ -54,13 +55,14 @@ export default function FormStepCard({
         ease: [0.9, 0, 0.1, 1],
         type: "tween",
       }}
+      className="w-full"
     >
       <motion.div
         variants={container}
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="w-full max-w-3xl mx-auto flex flex-col items-center gap-10"
+        className="w-full mx-auto flex flex-col items-center gap-14"
       >
         <motion.h2
           variants={{
@@ -84,7 +86,7 @@ export default function FormStepCard({
               },
             },
           }}
-          className="text-4xl sm:text-5xl md:text-[64px] leading-tight font-semibold text-center"
+          className="w-full text-3xl sm:text-4xl md:text-5xl leading-tight font-semibold"
         >
           {title}
         </motion.h2>
@@ -111,7 +113,7 @@ export default function FormStepCard({
               },
             },
           }}
-          className="w-full max-w-137.75"
+          className="w-full flex justify-center"
         >
           {children}
         </motion.div>

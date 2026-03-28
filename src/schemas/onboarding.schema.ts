@@ -3,7 +3,7 @@ import { z } from "zod";
 export const EducationSchema = z
   .object({
     educationLevel: z.enum(
-      ["SMA / SMK", "Diploma 3", "Diploma 4", "Sarjana (S1)"],
+      ["sma", "smk", "d3", "d4", "s1"],
       { message: "Tingkat pendidikan harus diisi" },
     ),
     major: z.string().trim().optional(),
@@ -11,9 +11,9 @@ export const EducationSchema = z
   })
   .superRefine((data, context) => {
     const needMajorAndInstitution = [
-      "Diploma 3",
-      "Diploma 4",
-      "Sarjana (S1)",
+      "d3",
+      "d4",
+      "s1",
     ].includes(data.educationLevel);
 
     if (needMajorAndInstitution && !data.major) {
@@ -34,10 +34,25 @@ export const EducationSchema = z
   });
 
 export const OnboardingSchema = z.object({
-  fullName: z.string().min(1, "Nama lengkap harus diisi"),
+  fullname: z.string().min(1, "Nama lengkap harus diisi"),
   education: EducationSchema,
-  career: z.string().min(1, "Minat karier harus diisi"),
+  career: z.object({
+    id: z.string().min(1, "Id karier harus ada"),
+    name: z.string().min(1, "Nama karier harus ada"),
+    description: z.string().min(1, "Deskripsi karier harus ada")
+  }),
 });
 
 export type OnboardingCredentials = z.infer<typeof OnboardingSchema>
 export type EducationCredentials = z.infer<typeof EducationSchema>
+export type EducationLevel = z.infer<typeof EducationSchema.shape.educationLevel>;
+
+export const EDUCATION_LEVEL_LABEL: Record<EducationLevel, string> = {
+  sma: "SMA",
+  smk: "SMK",
+  d3: "Diploma 3 (D3)",
+  d4: "Diploma 4 (D4)",
+  s1: "Sarjana (S1)",
+};
+
+export const EDUCATION_LEVEL_OPTIONS = EducationSchema.shape.educationLevel.options;

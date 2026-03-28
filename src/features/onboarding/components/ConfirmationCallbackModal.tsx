@@ -22,7 +22,7 @@ const ConfirmationCallbackModal = ({
       const result = OnboardingSchema.safeParse(formStore);
 
       if (!result.success) {
-        toast.error("Tolong lengkapi data dulu ya");
+        toast.warning("Tolong lengkapi data dulu ya");
         router.replace("/onboarding");
       } else {
         setIsValid(true);
@@ -55,12 +55,11 @@ const ConfirmationCallbackModal = ({
             Persiapanmu hampir matang
             {namePlaceholder ? `, ${namePlaceholder}` : ""}!
           </h1>
-          <h2 className="text-3xl font-semibold">
+          <h2 className="text-2xl sm:text-3xl font-semibold my-2">
             Mau analisis skill sekarang?
           </h2>
-          <p className="text-sm text-muted-foreground mt-5">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo,
-            voluptate?
+          <p className="text-sm text-muted-foreground text-left sm:text-center mt-5">
+            Tip: Di tahap analisis skill kamu akan menjalani beberapa assessment, jika pilih nanti aja kamu akan diarahkan ke dashboard
           </p>
         </main>
 

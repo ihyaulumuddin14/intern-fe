@@ -3,11 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
+    const body = await req.json();
     console.log("login", body)
 
     const isSuccess = true
@@ -16,43 +15,48 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Gagal Login",
-            status: 400
-          }
+          message: "(Mock) Gagal Login",
         },
         { status: 400 }
       )
     }
 
     const cookieStore = await cookies();
-
-    cookieStore.set("access_token", "accesstokengila", {
-      httpOnly: true,
-      path: "/",
-      maxAge: 15 * 60 * 1000
-    })
-
+ 
     cookieStore.set("refresh_token", "refreshtokengila", {
       httpOnly: true,
-      path: "/api/auth/refresh",
-      maxAge: body.rememberMe ? 24 * 60 * 60 : 60 * 60
+      path: "/",
+      maxAge: body.rememberMe ? 24 * 60 * 60 : 15 * 60
     })
-
+    
     cookieStore.set("role", "user", {
       httpOnly: true,
-      path: "/api",
-      maxAge: body.rememberMe ? 24 * 60 * 60 : 60 * 60
+      path: "/",
+      maxAge: body.rememberMe ? 24 * 60 * 60 : 15 * 60
     })
 
     return NextResponse.json(
-      { 
+      {
         success: true,
-        message: "(Mock) Berhasil Login",
-        data: null
+        message: "(Mock) Login berhasil",
+        data: {
+          access_token: "access_token",
+          user: {
+            fullname: "Somebody Pleasure",
+            username: "somebody2345",
+            email: "user@gmail.com",
+            role: "user",
+            education_level: "SMA",
+            major: "IPA",
+            institution: "SMA Taruna Bakti",
+            graduation_year: null,
+            is_premium: false
+          }
+        }
       },
       { status: 200 }
     )
+
   } catch (error) {
     return NextResponse.json(
       { message: "Internal server error" },

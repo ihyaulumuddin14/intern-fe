@@ -1,0 +1,1 @@
+export const MAX_ONBOARDING_STEP = 3 as const

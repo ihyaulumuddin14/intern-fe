@@ -4,10 +4,10 @@ import ForgotPasswordForm from "../../../features/auth/forgot-password/ForgotPas
 const ForgotPasswordPage = () => {
   return (
     <AuthCard
-      title="Lupa password"
-      description="Lorem ipsum dolor sit amet"
+      title="Atur Ulang Kata Sandi"
+      description="Jangan khawatir, kami akan memberikan instruksi untuk membuat kata sandi baru."
       footerText=""
-      footerLink="Syarat dan ketentuan • Kebijakan Privasi"
+      footerLink=""
       footerLinkTarget={`#`}
     >
       <ForgotPasswordForm />

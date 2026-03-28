@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-const OnboardingLayout = ({
+const StepFlowLayout = ({
   children
 }: {
   children: ReactNode
@@ -17,4 +17,4 @@ const OnboardingLayout = ({
   )
 }
 
-export default OnboardingLayout
+export default StepFlowLayout

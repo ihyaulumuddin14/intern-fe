@@ -6,27 +6,15 @@ export async function POST(req: NextRequest) {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get("refresh_token")?.value;
 
-    const isSuccess = !!refreshToken; // debug: sukses kalau ada cookie refresh_token
-
-    if (!isSuccess) {
+    if (!refreshToken) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Refresh token tidak valid atau habis",
-            status: 401
-          }
+          message: "(Mock) Refresh token tidak valid atau habis",
         },
         { status: 401 }
       );
     }
-
-    // generate new access token
-    cookieStore.set("access_token", "newaccesstokengila", {
-      httpOnly: true,
-      path: "/",
-      maxAge: 15 * 60 // 15 menit
-    });
 
     return NextResponse.json(
       {
@@ -42,10 +30,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: {
-          message: "Internal server error",
-          status: 500
-        }
+        message: "Internal server error",
       },
       { status: 500 }
     );

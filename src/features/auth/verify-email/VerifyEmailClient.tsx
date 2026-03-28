@@ -21,15 +21,14 @@ const VerifyEmailClient = () => {
 
   const handleResendEmail = async () => {
     if (countResend !== 0) return
+    const email = localStorage.getItem("pendingVerificationEmail") || ""
 
-    const credentials: ResendVerifyCredentials = {
-      token: token || ""
+    const credentials: ResendVerifyCredentials & { callbackUrl: string } = {
+      email,
+      callbackUrl
     }
 
-    try {
-      await mutateAsyncResend(credentials)
-      setCountResend(60)
-    } catch {}
+    await mutateAsyncResend(credentials)
   }
 
   useEffect(() => {
@@ -44,6 +43,10 @@ const VerifyEmailClient = () => {
         await mutateAsyncVerify(credentials)
         setIsVerified(true)
 
+        /**
+         * When user account has verified, its will be redirected to login with
+         * the callback url from the previous login if there is a callback url
+         */
         await new Promise(res => setTimeout(() => {
           router.replace(`/login?callbackUrl=${callbackUrl}`)
           toast.dismiss()
@@ -56,7 +59,7 @@ const VerifyEmailClient = () => {
   }, [])
 
   useEffect(() => {
-    if (isPendingResend) return
+    if (isPendingResend || isPendingVerify) return
     setCountResend(60)
 
     const interval = setInterval(() => {
@@ -70,7 +73,7 @@ const VerifyEmailClient = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [router, isPendingResend])
+  }, [router, isPendingResend, isPendingVerify])
 
   return (
     <div className="w-full max-w-xs flex flex-col items-center mx-auto">
@@ -93,7 +96,7 @@ const VerifyEmailClient = () => {
         <div className="w-full flex gap-2 justify-center items-center">
           <Button
             onClick={handleResendEmail}
-            disabled={countResend !== 0}
+            disabled={countResend !== 0 || isPendingResend}
           >
             {isPendingResend ? "Mengirim..." : "Kirim Ulang"}
           </Button>

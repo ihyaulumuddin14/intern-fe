@@ -14,29 +14,22 @@ import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { getCareers } from "@/services/career.services";
+import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { useState } from "react";
+import { Controller, useFormContext, useFormState, useWatch } from "react-hook-form";
 
 export default function InputCareerStep() {
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    control,
-    trigger,
-    formState: { errors, touchedFields, dirtyFields },
-  } = useFormContext<OnboardingCredentials>();
+  const { control } = useFormContext<OnboardingCredentials>();
+  const { errors } = useFormState({ control, name: "career" });
+  const { direction } = useOnboardingStepStore()
 
   const career = useWatch({
     control,
     name: "career",
   });
-
-  useEffect(() => {
-    if (dirtyFields.career || touchedFields.career) {
-      trigger("career");
-    }
-  }, [trigger, dirtyFields.career, touchedFields.career]);
 
   const {
     data: careers,
@@ -51,13 +44,14 @@ export default function InputCareerStep() {
 
   return (
     <FormStepCard
+      direction={direction}
       title={
-        <>
+        <div className="w-full max-w-3xl text-center">
           Karier Apa yang Ingin Kamu <span className="text-primary">Capai?</span>
-        </>
+        </div>
       }
     >
-      <FieldGroup>
+      <FieldGroup className="w-full max-w-137.75 flex flex-col gap-8">
         <Field>
           <Controller
             name="career"
@@ -72,7 +66,7 @@ export default function InputCareerStep() {
                   className="text-start relative cursor-pointer"
                 >
                   <DropdownTrigger
-                    value={career}
+                    value={career?.name ?? ""}
                     placeholder="Pilih minat karier kamu"
                     isOpen={isOpen}
                   >
@@ -106,7 +100,7 @@ export default function InputCareerStep() {
                           "px-4 py-4 text-base md:text-lg cursor-pointer transition-colors",
                           "focus:bg-accent focus:text-accent-foreground border-b",
                         )}
-                        onSelect={() => field.onChange(career.name)}
+                        onSelect={() => field.onChange(career)}
                       >
                         {career.name}
                       </DropdownMenuItem>
@@ -120,7 +114,7 @@ export default function InputCareerStep() {
         </Field>
         <Field>
           <Button
-            disabled={!career || !!errors.career}
+            disabled={!career.id || !!errors.career}
             size="lg"
             className="max-w-fit mx-auto"
             type="submit"
