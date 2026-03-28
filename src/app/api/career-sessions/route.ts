@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
+    const body = await req.json();
     console.log("career id", body)
 
     const isSuccess = true
@@ -15,10 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Gagal Membuat sesi karier",
-            status: 400
-          }
+          message: "(Mock) Gagal Membuat sesi karier",
         },
         { status: 400 }
       )
@@ -29,7 +25,11 @@ export async function POST(req: NextRequest) {
         success: true,
         message: "(Mock) Berhasil membuat sesi karier",
         data: {
-          user_career_session_id: "asdfa67663dwesdyguq2e3bssj"
+          id: "uuid-career-sessions",
+          user_id: "uuid-user",
+          career_id: "uuid-career",
+          status: "on_process",
+          started_at: "2026-03-26T16:00:00Z"
         }
       })
   } catch (error) {

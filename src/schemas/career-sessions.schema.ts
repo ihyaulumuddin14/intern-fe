@@ -1,26 +1,26 @@
 import { z } from "zod"
 
-export const SkillLevelEnum = z.enum([
+export const UserLevelEnum = z.enum([
   "no_experience",
   "beginner",
   "intermediate",
   "expert"
 ])
 
-export const SKILL_LEVEL_LABELS: Record<z.infer<typeof SkillLevelEnum>, string> = {
+export const USER_LEVEL_LABELS: Record<z.infer<typeof UserLevelEnum>, string> = {
   no_experience: "No Experience",
   beginner: "Beginner",
   intermediate: "Intermediate",
   expert: "Expert",
 }
 
-export const SKILL_LEVEL_TO_NUMBER: Record<string, number> = {
+export const USER_LEVEL_TO_NUMBER: Record<string, number> = {
   beginner: 1,
   intermediate: 2,
   expert: 3,
 };
 
-export const NUMBER_TO_SKILL_LEVEL: Record<number, SkillLevel> = {
+export const NUMBER_TO_USER_LEVEL: Record<number, UserLevel> = {
   1: "beginner",
   2: "intermediate",
   3: "expert",
@@ -45,7 +45,7 @@ export const SelfAssessmentSchema = z.object({
     .array(
       z.object({
         skillId: z.string(),
-        level: SkillLevelEnum
+        userLevel: UserLevelEnum
       })
     )
 }).refine(data => {
@@ -60,4 +60,4 @@ export const SelfAssessmentSchema = z.object({
 export type CreateCareerSessionCredentials = z.infer<typeof CreateCareerSessionSchema>
 export type SelfAssessmentCredentials = z.infer<typeof SelfAssessmentSchema>
 export type SkillRating = SelfAssessmentCredentials["skillRatings"][number]
-export type SkillLevel = z.infer<typeof SkillLevelEnum>
+export type UserLevel = z.infer<typeof UserLevelEnum>

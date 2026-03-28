@@ -1,25 +1,22 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    
-    const token = cookieStore.get("access_token")?.value
+    const token = req.headers.get("Authorization")
 
     if (token) {
       return NextResponse.json(
         {
           data: {
-            full_name: "Somebody Pleasure",
-            user_name: "somebody2345",
-            email: "capek@gmail.com",
+            fullname: "User1",
+            username: "user1",
+            email: "user@gmail.com",
             role: "user",
             education_level: "SMA",
             major: "IPA",
             institution: "SMA Negeri 200 Malang",
             graduation_year: null,
-            isPremium: false
+            is_premium: false
           }
         },
         { status: 200 }

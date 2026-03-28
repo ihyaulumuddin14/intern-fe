@@ -80,19 +80,15 @@ const MobileMenuOverlay = () => {
               const isActive = activeSection === id;
 
               return (
-                <motion.span
+                <motion.div
                   key={link.id}
                   variants={itemVariants}
-                  style={{ display: "contents" }}
                   onClick={close}
-                  >
-                  <NavLink
-                    isActive={isActive}
-                    href={link.href}
-                  >
+                >
+                  <NavLink isActive={isActive} href={link.href}>
                     {link.label}
                   </NavLink>
-                </motion.span>
+                </motion.div>
               );
             })}
           </motion.nav>

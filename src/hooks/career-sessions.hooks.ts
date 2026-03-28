@@ -1,10 +1,10 @@
-import privateApi from "@/api/axiosInstance";
-import { toCamel, toSnake } from "@/lib/case";
-import { CreateCareerSessionCredentials, SelfAssessmentCredentials } from "@/schemas/career-sessions.schema";
+import { SelfAssessmentCredentials } from "@/schemas/career-sessions.schema";
+import { createCareerSession, createSelfAssessment } from "@/services/career-session.services";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
 import { useMutation } from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export const useCreateCareerSession = () => {
@@ -12,12 +12,11 @@ export const useCreateCareerSession = () => {
   const { resetForm } = useOnboardingFormStore();
 
   return useMutation({
-    mutationFn: async (credentials: CreateCareerSessionCredentials) => {
-      const response = await privateApi.post("/api/career-sessions", toSnake(credentials));
-      return toCamel(response.data.data);
-    },
+    mutationFn: createCareerSession,
     onSuccess: (data) => {
-      const careerSessionId = data.userCareerSessionId
+      toast.dismiss()
+      toast.success(data.message)
+      const careerSessionId = data.data.id
       /**
        * Reset onboarding rhf on memory and localStorage
        * when the session successfully created
@@ -26,8 +25,11 @@ export const useCreateCareerSession = () => {
       router.replace(`/assessment/${careerSessionId}/self`);
     },
     onError: (error) => {
-      toast.error("Gagal membuat sesi, silakan coba lagi.");
-      router.replace("/dashboard");
+      toast.error(
+        error instanceof AxiosError
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
+      );
     }
   })
 }
@@ -35,17 +37,18 @@ export const useCreateCareerSession = () => {
 
 export const useCreateSelfAssessment = () => {
   const router = useRouter()
-  const params = useParams()
-  const careerSessionId = params.id
   const { resetForm } = useSelfAssessmentFormStore()
 
   return useMutation({
-    mutationFn: async (credentials: SelfAssessmentCredentials["skillRatings"]) => {
-      const response = await privateApi.post(`/api/career-sessions/${careerSessionId}/assessment`, toSnake(credentials))
-      return toCamel(response.data.data)
-    },
+    mutationFn: ({
+      credentials,
+      careerSessionId
+    }: {
+      credentials: SelfAssessmentCredentials["skillRatings"],
+      careerSessionId: string
+    }) =>  createSelfAssessment(credentials, careerSessionId),
     onSuccess: (data) => {
-      const careerSessionId = data.userCareerSessionId
+      const careerSessionId = data.data.userCareerSessionId
 
       /**
        * Reset onboarding rhf on memory and localStorage
@@ -55,8 +58,11 @@ export const useCreateSelfAssessment = () => {
       router.replace(`/assessment/${careerSessionId}/quiz`)
     },
     onError: (error) => {
-      toast.error("Gagal menyimpan data assessment, silakan coba lagi")
-      router.back()
+      toast.error(
+        error instanceof AxiosError
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
+      );
     }
   })
 }
