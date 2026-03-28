@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 export const useCreateCareerSession = () => {
   const router = useRouter();
-  const { resetForm } = useOnboardingFormStore();
+  const { resetForm } = useSelfAssessmentFormStore();
 
   return useMutation({
     mutationFn: createCareerSession,

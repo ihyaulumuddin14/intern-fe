@@ -114,10 +114,11 @@ export default function OnboardingContainer() {
 
   const getConfirmationCallback = (_credentials: OnboardingCredentials) => {
     setForm(form.getValues());
-    router.push(`${pathname}?${searchParams.toString()}&status=confirmation`);
-  };
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("status", "confirmation")
 
-  console.log(Object.keys(formStore))
+    router.push(`${pathname}?${searchParams.toString()}`);
+  };
 
   return (
     <>

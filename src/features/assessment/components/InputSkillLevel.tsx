@@ -104,7 +104,8 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   }, [currentIndex, fields]);
 
   /**
-   * Immediately update skill userL   * when the slider has changing value
+   * Immediately update skill user
+   * when the slider has changing value
    */
   const handleSliderChange = (newValue: number[]) => {
     setValue(newValue);

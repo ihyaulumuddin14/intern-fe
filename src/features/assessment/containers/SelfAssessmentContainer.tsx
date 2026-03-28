@@ -109,7 +109,10 @@ export default function SelfAssessmentContainer({
   if (!formHasHydrated || !stepHasHydrated) return null;
 
   const handleSelfAssessmentSubmit = (_credentials: SelfAssessmentCredentials) => {
-    router.push(`${pathname}?${searchParams.toString()}&status=confirmation`);
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("status", "confirmation")
+    
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
