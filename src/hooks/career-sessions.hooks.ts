@@ -58,7 +58,6 @@ export const useCreateSelfAssessment = () => {
       router.replace(`/assessment/${careerSessionId}/quiz`)
     },
     onError: (error) => {
-      console.log(error)
       toast.error(
         error instanceof AxiosError
           ? error.response?.data?.message || "Terjadi kesalahan sistem"
@@ -67,8 +66,3 @@ export const useCreateSelfAssessment = () => {
     }
   })
 }
-
-
-// export const useStartQuiz = () => {
-//   const 
-// }

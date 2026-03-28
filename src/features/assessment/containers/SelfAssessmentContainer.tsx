@@ -42,8 +42,6 @@ export default function SelfAssessmentContainer({
     })),
   );
 
-  console.log("formStore: ", formStore)
-
   // synchronize number of step from sessionStorage persist
   const {
     noStep,
@@ -110,8 +108,7 @@ export default function SelfAssessmentContainer({
    */
   if (!formHasHydrated || !stepHasHydrated) return null;
 
-  const handleSelfAssessmentSubmit = (credentials: SelfAssessmentCredentials) => {
-    console.log(credentials)
+  const handleSelfAssessmentSubmit = (_credentials: SelfAssessmentCredentials) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set("status", "confirmation")
     
