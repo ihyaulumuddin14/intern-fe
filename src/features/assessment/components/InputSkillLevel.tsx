@@ -41,6 +41,12 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   const currentSkill = selectedSkills[currentIndex];
   const isLastStep = currentIndex === selectedSkills.length - 1;
 
+  // Search field index base on current skill id
+  const targetIndex = useMemo(
+    () => fields.findIndex((field) => field.skillId === currentSkill.id),
+    [currentSkill, fields]
+  );
+
   const handleNext = () => {
     if (!isLastStep) setCurrentIndex((prev) => prev + 1);
   };
@@ -48,15 +54,6 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   const handlePrev = () => {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
-
-  /**
-   * Using useMemo and string comparison
-   * due to minimum rerender of reference difference
-   */
-  const selectedIdsString = useMemo(
-    () => selectedSkills.map((s) => s.id).join(","),
-    [selectedSkills],
-  );
 
   useEffect(() => {
     const selectedSkillIds = selectedSkills.map((skill) => skill.id);
@@ -70,38 +67,35 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
       }));
       replace(initialRatings);
     } else {
-      // if there is a difference in selectedSkills from the previous step
-      const hasChanged = fields.some(
-        (skillRating) =>
-          selectedSkillIds.includes(skillRating.skillId) &&
-          skillRating.userLevel === "no_experience",
-      );
-
-      if (hasChanged) {
-        const newRatings = fields.map((skillRating) => ({
-          ...skillRating,
-          level:
-            skillRating.userLevel === "no_experience" &&
-            selectedSkillIds.includes(skillRating.skillId)
+        const newFields = fields.map((field) => ({
+          ...field,
+          userLevel: selectedSkillIds.includes(field.skillId)
+            ? field.userLevel === "no_experience"
               ? "beginner"
-              : skillRating.userLevel,
+              : field.userLevel  // still user the previous user level
+            : "no_experience" as UserLevel,   // reset user level for removed skill
         }));
-        replace(newRatings);
-      }
+
+        const hasChanged = fields.some(
+          (field, i) => field.userLevel !== newFields[i].userLevel
+        );
+
+        if (hasChanged) replace(newFields);
     }
-  }, [selectedIdsString, replace]);
+  }, [selectedSkills, replace]);
 
   /**
    * Synchronizing slider value
    * when the current index has change
    */
   useEffect(() => {
-    const currentField = fields[currentIndex];
+    const currentField = fields[targetIndex];
     if (currentField?.userLevel) {
       const mappedValue = USER_LEVEL_TO_NUMBER[currentField.userLevel || 1];
       setValue([mappedValue]);
     }
   }, [currentIndex, fields]);
+
 
   /**
    * Immediately update skill user
@@ -111,8 +105,13 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
     setValue(newValue);
     const UserLevel = NUMBER_TO_USER_LEVEL[newValue[0]];
 
-    update(currentIndex, {
-      ...fields[currentIndex],
+    /**
+     * Search fields index base on current skill id
+     * for update the user level
+     */
+
+    update(targetIndex, {
+      ...fields[targetIndex],
       userLevel: UserLevel,
     });
   };

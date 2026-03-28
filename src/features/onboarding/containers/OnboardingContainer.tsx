@@ -117,7 +117,7 @@ export default function OnboardingContainer() {
     const params = new URLSearchParams(searchParams.toString())
     params.set("status", "confirmation")
 
-    router.push(`${pathname}?${searchParams.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
