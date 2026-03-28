@@ -4,10 +4,10 @@ import ResetPasswordForm from "../../../features/auth/reset-password/ResetPasswo
 const ResetPasswordPage = () => {
   return (
     <AuthCard
-      title="Reset password"
-      description="Lorem ipsum dolor sit amet"
+      title="Buat Kata Sandi Baru"
+      description="Pilih kata sandi yang kuat dan mudah kamu ingat agar akunmu tetap aman."
       footerText=""
-      footerLink="Syarat dan ketentuan • Kebijakan Privasi"
+      footerLink=""
       footerLinkTarget={`#`}
     >
       <ResetPasswordForm />

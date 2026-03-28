@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useResetPassword } from "@/hooks/auth.hooks";
 import { ResetPasswordCredentials, ResetPasswordSchema } from "@/schemas/auth.schema";
@@ -20,7 +20,7 @@ const ResetPasswordForm = () => {
     resolver: zodResolver(ResetPasswordSchema),
     mode: "onChange",
     defaultValues: {
-      newPassword: "",
+      password: "",
       token: token || ""
     },
   });
@@ -40,13 +40,14 @@ const ResetPasswordForm = () => {
         <Field>
           <FieldLabel htmlFor="new-password">Masukkan kata sandi baru kamu</FieldLabel>
           <Input
-            {...register("newPassword")}
+            {...register("password")}
             id="new-password"
             type="password"
             placeholder="••••••••"
           />
-          {errors.newPassword && (
-            <FieldError>{errors.newPassword.message}</FieldError>
+          <FieldDescription>Kata sandi minimal 8 karakter</FieldDescription>
+          {errors.password && (
+            <FieldError>{errors.password.message}</FieldError>
           )}
         </Field>
         <Field>

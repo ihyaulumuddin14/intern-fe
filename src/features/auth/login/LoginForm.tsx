@@ -14,7 +14,6 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     control,
     formState: { errors },
   } = useForm<LoginCredentials>({
@@ -30,11 +29,6 @@ const LoginForm = () => {
 
   const handleLoginSubmit = async (credentials: LoginCredentials) => {
     mutate(credentials)
-    reset({
-      email: "",
-      password: "",
-      rememberMe: false,
-    });
   };
 
   return (
@@ -45,19 +39,19 @@ const LoginForm = () => {
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="email">Alamat email *</FieldLabel>
+          <FieldLabel>Email</FieldLabel>
           <Input
             {...register("email")}
             id="email"
             type="email"
             placeholder="Masukkan alamat email kamu"
-          />
+            />
           {errors.email && (
             <FieldError>{errors.email.message}</FieldError>
           )}
         </Field>
         <Field>
-          <FieldLabel htmlFor="password">Kata sandi *</FieldLabel>
+          <FieldLabel>Kata sandi</FieldLabel>
           <Input
             {...register("password")}
             id="password"

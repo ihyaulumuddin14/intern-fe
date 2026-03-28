@@ -9,8 +9,8 @@ export async function POST(req: NextRequest) {
     await new Promise(res => setTimeout(res, 2000))
 
     // hapus cookie access_token dan refresh_token
-    cookieStore.delete("access_token");
     cookieStore.delete("refresh_token");
+    cookieStore.delete("role");
 
     const isSuccess = true; // toggle debug
 
@@ -18,10 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Logout gagal",
-            status: 400
-          }
+          message: "(Mock) Logout gagal",
         },
         { status: 400 }
       );
@@ -39,10 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: {
-          message: "Internal server error",
-          status: 500
-        }
+        message: "Internal server error",
       },
       { status: 500 }
     );

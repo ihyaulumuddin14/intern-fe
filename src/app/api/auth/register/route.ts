@@ -15,10 +15,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Gagal Register",
-            status: 400
-          }
+          message: "(Mock) Gagal Register",
         },
         { status: 400 }
       )

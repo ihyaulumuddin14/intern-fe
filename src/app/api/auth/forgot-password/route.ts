@@ -15,10 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Gagal request reset password",
-            status: 400
-          }
+          message: "(Mock) Gagal request reset password",
         },
         { status: 400 }
       );
@@ -36,10 +33,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: {
-          message: "Internal server error",
-          status: 500
-        }
+        message: "Internal server error",
       },
       { status: 500 }
     );

@@ -1,15 +1,15 @@
+import { apiConfig } from "@/config/env"
 import { refreshAccessToken } from "@/helper/authRefresh"
 import axios from "axios"
-import { API_URL } from "@/config/env"
 
 export const authApi = axios.create({
   // comment for using Nextjs route handler, without api url domain
-  // baseURL: API_URL
+  baseURL: apiConfig.BASE_URL
 })
 
 export const privateApi = axios.create({
   // comment for using Nextjs route handler, without api url domain
-  // baseURL: API_URL,
+  baseURL: apiConfig.BASE_URL,
   withCredentials: true
 })
 
@@ -22,7 +22,9 @@ privateApi.interceptors.response.use(
       originalRequest._retry = true
 
       try {
-        await refreshAccessToken()
+        const newAccessToken = await refreshAccessToken()
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
+
         return privateApi(originalRequest)
       } catch (error) {
         return Promise.reject(error)

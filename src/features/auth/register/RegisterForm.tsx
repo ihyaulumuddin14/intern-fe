@@ -13,24 +13,25 @@ import {
   Field,
   FieldDescription,
   FieldError,
-  FieldGroup
+  FieldGroup,
+  FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRegister } from "@/hooks/auth.hooks";
 import { RegisterCredentials, RegisterSchema } from "@/schemas/auth.schema";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const RegisterForm = () => {
-  const { mutateAsync, isPending } = useRegister();
+  const searchParams = useSearchParams();
+  const { mutate, isPending } = useRegister();
   const { formStore } = useOnboardingFormStore();
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<RegisterCredentials>({
     resolver: zodResolver(RegisterSchema),
@@ -39,16 +40,11 @@ const RegisterForm = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRegisterSubmit = async (credentials: RegisterCredentials) => {
-    await mutateAsync(credentials)
-      .then(() => {
-        reset({
-          fullName: "",
-          email: "",
-          password: "",
-        });
-        setIsOpen(true);
-      })
-      .catch(() => {});
+    const credentialsWithCallbackUrl = {
+      ...credentials,
+      callbackUrl: encodeURIComponent(searchParams.get("callbackUrl") || ""),
+    };
+    mutate(credentialsWithCallbackUrl)  
   };
 
   return (
@@ -60,27 +56,30 @@ const RegisterForm = () => {
       >
         <FieldGroup>
           <Field>
+            <FieldLabel>Nama Lengkap</FieldLabel>
             <Input
-              {...register("fullName")}
+              {...register("fullname")}
               id="fullname"
               type="text"
               placeholder="Masukkan nama kamu"
-              {...(formStore.fullName ? { value: formStore.fullName } : {})}
-            />
-            {errors.fullName && (
-              <FieldError>{errors.fullName.message}</FieldError>
+              {...(formStore.fullname ? { defaultValue: formStore.fullname } : {})}
+              />
+            {errors.fullname && (
+              <FieldError>{errors.fullname.message}</FieldError>
             )}
           </Field>
           <Field>
+            <FieldLabel>Email</FieldLabel>
             <Input
               {...register("email")}
               id="email"
               type="email"
               placeholder="Masukkan alamat email kamu"
-            />
+              />
             {errors.email && <FieldError>{errors.email.message}</FieldError>}
           </Field>
           <Field>
+            <FieldLabel>Kata sandi</FieldLabel>
             <Input
               {...register("password")}
               id="password"
@@ -125,6 +124,7 @@ const EmailSentAlert = ({
   const router = useRouter();
 
   useEffect(() => {
+    if (!isOpen) return
     setCountRedirect(30);
 
     const interval = setInterval(() => {
@@ -165,7 +165,7 @@ const EmailSentAlert = ({
           <AlertDialogDescription className="text-center">
             <>
               Akun kamu berhasil terdaftar, silakan cek email kamu untuk dapat
-              melakukan verifikasi akun. Kamu akan diarahkan kembali ke Beranda
+              melakukan verifikasi akun. Kamu akan diarahkan kembali ke Login
               secara otomatis dalam ({countRedirect}) detik.
             </>
           </AlertDialogDescription>
