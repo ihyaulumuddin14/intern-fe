@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const cookieStore = await cookies();
  
-    cookieStore.set("refresh_token", "refreshtokengila", {
+    cookieStore.set("refresh_token", "refreshtoken", {
       httpOnly: true,
       path: "/",
       maxAge: body.rememberMe ? 24 * 60 * 60 : 15 * 60

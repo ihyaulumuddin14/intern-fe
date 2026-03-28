@@ -53,8 +53,10 @@ export const useLogin = () => {
 
       toast.success(response.message || "Login berhasil");
       queryClient.setQueryData(["users"], response.data);
-      router.replace(callbackUrl);
-      router.refresh();
+
+      setTimeout(() => {
+        window.location.href = callbackUrl;
+      }, 500);
     },
     onError: (error) => {
       toast.error(
