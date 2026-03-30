@@ -1,7 +1,11 @@
-import { authApi } from "@/api/axiosInstance"
+import privateApi, { authApi } from "@/api/axiosInstance"
 import { toCamel, toSnake } from "@/lib/case"
 import { ForgotPasswordCredentials, LoginCredentials, RegisterCredentials, ResendVerifyCredentials, ResetPasswordCredentials, VerifyCredentials } from "@/schemas/auth.schema"
 
+/**
+ * Callback URLs are added to support direct redirects
+ * to the intended page, especially for the onboarding process.
+ */
 export async function registerUser(data: RegisterCredentials & { callbackUrl: string }) {
   const convertedPayload = toSnake(data)
 
@@ -29,7 +33,7 @@ export async function loginUser(data: LoginCredentials) {
 }
 
 export async function logoutUser() {
-  const response = await authApi.post(
+  const response = await privateApi.post(
     "/auth/logout"
   )
 

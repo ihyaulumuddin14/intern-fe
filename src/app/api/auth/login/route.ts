@@ -35,6 +35,19 @@ export async function POST(req: NextRequest) {
       maxAge: body.rememberMe ? 24 * 60 * 60 : 15 * 60
     })
 
+    // return NextResponse.json(
+    //   {
+    //     success: false,
+    //     message: "(Mock) Akun belum terverifikasi, mohon verifikasi ulang",
+    //     data: {
+    //       email: "usernotverified@gmail.com"
+    //     }
+    //   },
+    //   {
+    //     status: 403
+    //   }
+    // )
+
     return NextResponse.json(
       {
         success: true,
