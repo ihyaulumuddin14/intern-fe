@@ -1,1 +1,0 @@
-export const MAX_SELF_ASSESSMENT_STEP = 2 as const
