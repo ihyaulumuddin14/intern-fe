@@ -12,7 +12,7 @@ const SelfAssessmentPage = async ({
 
   if (status === "on_assessment") {
     return (
-      <SelfAssessmentContainer
+      <SelfAssessmentContai
         careerSessionId={id}
         skills={skillsMapped}
         careerName={careerName}

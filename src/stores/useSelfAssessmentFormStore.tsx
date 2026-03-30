@@ -17,6 +17,7 @@ type Store = {
   setForm: (data: Partial<SelfAsssessmentFormType>) => void;
   resetForm: () => void;
   setHasHydrated: (state: boolean) => void;
+  isResetting: boolean;
 };
 
 export const useSelfAssessmentFormStore = create<Store>()(
@@ -34,11 +35,13 @@ export const useSelfAssessmentFormStore = create<Store>()(
         })),
 
       resetForm: () => set({
+        isResetting: true,
         formStore: {
           selectedSkills: [],
           skillRatings: []
-        }
+        },
       }),
+      isResetting: false,
 
       setHasHydrated: (state) => set({ hasHydrated: state }),
     }),
