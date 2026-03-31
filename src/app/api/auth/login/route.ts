@@ -17,8 +17,7 @@ export async function POST(req: NextRequest) {
         backendRes.headers.get("content-type") ?? "application/json",
     },
   });
-
-  // 🔴 ini yang memperbaiki staging
+  
   const cookies = backendRes.headers.getSetCookie?.() ?? [];
 
   cookies.forEach((cookie) => {
