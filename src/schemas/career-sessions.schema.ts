@@ -7,12 +7,28 @@ export const UserLevelEnum = z.enum([
   "expert"
 ])
 
-export const USER_LEVEL_LABELS: Record<z.infer<typeof UserLevelEnum>, string> = {
-  no_experience: "No Experience",
-  beginner: "Beginner",
-  intermediate: "Intermediate",
-  expert: "Expert",
+export const USER_LEVEL_LABELS: Record<Exclude<UserLevel, "no_experience">, {
+  title: string;
+  description?: string;
+}> = {
+  beginner: {
+    title: "Pemula",
+    description: "Baru saja mulai menjelajahi"
+  },
+  intermediate: {
+    title: "Menengah",
+    description: "Menguasai dasar-dasarnya, sedang mengerjakan proyek"
+  },
+  expert: {
+    title: "Berpengalaman",
+    description: "Sangat berpengalaman, ingin mengkhususkan diri dalam bidang tertentu"
+  }
 }
+
+export const USER_LEVEL_OPTIONS = Object.entries(USER_LEVEL_LABELS).map(([key, value]) => ({
+  userLevel: key as Exclude<UserLevel, "no_experience">,
+  ...value
+}))
 
 export const USER_LEVEL_TO_NUMBER: Record<string, number> = {
   beginner: 1,

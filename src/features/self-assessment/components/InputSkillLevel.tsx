@@ -1,14 +1,16 @@
 import FormStepCard from "@/components/shared/FormStepCard";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useIsMobile } from "@/hooks/animation.hooks";
 import {
-  NUMBER_TO_USER_LEVEL,
   SelfAssessmentCredentials,
-  USER_LEVEL_TO_NUMBER,
-  UserLevel,
+  USER_LEVEL_OPTIONS,
+  UserLevel
 } from "@/schemas/career-sessions.schema";
 import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
 import { Skill } from "@/types/entities.type";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   useFieldArray,
@@ -16,15 +18,19 @@ import {
   useFormState,
   useWatch,
 } from "react-hook-form";
-import { SliderLevel } from "./SliderLevel";
-import { useIsMobile } from "@/hooks/animation.hooks";
+import { is } from "zod/v4/locales";
+import RadioLevel from "./RadioLevel";
 
 export default function InputUserLevel({ skills }: { skills: Skill[] }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   // index of skills
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // rate for each skill
-  const [value, setValue] = useState<number[]>([1]);
+  const [value, setValue] = useState<Exclude<UserLevel, "no_experience">>("beginner");
 
   // RHF
   const { control } = useFormContext<SelfAssessmentCredentials>();
@@ -91,8 +97,8 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   useEffect(() => {
     const currentField = fields[targetIndex];
     if (currentField?.userLevel) {
-      const mappedValue = USER_LEVEL_TO_NUMBER[currentField.userLevel || 1];
-      setValue([mappedValue]);
+      // const mappedValue = USER_LEVEL_TO_NUMBER[currentField.userLevel || 1];
+      setValue(currentField.userLevel as Exclude<UserLevel, "no_experience">);
     }
   }, [currentIndex, fields]);
 
@@ -101,87 +107,70 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
    * Immediately update skill user
    * when the slider has changing value
    */
-  const handleSliderChange = (newValue: number[]) => {
-    setValue(newValue);
-    const UserLevel = NUMBER_TO_USER_LEVEL[newValue[0]];
-
+  const handleUserLevelChange = (userLevel: Exclude<UserLevel, "no_experience">) => {
     /**
      * Search fields index base on current skill id
      * for update the user level
      */
-
+    
+    
     update(targetIndex, {
       ...fields[targetIndex],
-      userLevel: UserLevel,
+      userLevel,
     });
   };
+  
+  const handleSelfAssessmentSubmit = (
+    _credentials?: SelfAssessmentCredentials,
+  ) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("status", "confirmation");
 
+    router.push(`${pathname}?${params.toString()}`);
+  };
+  
   return (
     <FormStepCard
       direction={direction}
       title={
-        <div className="max-w-136.25 text-center mx-auto border">
+        <div className="text-center mx-auto">
           Ukur Tingkat <span className="text-primary">Keahlian</span> Kamu
         </div>
       }
     >
-      <FieldGroup className="flex flex-col mx-auto gap-8 max-w-181.75 h-max">
-        <Field>
-          <FieldLabel className="flex flex-col gap-2 sm:gap-4">
-            <span className="inline-block self-end text-sm md:text-base">
-              {currentIndex + 1}/{selectedSkills?.length} skills
-            </span>
-            <h2 className="self-start text-base sm:text-lg lg:text-xl text-neutral-70 max-w-219.5 font-normal">
-              Untuk skill <strong>{currentSkill?.name}</strong>, seberapa ahli
-              kamu?
-            </h2>
-          </FieldLabel>
+      <FieldGroup className="flex flex-col mx-auto gap-8 max-w-137.5 h-max">
+        <p className="text-center text-base sm:text-lg md:text-xl text-neutral-80">Seberapa ahli kamu untuk skill {currentSkill?.name}?</p>
 
-          <div className="w-full my-5">
-            <SliderLevel
-              value={value}
-              onValueChange={handleSliderChange}
-              defaultValue={[1]}
-              max={3}
-              min={1}
-              step={1}
-            />
-          </div>
-        </Field>
-        <Field
-          orientation={"horizontal"}
-          className="w-full flex justify-between"
-        >
-          <Button
-            type="button"
-            size={isMobile ? "default" : "lg"}
-            variant={"outline"}
-            disabled={currentIndex === 0}
-            onClick={handlePrev}
-          >
-            Sebelumnya
-          </Button>
-          <Button
-            type="button"
-            size={isMobile ? "default" : "lg"}
-            variant={"outline"}
-            disabled={isLastStep}
-            onClick={handleNext}
-          >
-            Selanjutnya
-          </Button>
-        </Field>
-        <Field>
-          <Button
-            type="submit"
-            size={isMobile ? "default" : "lg"}
-            disabled={
-              !!errors.skillRatings || currentIndex !== selectedSkills.length - 1
-            }
-          >
-            Mulai Kuis
-          </Button>
-        </Field>
+        <RadioGroup defaultValue={value} value={value} className="w-full" onValueChange={handleUserLevelChange}>
+          {USER_LEVEL_OPTIONS.map((option) => (
+            <RadioLevel title={option.title} description={option.description} userLevel={option.userLevel} />
+          ))}
+        </RadioGroup>
+
+        <div className="w-full flex! justify-between! items-center">
+          <span className="text-base sm:text-lg md:text-xl text-neutral-60">
+            {currentIndex + 1} dari {selectedSkills?.length} skill
+          </span>
+          <Field orientation={"horizontal"} className="gap-4 w-fit">
+            <Button
+              type="button"
+              size={isMobile ? "default" : "lg"}
+              disabled={currentIndex === 0}
+              onClick={handlePrev}
+            >
+              Kembali
+            </Button>
+            <Button
+              type={"button"}
+              size={isMobile ? "default" : "lg"}
+              onClick={() => {
+                isLastStep ? handleSelfAssessmentSubmit() : handleNext()
+              }}
+            >
+              {isLastStep ? "Selesai" : "Lanjut"}
+            </Button>
+          </Field>
+        </div>
       </FieldGroup>
     </FormStepCard>
   );

@@ -27,9 +27,6 @@ export default function SelfAssessmentContainer({
   careerSessionId: string;
   careerName: string;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-
   // manage params
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
@@ -116,21 +113,11 @@ export default function SelfAssessmentContainer({
    */
   if (!formHasHydrated || !stepHasHydrated) return null;
 
-  const handleSelfAssessmentSubmit = (
-    _credentials: SelfAssessmentCredentials,
-  ) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("status", "confirmation");
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
   return (
     <>
       <FormProvider {...form}>
         <form
           action=""
-          onSubmit={form.handleSubmit(handleSelfAssessmentSubmit)}
           className="w-full h-full flex items-center"
         >
           <AnimatePresence

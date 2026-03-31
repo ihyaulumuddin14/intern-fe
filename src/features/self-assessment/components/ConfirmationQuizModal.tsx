@@ -14,7 +14,7 @@ const ConfirmationQuizModal = ({
   careerSessionId: string
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = useCreateSelfAssessment()
+  const { mutate: createSelfAssessment, isPending } = useCreateSelfAssessment()
 
   const handleSelfAssessmentSubmit = async () => {
     const credentials: SelfAssessmentCredentials["skillRatings"] = {
@@ -25,7 +25,7 @@ const ConfirmationQuizModal = ({
         }
       })
     }
-    mutate({credentials, careerSessionId})
+    createSelfAssessment({credentials, careerSessionId})
   }
 
   return (
@@ -59,7 +59,7 @@ const ConfirmationQuizModal = ({
             className="w-full"
             disabled={isPending}
           >
-            {isPending ? "...Memulai" : "Mulai Kuis"}
+            {isPending ? "Memulai..." : "Mulai Kuis"}
           </Button>
           <Button
             size="lg"
