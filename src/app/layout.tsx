@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
 import "./globals.css";
+import QuizSessionGuard from "@/components/providers/QuizSessionGuard";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -34,11 +35,13 @@ export default async function RootLayout({
       <body
         className={`${inter.variable} ${lora.variable} antialiased`}
       >
-        <ClientProvider>
-          <Toaster position="top-center"/>
-          {children}
-          {modal}
-        </ClientProvider>
+        <QuizSessionGuard>
+          <ClientProvider>
+            <Toaster position="top-center"/>
+            {children}
+            {modal}
+          </ClientProvider>
+        </QuizSessionGuard>
       </body>
     </html>
   );

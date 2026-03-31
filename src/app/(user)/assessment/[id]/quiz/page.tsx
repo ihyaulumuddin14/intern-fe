@@ -1,13 +1,13 @@
+import QuizContainer from "@/features/quiz/containers/QuizContainer"
 
 const QuizPage = async ({
   params
 }: {
-  params: Promise<{ id: number }>
+  params: Promise<{ id: string }>
 }) => {
-  const { id } = await params
-
+  const { id } = await params;
   return (
-    <div>{ id }</div>
+    <QuizContainer careerSessionId={id} />
   )
 }
 

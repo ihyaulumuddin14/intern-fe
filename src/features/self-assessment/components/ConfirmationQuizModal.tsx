@@ -8,19 +8,24 @@ import { useRouter } from "next/navigation";
 
 const ConfirmationQuizModal = ({
   skillRatings,
-  careerSessionId
+  careerSessionId,
 }: {
   skillRatings: SkillRating[];
-  careerSessionId: string
+  careerSessionId: string,
 }) => {
   const router = useRouter();
-  const { mutate, isPending } = useCreateSelfAssessment()
+  const { mutate: createSelfAssessment, isPending } = useCreateSelfAssessment()
 
   const handleSelfAssessmentSubmit = async () => {
     const credentials: SelfAssessmentCredentials["skillRatings"] = {
-      ...skillRatings
+      ...skillRatings.map(skillRating => {
+        return {
+          skillId: skillRating.skillId,
+          userLevel: skillRating.userLevel
+        }
+      })
     }
-    mutate({credentials, careerSessionId})
+    createSelfAssessment({credentials, careerSessionId})
   }
 
   return (
@@ -54,7 +59,7 @@ const ConfirmationQuizModal = ({
             className="w-full"
             disabled={isPending}
           >
-            {isPending ? "...Memulai" : "Mulai Kuis"}
+            {isPending ? "Memulai..." : "Mulai Kuis"}
           </Button>
           <Button
             size="lg"

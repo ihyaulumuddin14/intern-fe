@@ -16,7 +16,7 @@ import ConfirmationCallbackModal from "../components/ConfirmationCallbackModal";
 import InputCareerStep from "../components/InputCareerStep";
 import InputEducationStep from "../components/InputEducationStep";
 import InputNameStep from "../components/InputNameStep";
-import { StepIndicator } from "../components/StepIndicator";
+import { StepIndicator } from "../../../components/shared/StepIndicator";
 
 export default function OnboardingContainer() {
   const router = useRouter();
@@ -75,7 +75,7 @@ export default function OnboardingContainer() {
    * reducing parent rerender
    */
   useEffect(() => {
-    if (!formHasHydrated) return
+    if (!formHasHydrated) return;
 
     const handleStepChange = (noStep: number) => {
       setForm(form.getValues());
@@ -114,10 +114,11 @@ export default function OnboardingContainer() {
 
   const getConfirmationCallback = (_credentials: OnboardingCredentials) => {
     setForm(form.getValues());
-    router.push(`${pathname}?${searchParams.toString()}&status=confirmation`);
-  };
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("status", "confirmation");
 
-  console.log(Object.keys(formStore))
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <>

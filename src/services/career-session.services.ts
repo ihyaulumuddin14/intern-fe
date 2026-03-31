@@ -1,6 +1,7 @@
 import privateApi from "@/api/axiosInstance"
 import { toCamel, toSnake } from "@/lib/case"
 import { CreateCareerSessionCredentials, SelfAssessmentCredentials } from "@/schemas/career-sessions.schema"
+import { CareerSessionStatus } from "@/types/common.type"
 import { Skill, SkillRaw } from "@/types/entities.type"
 
 export async function createCareerSession(credentials: CreateCareerSessionCredentials) {
@@ -18,7 +19,9 @@ export async function createCareerSession(credentials: CreateCareerSessionCreden
 
 
 export async function createSelfAssessment(credentials: SelfAssessmentCredentials["skillRatings"], careerSessionId: string) {
-  const convertedPayload = toSnake(credentials)
+  const convertedPayload = toSnake({
+    skills: credentials
+  })
 
   const response = await privateApi.post(
     `/career-sessions/${careerSessionId}/assessment`,
@@ -31,16 +34,30 @@ export async function createSelfAssessment(credentials: SelfAssessmentCredential
 }
 
 
-export const getSkillsByCareerSessionId = async (careerSessionId: string) => {
+export const startQuiz = async (careerSessionId: string) => {
+  const response = await privateApi.post(`/career-sessions/quiz/${careerSessionId}/start`)
+  if (!response.data.success) throw new Error(response.data?.message || "Gagal memulai kuis, silakan coba lagi")
+
+  return toCamel(response.data)
+}
+
+
+export const getSkillsByCareerSessionId = async (careerSessionId: string): Promise<{ 
+  status: CareerSessionStatus,
+  skillsMapped: Skill[],
+  careerName: string
+}> => {
   const { data: sessionData } = await privateApi.get(`/career-sessions/${careerSessionId}`)
-  const careerId = toCamel(sessionData.data).careerId
+  const { status, careerId } = toCamel(sessionData.data)
 
   const { data: careerData } = await privateApi.get(`/careers/${careerId}`)
-  const { skills } = toCamel(careerData.data)
+  const { skills, name: careerName } = toCamel(careerData.data)
 
-  return skills.map((skill: SkillRaw): Skill => ({
+  const skillsMapped = skills.map((skill: SkillRaw): Skill => ({
     id: skill.id,
     name: skill.name,
     description: skill.desc
   }))
+
+  return { status, skillsMapped, careerName }
 }

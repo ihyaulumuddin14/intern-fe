@@ -8,8 +8,8 @@ export async function POST(
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
-    const { id } = await params
-    console.log("career session id", id)
+    const { id: careerSessionId } = await params
+    console.log("career session id", careerSessionId)
 
     const isSuccess = true
 
@@ -29,7 +29,7 @@ export async function POST(
         success: true,
         message: "(Mock) Berhasil menyimpan data assessment",
         data: {
-          user_career_session_id: "uuid-career-session"
+          career_session_id: "uuid-session"
         }
       }
     )

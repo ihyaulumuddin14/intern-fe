@@ -9,7 +9,9 @@ export function makeQueryClient() {
          * above 0 to avoid refetching immediately on the client
          * cuz of the "stale" data by client
         */
-       staleTime: 60 * 1000
+       staleTime: 60 * 1000,
+       retry: false,
+       refetchOnWindowFocus: false
       },
       dehydrate: {
         shouldDehydrateQuery: (query) =>

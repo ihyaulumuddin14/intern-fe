@@ -11,43 +11,40 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { useCareers } from "@/hooks/careers.hooks";
 import { cn } from "@/lib/utils";
 import { OnboardingCredentials } from "@/schemas/onboarding.schema";
-import { getCareers } from "@/services/career.services";
 import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
-import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { Controller, useFormContext, useFormState, useWatch } from "react-hook-form";
+import {
+  Controller,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 
 export default function InputCareerStep() {
   const [isOpen, setIsOpen] = useState(false);
   const { control } = useFormContext<OnboardingCredentials>();
   const { errors } = useFormState({ control, name: "career" });
-  const { direction } = useOnboardingStepStore()
+  const { direction } = useOnboardingStepStore();
 
   const career = useWatch({
     control,
     name: "career",
   });
 
-  const {
-    data: careers,
-    isPending,
-    error,
-  } = useQuery({
-    queryKey: ["careers"],
-    queryFn: getCareers,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data: careers, isPending, error } = useCareers();
 
   return (
     <FormStepCard
       direction={direction}
       title={
         <div className="w-full max-w-3xl text-center">
-          Karier Apa yang Ingin Kamu <span className="text-primary">Capai?</span>
+          Karier Apa yang Ingin Kamu{" "}
+          <span className="text-primary">Capai?</span>
         </div>
       }
     >
@@ -80,14 +77,19 @@ export default function InputCareerStep() {
                 >
                   {error && (
                     <div className="border border-error-border bg-error-surface p-4 text-error text-base">
-                      {error.message}
+                      {(error instanceof AxiosError &&
+                        error.response?.data?.message) ||
+                        "Gagal memuat data karier"}
                     </div>
                   )}
 
                   {isPending ? (
                     <>
-                      {[...Array(3)].map((_,index) => (
-                        <div key={index} className="w-full h-14 border-b flex items-center px-4">
+                      {[...Array(3)].map((_, index) => (
+                        <div
+                          key={index}
+                          className="w-full h-14 border-b flex items-center px-4"
+                        >
                           <Skeleton />
                         </div>
                       ))}
@@ -127,5 +129,3 @@ export default function InputCareerStep() {
     </FormStepCard>
   );
 }
-
-

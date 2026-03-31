@@ -1,44 +1,48 @@
-'use client'
+"use client";
 
-import { SelfAssessmentCredentials, SelfAssessmentSchema } from '@/schemas/career-sessions.schema'
-import { Skill } from '@/types/entities.type'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { AnimatePresence } from 'motion/react'
-import { FormProvider, useForm } from 'react-hook-form'
-import InputSkills from '../components/InputSkills'
-import InputSkillLevel from '../components/InputSkillLevel'
-import { useSelfAssessmentStepStore } from '@/stores/useSelfAssessmentStepStore'
-import { useShallow } from 'zustand/react/shallow'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useSelfAssessmentFormStore } from '@/stores/useSelfAssessmentFormStore'
-import { useEffect } from 'react'
-import { StepIndicator } from '@/features/onboarding/components/StepIndicator'
-import ConfirmationQuizModal from '../components/ConfirmationQuizModal'
+import {
+  SelfAssessmentCredentials,
+  SelfAssessmentSchema,
+} from "@/schemas/career-sessions.schema";
+import { Skill } from "@/types/entities.type";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence } from "motion/react";
+import { FormProvider, useForm } from "react-hook-form";
+import InputSkills from "../components/InputSkills";
+import InputSkillLevel from "../components/InputSkillLevel";
+import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
+import { useShallow } from "zustand/react/shallow";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
+import { useEffect } from "react";
+import { StepIndicator } from "@/components/shared/StepIndicator";
+import ConfirmationQuizModal from "../components/ConfirmationQuizModal";
 
 export default function SelfAssessmentContainer({
   skills,
-  careerSessionId
+  careerSessionId,
+  careerName,
 }: {
-  skills: Skill[],
-  careerSessionId: string
+  skills: Skill[];
+  careerSessionId: string;
+  careerName: string;
 }) {
-  const router = useRouter()
-  const pathname = usePathname()
-
   // manage params
-  const searchParams = useSearchParams()
-  const status = searchParams.get("status")
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status");
 
-// synchronize RHF form and zustand state from localStorage
+  // synchronize RHF form and zustand state from localStorage
   const {
     formStore,
     setForm,
+    isResetting,
     hasHydrated: formHasHydrated,
   } = useSelfAssessmentFormStore(
     useShallow((state) => ({
       formStore: state.formStore,
       setForm: state.setForm,
       hasHydrated: state.hasHydrated,
+      isResetting: state.isResetting,
     })),
   );
 
@@ -59,11 +63,12 @@ export default function SelfAssessmentContainer({
 
   const form = useForm<SelfAssessmentCredentials>({
     resolver: zodResolver(SelfAssessmentSchema),
+    shouldUnregister: true,
     mode: "onChange",
-    defaultValues: formStore as SelfAssessmentCredentials
-  })
+    defaultValues: formStore as SelfAssessmentCredentials,
+  });
 
-/**
+  /**
    * Auto hydrate form field from zustand persist at mount
    */
   useEffect(() => {
@@ -78,7 +83,8 @@ export default function SelfAssessmentContainer({
    * reducing parent rerender
    */
   useEffect(() => {
-    if (!formHasHydrated) return    
+    if (!formHasHydrated) return;
+    if (isResetting) return;
     const handleStepChange = (noStep: number) => {
       setForm(form.getValues());
       setStep(noStep);
@@ -94,7 +100,7 @@ export default function SelfAssessmentContainer({
     if (!stepHasHydrated) return;
 
     const selectedSkills = form.getValues("selectedSkills");
-    if (!selectedSkills.length && noStep > 1) {
+    if (!selectedSkills?.length && noStep > 1) {
       setStep(1);
       return;
     }
@@ -108,49 +114,57 @@ export default function SelfAssessmentContainer({
    */
   if (!formHasHydrated || !stepHasHydrated) return null;
 
-  const handleSelfAssessmentSubmit = (_credentials: SelfAssessmentCredentials) => {
-    router.push(`${pathname}?${searchParams.toString()}&status=confirmation`);
-  }
-
   return (
     <>
       <FormProvider {...form}>
-        <form action=""
-          onSubmit={form.handleSubmit(handleSelfAssessmentSubmit)}
-          className='w-full h-full flex items-center'
+        <form
+          action=""
+          className="w-full h-full flex items-center"
         >
           <AnimatePresence
             mode="wait"
             custom={direction}
           >
-            {noStep == 1 && <InputSkills key="step-1" skills={skills}/>}
-            {noStep == 2 && <InputSkillLevel key="step-2" skills={skills}/>}
+            {noStep == 1 && (
+              <InputSkills
+                key="step-1"
+                skills={skills}
+                careerName={careerName}
+              />
+            )}
+            {noStep == 2 && (
+              <InputSkillLevel
+                key="step-2"
+                skills={skills}
+              />
+            )}
           </AnimatePresence>
         </form>
 
         <nav className="absolute top-10 right-10">
           <ol className="w-full flex gap-3">
-            {(Object.keys(formStore) as Array<keyof SelfAssessmentCredentials>).map(
-              (state, index) => (
-                <StepIndicator<SelfAssessmentCredentials>
-                  key={index}
-                  stateKey={state}
-                  index={index}
-                  currentStep={noStep}
-                  setStep={setStep}
-                />
-              ),
-            )}
+            {(
+              Object.keys(formStore) as Array<keyof SelfAssessmentCredentials>
+            ).map((state, index) => (
+              <StepIndicator<SelfAssessmentCredentials>
+                key={index}
+                stateKey={state}
+                index={index}
+                currentStep={noStep}
+                setStep={setStep}
+              />
+            ))}
           </ol>
         </nav>
       </FormProvider>
 
       {status === "confirmation" && (
         <ConfirmationQuizModal
+          // formReset={form.reset}
           careerSessionId={careerSessionId}
           skillRatings={form.getValues("skillRatings")}
         />
       )}
     </>
-  )
+  );
 }

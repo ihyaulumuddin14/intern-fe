@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
-    
+
+    const body = await req.json();
     console.log("email forgot password", body)
 
     const isSuccess = true;

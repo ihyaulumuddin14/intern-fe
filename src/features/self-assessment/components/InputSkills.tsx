@@ -11,7 +11,7 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import BadgeSkill from "./BadgeSkill";
 import { useShallow } from "zustand/react/shallow";
 
-export default function InputSkills({ skills }: { skills: Skill[] }) {
+export default function InputSkills({ skills, careerName }: { skills: Skill[], careerName: string }) {
   const { control } = useFormContext<SelfAssessmentCredentials>();
   const { errors } = useFormState({ control, name: "selectedSkills" });
   const { nextStep, direction } = useSelfAssessmentStepStore(useShallow(state => ({
@@ -28,8 +28,8 @@ export default function InputSkills({ skills }: { skills: Skill[] }) {
     <FormStepCard
       direction={direction}
       title={
-        <div className="max-w-4xl text-center mx-auto">
-          Sebagai UI/UX Design, <span className="text-primary">Skill</span> Apa
+        <div className="max-w-4xl text-2xl sm:text-4xl md:text-5xl text-center mx-auto">
+          Sebagai {careerName}, <span className="text-primary">Skill</span> Apa
           Saja yang Sudah Kamu Kuasai?
         </div>
       }
@@ -50,7 +50,7 @@ export default function InputSkills({ skills }: { skills: Skill[] }) {
             size="lg"
             type="button"
             className="max-w-fit mx-auto"
-            disabled={selectedSkills.length == 0 || !!errors.selectedSkills}
+            disabled={selectedSkills?.length == 0 || !!errors.selectedSkills}
             onClick={nextStep}
           >
             Lanjut

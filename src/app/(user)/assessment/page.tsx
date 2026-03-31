@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 const AssessmentGate = () => {
   const router = useRouter();
-  const { mutate } = useCreateCareerSession();
+  const { mutate: createCareerSession } = useCreateCareerSession();
 
   useEffect(() => {
     const dataString = localStorage.getItem("onboarding-form");
@@ -21,12 +21,17 @@ const AssessmentGate = () => {
     const careerId = data?.state?.formStore?.career?.id;
 
     if (careerId) {
-      mutate({ careerId });
+      createCareerSession({ careerId }, {
+        onSuccess: (data) => {
+          const careerSessionId = data.data.id;
+          router.replace(`/assessment/${careerSessionId}/self`);
+        }
+      });
     } else {
       toast.error("Belum ada karir dipilih");
       router.replace("/dashboard");
     }
-  }, [mutate, router]);
+  }, [createCareerSession, router]);
 
   return (
     <section className="w-full h-dvh p-[clamp(12px,5vw,56px)] flex flex-col justify-center items-center">

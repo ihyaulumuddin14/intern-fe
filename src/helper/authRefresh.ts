@@ -27,7 +27,6 @@ export async function refreshAccessToken() {
         return newAccessToken
       })
       .catch(error => {
-        console.log(error)
         throw error
       })
       .finally(() => {
