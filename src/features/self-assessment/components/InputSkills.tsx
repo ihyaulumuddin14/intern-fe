@@ -50,7 +50,7 @@ export default function InputSkills({ skills, careerName }: { skills: Skill[], c
             size="lg"
             type="button"
             className="max-w-fit mx-auto"
-            disabled={selectedSkills.length == 0 || !!errors.selectedSkills}
+            disabled={selectedSkills?.length == 0 || !!errors.selectedSkills}
             onClick={nextStep}
           >
             Lanjut

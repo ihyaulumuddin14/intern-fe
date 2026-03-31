@@ -8,7 +8,7 @@ import { toast } from "sonner";
 
 const AssessmentGate = () => {
   const router = useRouter();
-  const { mutateAsync: createCareerSession } = useCreateCareerSession();
+  const { mutate: createCareerSession } = useCreateCareerSession();
 
   useEffect(() => {
     const dataString = localStorage.getItem("onboarding-form");

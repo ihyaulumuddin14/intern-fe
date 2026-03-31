@@ -4,6 +4,7 @@ import privateApi from "@/api/axiosInstance";
 import { Button } from "@/components/ui/button";
 import UserDashboardContainer from "@/features/user-dashboard/containers/UserDashboardContainer";
 import { useLogout } from "@/hooks/auth.hooks";
+import { useCareers } from "@/hooks/careers.hooks";
 import useUser from "@/hooks/users.hooks";
 import { toCamel } from "@/lib/case";
 import { AxiosError } from "axios";

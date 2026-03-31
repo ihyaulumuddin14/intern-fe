@@ -44,7 +44,7 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   const { direction } = useSelfAssessmentStepStore();
 
   const currentSkill = selectedSkills[currentIndex];
-  const isLastStep = currentIndex === selectedSkills.length - 1;
+  const isLastStep = currentIndex === selectedSkills?.length - 1;
 
   // Search field index base on current skill id
   const targetIndex = useMemo(

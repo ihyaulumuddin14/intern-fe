@@ -1,44 +1,39 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { apiConfig } from "@/config/env";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  try {
-    const cookieStore = await cookies();
+  const res = await fetch(`${apiConfig.BASE_URL}/auth/logout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      cookie: req.headers.get("cookie") ?? "",
+    },
+    credentials: "include",
+  });
 
-    // mock bandwith
-    await new Promise(res => setTimeout(res, 2000))
+  const body = await res.text();
 
-    // hapus cookie access_token dan refresh_token
-    cookieStore.delete("refresh_token");
-    cookieStore.delete("role");
+  const response = new Response(body, {
+    status: res.status,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    const isSuccess = true; // toggle debug
+  const cookies = res.headers.getSetCookie?.() ?? [];
+  cookies.forEach((cookie) => {
+    response.headers.append("Set-Cookie", cookie);
+  });
 
-    if (!isSuccess) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "(Mock) Logout gagal",
-        },
-        { status: 400 }
-      );
-    }
+  response.headers.append(
+    "Set-Cookie",
+    "refresh_token=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure"
+  );
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "(Mock) Logout berhasil",
-        data: null
-      },
-      { status: 200 }
-    );
-  } catch (err) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
-  }
+  response.headers.append(
+    "Set-Cookie",
+    "role=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure"
+  );
+
+  return response;
 }

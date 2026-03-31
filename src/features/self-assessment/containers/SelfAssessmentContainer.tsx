@@ -63,6 +63,7 @@ export default function SelfAssessmentContainer({
 
   const form = useForm<SelfAssessmentCredentials>({
     resolver: zodResolver(SelfAssessmentSchema),
+    shouldUnregister: true,
     mode: "onChange",
     defaultValues: formStore as SelfAssessmentCredentials,
   });
@@ -99,7 +100,7 @@ export default function SelfAssessmentContainer({
     if (!stepHasHydrated) return;
 
     const selectedSkills = form.getValues("selectedSkills");
-    if (!selectedSkills.length && noStep > 1) {
+    if (!selectedSkills?.length && noStep > 1) {
       setStep(1);
       return;
     }

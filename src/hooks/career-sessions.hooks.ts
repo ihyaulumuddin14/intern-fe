@@ -11,7 +11,6 @@ import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore"
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { useFormContext, UseFormReset } from "react-hook-form";
 import { toast } from "sonner";
 
 export const useCreateCareerSession = () => {

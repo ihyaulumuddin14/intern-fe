@@ -98,7 +98,7 @@ export const useLogout = () => {
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          ? error.response?.data?.message
           : (error as Error).message,
       );
     },

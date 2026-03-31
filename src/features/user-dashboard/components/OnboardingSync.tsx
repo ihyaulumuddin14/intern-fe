@@ -13,13 +13,16 @@ const OnboardingSync = () => {
 
     if (!dataString) return
 
-    const data = JSON.parse(dataString)
+    const data = JSON.parse(dataString) || ""
     const careerId = data?.state?.formStore?.career?.id
 
     if (careerId) {
       createCareerSession({ careerId }, {
         onSuccess: (_data) => {
           queryClient.invalidateQueries({ queryKey: ["career-sessions"] })
+        },
+        onError: (error) => {
+          console.error("Failed to create career session: ", error)
         }
       })
     }
