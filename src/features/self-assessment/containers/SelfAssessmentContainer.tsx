@@ -159,6 +159,7 @@ export default function SelfAssessmentContainer({
 
       {status === "confirmation" && (
         <ConfirmationQuizModal
+          // formReset={form.reset}
           careerSessionId={careerSessionId}
           skillRatings={form.getValues("skillRatings")}
         />

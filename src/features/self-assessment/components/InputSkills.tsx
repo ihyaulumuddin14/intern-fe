@@ -28,7 +28,7 @@ export default function InputSkills({ skills, careerName }: { skills: Skill[], c
     <FormStepCard
       direction={direction}
       title={
-        <div className="max-w-4xl text-center mx-auto">
+        <div className="max-w-4xl text-2xl sm:text-4xl md:text-5xl text-center mx-auto">
           Sebagai {careerName}, <span className="text-primary">Skill</span> Apa
           Saja yang Sudah Kamu Kuasai?
         </div>

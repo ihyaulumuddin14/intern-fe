@@ -1,7 +1,7 @@
 import FormStepCard from "@/components/shared/FormStepCard";
 import { Button } from "@/components/ui/button";
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldTitle } from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { useIsMobile } from "@/hooks/animation.hooks";
 import {
   SelfAssessmentCredentials,
@@ -18,7 +18,6 @@ import {
   useFormState,
   useWatch,
 } from "react-hook-form";
-import { is } from "zod/v4/locales";
 import RadioLevel from "./RadioLevel";
 
 export default function InputUserLevel({ skills }: { skills: Skill[] }) {
@@ -143,15 +142,15 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
 
         <RadioGroup defaultValue={value} value={value} className="w-full" onValueChange={handleUserLevelChange}>
           {USER_LEVEL_OPTIONS.map((option) => (
-            <RadioLevel title={option.title} description={option.description} userLevel={option.userLevel} />
+            <RadioLevel key={option.title} title={option.title} description={option.description} userLevel={option.userLevel} />
           ))}
         </RadioGroup>
 
         <div className="w-full flex! justify-between! items-center">
-          <span className="text-base sm:text-lg md:text-xl text-neutral-60">
+          <span className="text-xs sm:text-base md:text-xl text-neutral-60">
             {currentIndex + 1} dari {selectedSkills?.length} skill
           </span>
-          <Field orientation={"horizontal"} className="gap-4 w-fit">
+          <Field orientation={"horizontal"} className="gap-2 md:gap-4 w-fit">
             <Button
               type="button"
               size={isMobile ? "default" : "lg"}
