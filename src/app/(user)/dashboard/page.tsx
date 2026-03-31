@@ -17,6 +17,8 @@ export default function UserDashboardPage() {
   const router = useRouter()
   const { user } = useUser()
 
+  const { data: careers } = useCareers()
+
   const handleLogout = () => mutate();
 
   const handlePayment = async () => {
@@ -90,7 +92,8 @@ export default function UserDashboardPage() {
       </Button>
 
       <div>{JSON.stringify(user)}</div>
-      <UserDashboardContainer />
+      <div>{JSON.stringify(careers)}</div>
+      {/* <UserDashboardContainer /> */}
     </section>
   );
 }

@@ -1,13 +1,11 @@
 'use client'
 
-import axios from "axios"
-import { apiConfig } from "@/config/env"
 import privateApi from "@/api/axiosInstance"
 import { toCamel } from "@/lib/case"
+import axios from "axios"
 
 const refreshApi = axios.create({
-  // comment for using Nextjs route handler, without api url domain
-  baseURL: apiConfig.BASE_URL,
+  baseURL: "/",
   withCredentials: true
 })
 
@@ -15,7 +13,7 @@ let refreshPromise: Promise<{ success: boolean }> | null = null
 
 export async function refreshAccessToken() {
   if (!refreshPromise) {
-    refreshPromise = refreshApi.post('/auth/refresh')
+    refreshPromise = refreshApi.post('/api/auth/refresh')
       .then(response => {
         const camelData = toCamel(response)
         const newAccessToken = camelData.data.data.accessToken
