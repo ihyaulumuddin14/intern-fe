@@ -1,38 +1,28 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { apiConfig } from "@/config/env";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  try {
-    const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("refresh_token")?.value;
+  const backendRes = await fetch(`${apiConfig.BASE_URL}/auth/refresh`, {
+    method: "POST",
+    headers: {
+      cookie: req.headers.get("cookie") ?? "",
+    },
+  });
 
-    if (!refreshToken) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "(Mock) Refresh token tidak valid atau habis",
-        },
-        { status: 401 }
-      );
-    }
+  const body = await backendRes.text();
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "(Mock) Access token berhasil diperbarui",
-        data: {
-          access_token: "newaccesstokengila"
-        }
-      },
-      { status: 200 }
-    );
-  } catch (err) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Internal server error",
-      },
-      { status: 500 }
-    );
-  }
+  const response = new Response(body, {
+    status: backendRes.status,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const cookies = backendRes.headers.getSetCookie?.() ?? [];
+  
+  cookies.forEach((cookie) => {
+    response.headers.append("Set-Cookie", cookie);
+  });
+
+  return response;
 }
