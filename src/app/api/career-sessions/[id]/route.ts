@@ -5,13 +5,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // career session id
-    const { id } = await params
-
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
-    console.log("career session id", id)
+    // career session id
+    const { id: careerSessionId } = await params
+    console.log("career session id", careerSessionId)
 
     const isSuccess = true
 
@@ -34,7 +33,7 @@ export async function GET(
           id: "uuid-session",
           user_id: "uuid-user",
           career_id: "uuid-career",
-          status: "on_process",
+          status: "on_assessment",
           started_at: "2026-03-26T16:00:00Z"
         }
       }

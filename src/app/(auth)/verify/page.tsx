@@ -5,7 +5,7 @@ const VerifyEmailPage = () => {
   return (
     <AuthCard
       title="Verifikasi Email"
-      description="Lorem ipsum dolor sit amet"
+      description="Silakan verifikasi akun kamu untuk dapat melanjutkan sesi"
       footerText=""
       footerLink=""
       footerLinkTarget=""

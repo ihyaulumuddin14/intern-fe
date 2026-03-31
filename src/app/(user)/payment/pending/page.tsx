@@ -13,8 +13,6 @@ export default function PaymentPendingPage() {
   const orderId = searchParams.get('order_id')
   const { data, isPending } = useTransactionStatus(orderId)
 
-  console.log(data)
-
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="w-full max-w-md flex flex-col items-center gap-6 text-center">

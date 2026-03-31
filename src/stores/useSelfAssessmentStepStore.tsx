@@ -1,5 +1,4 @@
-
-import { MAX_SELF_ASSESSMENT_STEP } from "@/features/assessment/constants";
+import { MAX_SELF_ASSESSMENT_STEP } from "@/features/self-assessment/constants";
 import { StepDirection } from "@/types/common.type";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
