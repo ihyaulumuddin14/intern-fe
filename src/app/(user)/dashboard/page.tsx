@@ -2,10 +2,10 @@
 
 import privateApi from "@/api/axiosInstance";
 import { Button } from "@/components/ui/button";
-import UserDashboardContainer from "@/features/user-dashboard/containers/UserDashboardContainer";
+import OnboardingSync from "@/features/user-dashboard/components/OnboardingSync";
 import { useLogout } from "@/hooks/auth.hooks";
 import { useCareers } from "@/hooks/careers.hooks";
-import useUser from "@/hooks/users.hooks";
+import { useUser } from "@/hooks/users.hooks";
 import { toCamel } from "@/lib/case";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -14,8 +14,11 @@ import { toast } from "sonner";
 
 export default function UserDashboardPage() {
   const { mutate, isPending } = useLogout();
-  const router = useRouter()
-  const { user } = useUser()
+  const router = useRouter();
+  const { user } = useUser();
+  const { data: careers } = useCareers();
+
+  const { data: careers } = useCareers()
 
   const { data: careers } = useCareers()
 
@@ -28,27 +31,31 @@ export default function UserDashboardPage() {
 
       window.snap.pay(data.data.token, {
         onSuccess: (result) => {
-          toast.success("Pembayaran berhasil!")
-          router.push("/dashboard")
+          toast.dismiss()
+          toast.success("Pembayaran berhasil!");
+          router.push("/dashboard");
         },
 
         onPending: (result) => {
-          if (result.transaction_status === 'pending') {
-            if (result.payment_type === 'qris' || result.payment_type === 'bank_transfer') {
-              toast.info("Selesaikan pembayaran kamu!")
-              router.push(`/payment/pending?order_id=${result.order_id}`)
+          if (result.transaction_status === "pending") {
+            if (
+              result.payment_type === "qris" ||
+              result.payment_type === "bank_transfer"
+            ) {
+              toast.info("Selesaikan pembayaran kamu!");
+              router.push(`/payment/pending?order_id=${result.order_id}`);
             }
           }
         },
 
         onError: () => {
-          toast.error("Pembayaran gagal, coba lagi")
+          toast.error("Pembayaran gagal, coba lagi");
         },
 
         onClose: () => {
-          toast.warning("Pembayaran dibatalkan")
-        }
-      })
+          toast.warning("Pembayaran dibatalkan");
+        },
+      });
     } catch (error) {
       toast.error(
         error instanceof AxiosError
@@ -59,23 +66,27 @@ export default function UserDashboardPage() {
   };
 
   useEffect(() => {
-    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js"
-    const clientKey = process.env.NEXT_PUBLIC_CLIENT_MIDTRANS_KEY || ""
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = process.env.NEXT_PUBLIC_CLIENT_MIDTRANS_KEY || "";
 
-    const script = document.createElement("script")
-    script.src = snapScript
-    script.setAttribute("data-client-key", clientKey)
-    script.async = true
+    const script = document.createElement("script");
+    script.src = snapScript;
+    script.setAttribute("data-client-key", clientKey);
+    script.async = true;
 
-    document.body.appendChild(script)
+    document.body.appendChild(script);
 
     return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  
 
   return (
     <section>
+      <OnboardingSync />
+
       User Dashboard Page
       <Button
         variant={"destructive"}
@@ -84,15 +95,14 @@ export default function UserDashboardPage() {
       >
         {isPending ? "..." : "Logout"}
       </Button>
-      <Button
+      {/* <Button
         onClick={handlePayment}
         variant={"outline"}
       >
         Upgrade Premium
-      </Button>
-
-      <div>{JSON.stringify(user)}</div>
-      <div>{JSON.stringify(careers)}</div>
+      </Button> */}
+      {/* <div>{JSON.stringify(user)}</div>
+      <div>{JSON.stringify(careers)}</div> */}
       {/* <UserDashboardContainer /> */}
     </section>
   );

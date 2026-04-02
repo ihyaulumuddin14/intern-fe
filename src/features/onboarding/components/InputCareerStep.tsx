@@ -120,9 +120,9 @@ export default function InputCareerStep() {
             size="lg"
             className="max-w-fit mx-auto"
             type="submit"
+            withArrow
           >
             Lanjut
-            <ArrowRight />
           </Button>
         </Field>
       </FieldGroup>

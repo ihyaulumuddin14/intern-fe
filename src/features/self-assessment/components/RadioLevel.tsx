@@ -23,9 +23,9 @@ const RadioLevel = ({
       >
         <RadioGroupItem className="size-5 border-2 border-neutral-60" value={userLevel} id={userLevel}/>
         <FieldContent className="flex flex-col gap-1">
-          <FieldTitle className="font-medium text-xs sm:text-base md:text-xl text-neutral-100">{title}</FieldTitle>
+          <FieldTitle className="font-medium text-xs sm:text-sm lg:text-base xl:text-xl text-neutral-100">{title}</FieldTitle>
           {description && (
-            <FieldDescription className="font-normal text-xs sm:text-base md:text-xl text-neutral-60 ">{description}</FieldDescription>
+            <FieldDescription className="font-normal text-xs sm:text-sm lg:text-base xl:text-xl text-neutral-60 ">{description}</FieldDescription>
           )}
         </FieldContent>
       </Field>

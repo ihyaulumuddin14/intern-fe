@@ -1,22 +1,22 @@
 "use client";
 
+import { StepIndicator } from "@/components/shared/StepIndicator";
 import {
   SelfAssessmentCredentials,
   SelfAssessmentSchema,
 } from "@/schemas/career-sessions.schema";
+import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
+import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
 import { Skill } from "@/types/entities.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "motion/react";
-import { FormProvider, useForm } from "react-hook-form";
-import InputSkills from "../components/InputSkills";
-import InputSkillLevel from "../components/InputSkillLevel";
-import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
-import { useShallow } from "zustand/react/shallow";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { StepIndicator } from "@/components/shared/StepIndicator";
+import { FormProvider, useForm } from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 import ConfirmationQuizModal from "../components/ConfirmationQuizModal";
+import InputSkillLevel from "../components/InputSkillLevel";
+import InputSkills from "../components/InputSkills";
 
 export default function SelfAssessmentContainer({
   skills,
@@ -63,7 +63,6 @@ export default function SelfAssessmentContainer({
 
   const form = useForm<SelfAssessmentCredentials>({
     resolver: zodResolver(SelfAssessmentSchema),
-    shouldUnregister: true,
     mode: "onChange",
     defaultValues: formStore as SelfAssessmentCredentials,
   });
@@ -160,7 +159,6 @@ export default function SelfAssessmentContainer({
 
       {status === "confirmation" && (
         <ConfirmationQuizModal
-          // formReset={form.reset}
           careerSessionId={careerSessionId}
           skillRatings={form.getValues("skillRatings")}
         />
