@@ -6,7 +6,7 @@ import { useCreateCareerSession } from "@/hooks/career-sessions.hooks";
 import { useUser } from "@/hooks/users.hooks";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const AssessmentGate = () => {
@@ -14,13 +14,9 @@ const AssessmentGate = () => {
   const { mutate: createCareerSession } = useCreateCareerSession();
   const { user } = useUser()
   const [isUpdated, setIsUpdated] = useState(false);
-  const hasChecked = useRef(false);
   
   useEffect(() => {
     if (!user) return
-    if (hasChecked.current) return;
-
-    hasChecked.current = true;
 
     const formStore = getOnboardingData()
     if (!formStore) return
