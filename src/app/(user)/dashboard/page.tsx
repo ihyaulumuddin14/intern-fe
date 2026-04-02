@@ -20,6 +20,8 @@ export default function UserDashboardPage() {
 
   const { data: careers } = useCareers()
 
+  const { data: careers } = useCareers()
+
   const handleLogout = () => mutate();
 
   const handlePayment = async () => {
