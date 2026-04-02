@@ -49,17 +49,19 @@ export const useLogin = () => {
       privateApi.defaults.headers.common["Authorization"] =
         `Bearer ${accessToken}`;
 
-      toast.dismiss()
       toast.success(response.message || "Login berhasil");
-      queryClient.setQueryData(["users"], response.data);
+      toast.dismiss()
 
+      queryClient.setQueryData(["users"], response.data);
+      toast.loading("Halaman dialihkan")
       /**
        * Ensure cookies reach the client browser
        * as there is latency in production builds
        */
       setTimeout(() => {
-        router.replace(callbackUrl);
-      }, 500);
+        toast.dismiss()
+        window.location.href = callbackUrl
+      }, 1000);
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
