@@ -52,9 +52,9 @@ export default function InputSkills({ skills, careerName }: { skills: Skill[], c
             className="max-w-fit mx-auto"
             disabled={selectedSkills?.length == 0 || !!errors.selectedSkills}
             onClick={nextStep}
+            withArrow
           >
             Lanjut
-            <ArrowRight />
           </Button>
         </Field>
       </FieldGroup>

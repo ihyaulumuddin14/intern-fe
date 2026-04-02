@@ -91,7 +91,7 @@ export default function OnboardingContainer() {
   useEffect(() => {
     if (!stepHasHydrated) return;
 
-    const fullNameField = form.getValues("fullname");
+    const fullNameField = form.getValues("fullName");
     if (!fullNameField?.trim() && noStep > 1) {
       setStep(1);
       return;
@@ -119,6 +119,8 @@ export default function OnboardingContainer() {
 
     router.push(`${pathname}?${params.toString()}`);
   };
+
+  
 
   return (
     <>
@@ -156,7 +158,7 @@ export default function OnboardingContainer() {
 
       {status === "confirmation" && (
         <ConfirmationCallbackModal
-          namePlaceholder={form.getValues("fullname")}
+          namePlaceholder={form.getValues("fullName")}
         />
       )}
     </>

@@ -15,9 +15,17 @@ export async function POST(req: NextRequest) {
     headers: {
       "Content-Type":
         backendRes.headers.get("content-type") ?? "application/json",
-    },
+      },
   });
-  
+
+  const data = JSON.parse(body);
+  if (data?.data?.access_token) {
+    response.headers.append(
+      "Set-Cookie",
+      `access_token=${data.data.access_token}; Path=/; HttpOnly; SameSite=Lax`
+    )
+  }
+    
   const cookies = backendRes.headers.getSetCookie?.() ?? [];
 
   cookies.forEach((cookie) => {

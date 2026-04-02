@@ -1,28 +1,29 @@
-import { apiConfig } from "@/config/env";
-import { NextRequest } from "next/server";
+import { apiConfig } from "@/config/env"
+import { cookies } from "next/headers"
 
-export async function POST(req: NextRequest) {
-  const backendRes = await fetch(`${apiConfig.BASE_URL}/auth/refresh`, {
-    method: "POST",
-    headers: {
-      cookie: req.headers.get("cookie") ?? "",
-    },
-  });
+export async function POST() {
+  const res = await fetch(
+    `${apiConfig.BASE_URL}/auth/refresh`,
+    {
+      method: "POST",
+      headers: {
+        Cookie: (await cookies()).toString(),
+      },
+    }
+  )
 
-  const body = await backendRes.text();
+  const data = await res.json()
+  const response = Response.json(data)
 
-  const response = new Response(body, {
-    status: backendRes.status,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const setCookie = res.headers.getSetCookie?.() ?? []
+  setCookie.forEach(cookie => response.headers.append("set-cookie", cookie))
 
-  const cookies = backendRes.headers.getSetCookie?.() ?? [];
-  
-  cookies.forEach((cookie) => {
-    response.headers.append("Set-Cookie", cookie);
-  });
+  if (data?.data?.access_token) {
+    response.headers.append(
+      "set-cookie",
+      `access_token=${data.data.access_token}; Path=/; HttpOnly; SameSite=Lax`
+    )
+  }
 
-  return response;
+  return response
 }

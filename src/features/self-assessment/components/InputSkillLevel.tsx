@@ -33,7 +33,6 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
 
   // RHF
   const { control } = useFormContext<SelfAssessmentCredentials>();
-  const { errors } = useFormState({ control, name: "skillRatings" });
   const selectedSkills = useWatch({ control, name: "selectedSkills" });
   const { fields, replace, update } = useFieldArray({
     control,
@@ -44,7 +43,7 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
   const { direction } = useSelfAssessmentStepStore();
 
   const currentSkill = selectedSkills[currentIndex];
-  const isLastStep = currentIndex === selectedSkills?.length - 1;
+  const isLastStep = currentIndex === selectedSkills.length - 1;
 
   // Search field index base on current skill id
   const targetIndex = useMemo(
@@ -89,14 +88,14 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
     }
   }, [selectedSkills, replace]);
 
+
   /**
    * Synchronizing slider value
-   * when the current index has change
+   * when the current index or rhf field has change
    */
   useEffect(() => {
     const currentField = fields[targetIndex];
     if (currentField?.userLevel) {
-      // const mappedValue = USER_LEVEL_TO_NUMBER[currentField.userLevel || 1];
       setValue(currentField.userLevel as Exclude<UserLevel, "no_experience">);
     }
   }, [currentIndex, fields]);
@@ -111,14 +110,13 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
      * Search fields index base on current skill id
      * for update the user level
      */
-    
-    
     update(targetIndex, {
       ...fields[targetIndex],
       userLevel,
     });
   };
   
+
   const handleSelfAssessmentSubmit = (
     _credentials?: SelfAssessmentCredentials,
   ) => {
@@ -127,6 +125,7 @@ export default function InputUserLevel({ skills }: { skills: Skill[] }) {
 
     router.push(`${pathname}?${params.toString()}`);
   };
+
   
   return (
     <FormStepCard

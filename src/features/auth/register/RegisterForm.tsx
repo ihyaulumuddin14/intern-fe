@@ -27,7 +27,7 @@ import { useForm } from "react-hook-form";
 
 const RegisterForm = () => {
   const searchParams = useSearchParams();
-  const { mutate, isPending } = useRegister();
+  const { mutate: mutateRegister, isPending: isPendingRegister } = useRegister();
   const { formStore } = useOnboardingFormStore();
   const {
     register,
@@ -44,7 +44,7 @@ const RegisterForm = () => {
       ...credentials,
       callbackUrl: encodeURIComponent(searchParams.get("callbackUrl") || ""),
     };
-    mutate(credentialsWithCallbackUrl)  
+    mutateRegister(credentialsWithCallbackUrl)  
   };
 
   return (
@@ -56,20 +56,20 @@ const RegisterForm = () => {
       >
         <FieldGroup>
           <Field>
-            <FieldLabel>Nama Lengkap</FieldLabel>
+            <FieldLabel htmlFor="fullName">Nama Lengkap</FieldLabel>
             <Input
-              {...register("fullname")}
-              id="fullname"
+              {...register("fullName")}
+              id="fullName"
               type="text"
               placeholder="Masukkan nama kamu"
-              {...(formStore.fullname ? { defaultValue: formStore.fullname } : {})}
+              {...(formStore.fullName ? { defaultValue: formStore.fullName } : {})}
               />
-            {errors.fullname && (
-              <FieldError>{errors.fullname.message}</FieldError>
+            {errors.fullName && (
+              <FieldError>{errors.fullName.message}</FieldError>
             )}
           </Field>
           <Field>
-            <FieldLabel>Email</FieldLabel>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               {...register("email")}
               id="email"
@@ -79,7 +79,7 @@ const RegisterForm = () => {
             {errors.email && <FieldError>{errors.email.message}</FieldError>}
           </Field>
           <Field>
-            <FieldLabel>Kata sandi</FieldLabel>
+            <FieldLabel htmlFor="password">Kata sandi</FieldLabel>
             <Input
               {...register("password")}
               id="password"
@@ -94,10 +94,10 @@ const RegisterForm = () => {
           <Field>
             <Button
               size="lg"
-              disabled={isPending}
+              disabled={isPendingRegister}
               type="submit"
             >
-              {isPending ? "Mengirim..." : "Daftar"}
+              {isPendingRegister ? "Mengirim..." : "Daftar"}
             </Button>
           </Field>
         </FieldGroup>

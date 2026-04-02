@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const RegisterSchema = z.object({
-  fullname: z
+  fullName: z
     .string()
     .min(1, "Nama lengkap harus diisi")
     .min(3, "Nama lengkap minimal 3 karakter"),

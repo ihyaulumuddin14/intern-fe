@@ -136,9 +136,9 @@ export default function InputEducationStep() {
             type="button"
             disabled={!!errors.education}
             onClick={nextStep}
+            withArrow
           >
             Lanjut
-            <ArrowRight />
           </Button>
         </Field>
       </FieldGroup>

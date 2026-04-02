@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(
         {
           data: {
-            fullname: "User1",
+            full_name: "User1",
             username: "user1",
             email: "user@gmail.com",
             role: "user",
@@ -22,7 +22,10 @@ export async function GET(req: NextRequest) {
         { status: 200 }
       )
     } else {
-      throw new Error("no token")
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401 }
+      )
     }
   } catch (error) {
     return NextResponse.json(

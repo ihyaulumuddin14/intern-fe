@@ -25,10 +25,10 @@ const LoginForm = () => {
       rememberMe: false,
     },
   });
-  const { mutate, isPending } = useLogin()
+  const { mutate: mutateLogin, isPending: isPendingLogin } = useLogin()
 
   const handleLoginSubmit = async (credentials: LoginCredentials) => {
-    mutate(credentials)
+    mutateLogin(credentials)
   };
 
   return (
@@ -89,10 +89,10 @@ const LoginForm = () => {
         <Field>
           <Button
             size="lg"
-            disabled={isPending}
+            disabled={isPendingLogin}
             type="submit"
           >
-            {isPending ? "Mengirim..." : "Login"}
+            {isPendingLogin ? "Mengirim..." : "Login"}
           </Button>
         </Field>
       </FieldGroup>

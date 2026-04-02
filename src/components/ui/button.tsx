@@ -24,11 +24,11 @@ const buttonVariants = cva(
         muted: "border-[1.5px] text-muted-foreground border-neutral-40 bg-transparent hover:opacity-70"
       },
       size: {
-        tn: "h-3 gap-1.5 rounded-[8px] py-1.5 px-4 text-[10px] has-[>svg]:px-4",
-        sm: "h-8 gap-1 rounded-[8px] px-5 py-2 text-xs has-[>svg]:px-5 [&_svg:not([class*='size-'])]:size-3",
-        default: "h-10 rounded-[12px] px-6 py-3 has-[>svg]:px-6",
-        lg: "h-12 rounded-[12px] px-7 py-3.5 text-base has-[>svg]:px-7",
-        gt: "h-14 rounded-[12px] px-8 py-4 text-lg",
+          tn: "h-3 gap-1.5 rounded-[8px] py-1.5 px-4 text-[10px] has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
+          sm: "h-8 gap-1 rounded-[8px] px-5 py-2 text-xs has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square [&_svg:not([class*='size-'])]:size-4",
+          default: "h-10 rounded-[12px] px-6 py-3 has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
+          lg: "h-12 rounded-[12px] px-7 py-3.5 text-base has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
+          gt: "h-14 rounded-[12px] px-8 py-4 text-lg has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
         icon: "size-9",
         "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-8",

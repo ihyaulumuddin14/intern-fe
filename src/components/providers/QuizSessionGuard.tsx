@@ -18,7 +18,7 @@ const QuizSessionGuard = ({ children }:{ children: ReactNode }) => {
       const isQuizPage = pathname.includes("/assessment/") && pathname.includes("/quiz")
       if (!isQuizPage) {
         toast.error("Sesi quiz ditemukan, tetapi Anda tidak berada di halaman quiz. Sesi akan direset.")
-        localStorage.removeItem("quiz-session-storage")
+        sessionStorage.removeItem("quiz-session-storage")
       }
     }
   }, [pathname])

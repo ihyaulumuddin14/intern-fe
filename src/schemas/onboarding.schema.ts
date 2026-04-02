@@ -34,12 +34,12 @@ export const EducationSchema = z
   });
 
 export const OnboardingSchema = z.object({
-  fullname: z.string().min(1, "Nama lengkap harus diisi"),
+  fullName: z.string().min(1, "Nama lengkap harus diisi"),
   education: EducationSchema,
   career: z.object({
     id: z.string().min(1, "Id karier harus ada"),
     name: z.string().min(1, "Nama karier harus ada"),
-    description: z.string().min(1, "Deskripsi karier harus ada")
+    description: z.string()
   }),
 });
 

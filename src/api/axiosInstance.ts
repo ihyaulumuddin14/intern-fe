@@ -3,13 +3,11 @@ import { refreshAccessToken } from "@/helper/authRefresh"
 import axios from "axios"
 
 export const authApi = axios.create({
-  // comment for using Nextjs route handler, without api url domain
   baseURL: apiConfig.BASE_URL,
   withCredentials: true
 })
 
 export const privateApi = axios.create({
-  // comment for using Nextjs route handler, without api url domain
   baseURL: apiConfig.BASE_URL,
   withCredentials: true
 })
@@ -19,7 +17,7 @@ privateApi.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if ((error.response?.status === 401 || error.response?.status === 400) && !originalRequest._retry) {
       originalRequest._retry = true
 
       try {
