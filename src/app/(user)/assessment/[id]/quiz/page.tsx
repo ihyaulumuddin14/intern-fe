@@ -1,14 +1,30 @@
-import QuizContainer from "@/features/quiz/containers/QuizContainer"
+import QuizContainer from "@/features/quiz/containers/QuizContainer";
+import { toCamel } from "@/lib/case";
+import { serverApi } from "@/lib/serverApi";
+import { CareerSessionStatus } from "@/types/common.type";
+import { redirect } from "next/navigation";
 
-const QuizPage = async ({
-  params
-}: {
-  params: Promise<{ id: string }>
-}) => {
+const getCareerSessionStatus = async (
+  careerSessionId: string,
+): Promise<CareerSessionStatus> => {
+  const api = await serverApi();
+  const { data: careerSessionData } = await api.get(
+    `/career-sessions/${careerSessionId}`,
+  );
+  const { status: careerSessionStatus } = toCamel(careerSessionData.data);
+  return careerSessionStatus;
+};
+
+const QuizPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
-  return (
-    <QuizContainer careerSessionId={id} />
-  )
-}
+  const careerSessionStatus = await getCareerSessionStatus(id);
 
-export default QuizPage
+  // Redirect to dashboard for on_learning user
+  if (careerSessionStatus === "on_learning") {
+    redirect("/dashboard");
+  }
+
+  return <QuizContainer careerSessionId={id} />;
+};
+
+export default QuizPage;
