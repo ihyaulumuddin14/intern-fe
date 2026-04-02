@@ -4,17 +4,39 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { useQuizResultStore } from "@/stores/useQuizResultStore";
+import { useEffect, useState } from "react";
+import Loader from "@/components/shared/Loader";
 
 const SCORE_THRESHOLD = 75;
 
 const QuizResult = () => {
   const router = useRouter();
-  const { result } = useQuizResultStore();
+  const { result, clearResult, hasHydrated } = useQuizResultStore();
+  const [isReady, setIsReady] = useState(false);
 
-  if (!result) {
-    router.replace("/dashboard")
-    return null
-  };
+  useEffect(() => {
+    if (!hasHydrated) return;
+
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [hasHydrated]);
+
+  useEffect(() => {
+    if (isReady && !result) {
+      router.replace("/dashboard");
+    }
+  }, [isReady, result, router]);
+
+  if (!hasHydrated || !isReady || !result) {
+    return (
+      <div className="w-full h-dvh flex items-center justify-center">
+        <Loader size="lg" />
+      </div>
+    );
+  }
 
   const { totalScore, skillsResult } = result;
   const isPassed = totalScore >= SCORE_THRESHOLD;
@@ -22,6 +44,7 @@ const QuizResult = () => {
 
   const handleBackToDashboard = () => {
     sessionStorage.removeItem("quiz-session-storage")
+    clearResult()
     router.replace("/dashboard")
   }
 

@@ -4,7 +4,8 @@ import privateApi from "@/api/axiosInstance";
 import { useStartQuiz } from "@/hooks/quiz.hooks";
 import { toCamel } from "@/lib/case";
 import { useQuizStore } from "@/stores/useQuizStore";
-import { useSearchParams } from "next/navigation";
+import { useQuizResultStore } from "@/stores/useQuizResultStore";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
@@ -12,19 +13,41 @@ import LoadingCheckingQuizSession from "../components/LoadingCheckingQuizSession
 import LoadingStartingNewQuiz from "../components/LoadingStartingNewQuiz";
 import QuestionAnswer from "../components/Question";
 
-const QuizContainer = ({ careerSessionId }: { careerSessionId: string }) => {
+import { CareerSessionStatus } from "@/types/common.type";
+
+const QuizContainer = ({ 
+  careerSessionId,
+  careerSessionStatus
+}: { 
+  careerSessionId: string;
+  careerSessionStatus: CareerSessionStatus;
+}) => {
+  const router = useRouter();
   const params = useSearchParams();
-  const careerSessionStatus = params.get("career_session_status");
-  const { mutateAsync: mutateStartQuiz, isPending } = useStartQuiz();
+  const urlStatus = params.get("status");
+  const { mutateAsync, isPending } = useStartQuiz();
   const [isChecking, setIsChecking] = useState(true);
-  const { questions, setCareerId, hasHydrated } = useQuizStore(useShallow((state) => ({
+  const { questions, setCareerId, hasHydrated, quizSessionId } = useQuizStore(useShallow((state) => ({
     questions: state.questions,
     setCareerId: state.setCareerId,
     hasHydrated: state.hasHydrated,
+    quizSessionId: state.quizSessionId,
   })));
+  const { result, hasHydrated: hasHydratedResult } = useQuizResultStore();
 
   useEffect(() => {
-    if (!hasHydrated) return;
+    if (!hasHydrated || !hasHydratedResult) return;
+
+    if (urlStatus === "confirmation" || urlStatus === "result") {
+      return;
+    }
+
+    if (careerSessionStatus === "on_learning") {
+      if (!result?.quizSessionId || result?.quizSessionId !== quizSessionId) {
+        router.replace("/dashboard");
+        return;
+      }
+    }
 
     const checkQuizSession = async () => {
       setIsChecking(true);
@@ -34,9 +57,9 @@ const QuizContainer = ({ careerSessionId }: { careerSessionId: string }) => {
         /**
          * If there is no quiz session in the store, start a new quiz session.
          */
-        await mutateStartQuiz(careerSessionId);
+        await mutateAsync(careerSessionId);
         const [, careerSessionData] = await Promise.all([
-          mutateStartQuiz(careerSessionId),
+          mutateAsync(careerSessionId),
           privateApi.get(`/career-sessions/${careerSessionId}`)
         ])
 
@@ -55,7 +78,7 @@ const QuizContainer = ({ careerSessionId }: { careerSessionId: string }) => {
     };
 
     checkQuizSession();
-  }, [careerSessionId, hasHydrated]);
+  }, [careerSessionId, hasHydrated, hasHydratedResult, urlStatus, careerSessionStatus, quizSessionId, result, router]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
