@@ -12,8 +12,6 @@ export function proxy(request: NextRequest) {
    * to keep the flow stable
    */
   if (!session && !pathname.startsWith("/onboarding")) {
-    console.log(search)
-    console.log(pathname)
     const fullCallbackUrl = `${pathname}${search}`
     const encodedCallback = encodeURIComponent(fullCallbackUrl)
     
