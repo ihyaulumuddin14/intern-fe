@@ -15,7 +15,7 @@ const RegisterPageInterceptor = () => {
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/register");
   const searchParams = useSearchParams();
-  const callbackUrl = encodeURIComponent(searchParams.get("callbackUrl") || "");
+  const callbackUrl = searchParams.get("callbackUrl") || "";
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
