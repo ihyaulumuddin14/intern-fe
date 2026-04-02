@@ -17,19 +17,19 @@ import { useShallow } from "zustand/react/shallow";
 
 export default function InputNameStep() {
   const { control } = useFormContext<OnboardingCredentials>();
-  const { errors } = useFormState({ control, name: "fullname" });
+  const { errors } = useFormState({ control, name: "fullName" });
   const { nextStep, direction } = useOnboardingStepStore(useShallow(state => ({
     nextStep: state.nextStep,
     direction: state.direction
   })));
 
-  const fullname = useWatch({
+  const fullName = useWatch({
     control,
-    name: "fullname",
+    name: "fullName",
   });
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && fullname && !errors.fullname) {
+    if (e.key === "Enter" && fullName && !errors.fullName) {
       e.preventDefault()
       nextStep()
     }
@@ -48,7 +48,7 @@ export default function InputNameStep() {
         <Field>
           <Controller
             control={control}
-            name="fullname"
+            name="fullName"
             render={({ field }) => (
               <Input
                 className="w-full"
@@ -59,20 +59,20 @@ export default function InputNameStep() {
               />
             )}
           />
-          {errors.fullname && (
-            <FieldError>{errors.fullname.message}</FieldError>
+          {errors.fullName && (
+            <FieldError>{errors.fullName.message}</FieldError>
           )}
         </Field>
         <Field>
           <Button
             size="lg"
+            withArrow
             className="max-w-fit mx-auto"
             type="button"
-            disabled={!fullname || !!errors.fullname}
+            disabled={!fullName || !!errors.fullName}
             onClick={nextStep}
           >
             Lanjut
-            <ArrowRight />
           </Button>
         </Field>
       </FieldGroup>

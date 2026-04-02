@@ -24,10 +24,10 @@ const ResetPasswordForm = () => {
       token: token || ""
     },
   });
-  const { mutate, isPending } = useResetPassword()
+  const { mutate: mutateResetPassword, isPending: isPendingResetPassword } = useResetPassword()
 
   const handleResetPasswordSubmit = (credentials: ResetPasswordCredentials) => {
-    mutate(credentials)
+    mutateResetPassword(credentials)
   };
 
   return (
@@ -53,10 +53,10 @@ const ResetPasswordForm = () => {
         <Field>
           <Button
             size="lg"
-            disabled={isPending}
+            disabled={isPendingResetPassword}
             type="submit"
           >
-            {isPending ? "Mengubah..." : "Ubah kata sandi"}
+            {isPendingResetPassword ? "Mengubah..." : "Ubah kata sandi"}
           </Button>
         </Field>
       </FieldGroup>

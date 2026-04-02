@@ -3,8 +3,8 @@ import { Career } from "@/types/entities.type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type OnboardingFormType = {
-  fullname: string;
+export type OnboardingFormType = {
+  fullName: string;
   education: {
     educationLevel?: EducationLevel
     major?: string;
@@ -25,7 +25,7 @@ export const useOnboardingFormStore = create<Store>()(
   persist(
     (set) => ({
       formStore: {
-        fullname: "",
+        fullName: "",
         education: {},
         career: {
           id: "",
@@ -42,7 +42,7 @@ export const useOnboardingFormStore = create<Store>()(
 
       resetForm: () => set({
         formStore: {
-          fullname: "",
+          fullName: "",
           education: {},
           career: {
             id: "",

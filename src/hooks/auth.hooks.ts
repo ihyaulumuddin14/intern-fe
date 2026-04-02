@@ -21,10 +21,7 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
     onSuccess: (data, credentials) => {
-      // dummy
-      console.log(
-        `link verify: http://localhost:3000/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard`,
-      );
+      toast.dismiss()
       toast.success(data.message || "Register berhasil");
       sessionStorage.setItem("pending-verification-email", credentials.email);
     },
@@ -52,6 +49,7 @@ export const useLogin = () => {
       privateApi.defaults.headers.common["Authorization"] =
         `Bearer ${accessToken}`;
 
+      toast.dismiss()
       toast.success(response.message || "Login berhasil");
       queryClient.setQueryData(["users"], response.data);
 
@@ -93,20 +91,19 @@ export const useLogout = () => {
     onSuccess: (response) => {
       router.push("/");
       router.refresh();
+      toast.dismiss()
       toast.success(response.message || "Logout berhasil");
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.message
-          : (error as Error).message,
+        ? error.response?.data?.message
+        : (error as Error).message,
       );
     },
     onSettled: () => {
       queryClient.clear();
-
       delete privateApi.defaults.headers.common["Authorization"];
-      window.location.href = "/";
     },
   });
 };
@@ -132,10 +129,7 @@ export const useResendVerifyEmail = () => {
   return useMutation({
     mutationFn: resendVerify,
     onSuccess: (response) => {
-      // dummy
-      console.log(
-        `link verify: http://localhost:3000/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard`,
-      );
+      toast.dismiss()
       toast.success(response.message || "Berhasil kirim email verifikasi");
     },
     onError: (error) => {
@@ -152,11 +146,8 @@ export const useForgotPassword = () => {
   return useMutation({
     mutationFn: forgotPassword,
     onSuccess: (response) => {
+      toast.dismiss()
       toast.success(response.message || "Tautan reset berhasil dikirim");
-      // dummy
-      console.log(
-        `link reset: http://localhost:3000/reset-password?token=FDSefqo87c43yrUGYU8968`,
-      );
     },
     onError: (error) => {
       toast.error(
@@ -174,6 +165,7 @@ export const useResetPassword = () => {
   return useMutation({
     mutationFn: resetPassword,
     onSuccess: (response) => {
+      toast.dismiss()
       toast.success(response.message || "Password berhasil direset!");
       router.replace("/login");
     },

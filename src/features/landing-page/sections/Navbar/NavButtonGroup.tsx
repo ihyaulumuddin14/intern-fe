@@ -2,17 +2,17 @@
 
 import Skeleton from "@/components/shared/Skeleton";
 import { Button } from "@/components/ui/button";
-import useUser from "@/hooks/users.hooks";
+import { useUser } from "@/hooks/users.hooks";
 import { useRouter } from "next/navigation";
 
 const NavButtonGroup = () => {
-  const { user, isPending } = useUser();
+  const { user, isPending, error } = useUser();
   const router = useRouter();
 
   return (
     <ul className="flex gap-4 items-center">
 
-      {isPending ? (
+      {isPending && !error ? (
         <Skeleton className="w-30.25 h-10"/>
       ) : (
         user ? (

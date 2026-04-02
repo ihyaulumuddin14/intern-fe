@@ -1,35 +1,70 @@
 'use client'
 
+import UpdateProfileConfirmation, { getOnboardingData } from "@/components/shared/UpdateProfileConfirmation"
 import { useCreateCareerSession } from "@/hooks/career-sessions.hooks"
-import { getQueryClient } from "@/lib/queryClient"
-import { useEffect } from "react"
+import { useUser } from "@/hooks/users.hooks"
+import { useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
+import { toast } from "sonner"
 
 const OnboardingSync = () => {
+  const [isUpdated, setIsUpdated] = useState(false);
   const { mutate: createCareerSession } = useCreateCareerSession()
-  const queryClient = getQueryClient()
+  const { user } = useUser();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const hasChecked = useRef(false);
 
   useEffect(() => {
-    const dataString = localStorage.getItem("onboarding-form")
+    if (!user) return;
+    if (hasChecked.current) return;
 
-    if (!dataString) return
+    hasChecked.current = true;
 
-    const data = JSON.parse(dataString) || ""
-    const careerId = data?.state?.formStore?.career?.id
+    const formStore = getOnboardingData();
+    if (!formStore) return;
 
-    if (careerId) {
-      createCareerSession({ careerId }, {
-        onSuccess: (_data) => {
-          queryClient.invalidateQueries({ queryKey: ["career-sessions"] })
-        },
-        onError: (error) => {
-          console.error("Failed to create career session: ", error)
-        }
-      })
+    const {
+      career: { id },
+      education: { educationLevel, major, institution },
+      fullName,
+    } = formStore;
+
+    if (id) {
+      if (educationLevel || major || institution || fullName) {
+        setIsUpdated(true);
+      }
     }
+  }, [router, user]);
 
-  }, [createCareerSession])
 
-  return null
+  const handleCreateCareerSession = () => {
+    if (isUpdated) setIsUpdated(false)
+
+    const formStore = getOnboardingData()
+    if (!formStore) return
+
+    const { career: { id: careerId } } = formStore
+
+    createCareerSession({ careerId }, {
+      onSuccess: () => {
+        toast.success("Berhasil menyimpan sesi karier")
+        queryClient.invalidateQueries({ queryKey: ["career-sessions"] })
+      },
+      onError: () => {
+        toast.error("Gagal menyimpan data karier")
+      }
+    });
+  }
+
+  return (
+    <UpdateProfileConfirmation
+      setIsUpdated={setIsUpdated}
+      isUpdated={isUpdated}
+      onNextStep={handleCreateCareerSession}
+    />
+  )
 }
 
 export default OnboardingSync
