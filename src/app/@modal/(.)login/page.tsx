@@ -15,7 +15,7 @@ const LoginPageInterceptor = () => {
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/login");
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "";
+  const callbackUrl = encodeURIComponent(searchParams.get("callbackUrl") || "");
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;

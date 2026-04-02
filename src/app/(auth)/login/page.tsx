@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "";
+  const callbackUrl = encodeURIComponent(searchParams.get("callbackUrl") || "");
 
   return (
     <AuthCard
