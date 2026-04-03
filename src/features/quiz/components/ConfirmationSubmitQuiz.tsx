@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useSubmitQuiz } from "@/hooks/quiz.hooks";
 import { useQuizStore } from "@/stores/useQuizStore";
+import { SendHorizonal } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const ConfirmationSubmitQuiz = () => {
@@ -39,11 +40,13 @@ const ConfirmationSubmitQuiz = () => {
           <DialogTitle>Selesaikan Kuis</DialogTitle>
         </DialogHeader>
         <div className="w-full">
-          <img
-            className="w-1/2 mx-auto"
-            src="/gif/evaluate.gif"
-            alt="evaluate.gif"
-          />
+          <div className="w-1/2 mx-auto flex justify-center items-center">
+            <SendHorizonal
+              size={96}
+              strokeWidth={1.5}
+              className="text-foreground"
+            />
+          </div>
         </div>
 
         <main className="text-center mb-7">

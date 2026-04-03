@@ -8,6 +8,7 @@ import {
   ResendVerifyCredentials,
   VerifyCredentials,
 } from "@/schemas/auth.schema";
+import { AlertTriangle, CheckCircle, Loader2, XCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -98,16 +99,36 @@ const VerifyEmailClient = () => {
 
   return (
     <div className="w-full max-w-xs flex flex-col items-center mx-auto">
-      <img
-        className="w-1/2 mx-auto"
-        src={
-          (isPendingVerify && "/gif/face-scan.gif") ||
-          error ||
-          (!token && !isVerified && "/gif/failed-verify.gif") ||
-          (data && "/gif/success-verify.gif")
-        }
-        alt="status.gif"
-      />
+      <div className="w-1/2 mx-auto flex justify-center items-center">
+        {isPendingVerify && (
+          <Loader2
+            className="animate-spin text-muted-foreground"
+            size={80}
+            strokeWidth={1.5}
+          />
+        )}
+        {!isPendingVerify && !error && !isVerified && (
+          <XCircle
+            className="text-destructive animate-pulse"
+            size={80}
+            strokeWidth={1.5}
+          />
+        )}
+        {error && (
+          <AlertTriangle
+            className="text-warning"
+            size={80}
+            strokeWidth={1.5}
+          />
+        )}
+        {data && isVerified && (
+          <CheckCircle
+            className="text-success"
+            size={80}
+            strokeWidth={1.5}
+          />
+        )}
+      </div>
 
       <p>
         {isPendingVerify && "Memverifikasi akun Anda.."}

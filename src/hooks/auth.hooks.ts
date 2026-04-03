@@ -72,7 +72,7 @@ export const useLogin = () => {
           const unverifiedEmail = error.response?.data?.data?.email;
 
           sessionStorage.setItem("pending-verification-email", unverifiedEmail);
-          router.push("/verify-email");
+          router.push("/verify");
           return;
         }
 
@@ -104,6 +104,7 @@ export const useLogout = () => {
       );
     },
     onSettled: () => {
+      localStorage.removeItem("selected-career-session-id")
       queryClient.clear();
       delete privateApi.defaults.headers.common["Authorization"];
     },

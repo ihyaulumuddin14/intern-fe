@@ -4,14 +4,14 @@ export const AnswerOptionEnum = z.enum(["a", "b", "c", "d"]);
 
 export const QuizAnswerSchema = z.object({
   quizAnswerId: z.string(),
-  answer: AnswerOptionEnum.optional().refine(value => value !== undefined, {
+  userAnswer: AnswerOptionEnum.optional().refine(value => value !== undefined, {
     message: "Jawaban tidak boleh kosong"
   })
 })
 
 export const QuizFormSchema = z.object({
   answers: z.array(QuizAnswerSchema)
-}).refine(data => data.answers.every(answer => answer.answer !== undefined), {
+}).refine(data => data.answers.every(answer => answer.userAnswer !== undefined), {
   message: "Semua pertanyaan harus dijawab"
 })
 

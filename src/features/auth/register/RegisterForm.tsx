@@ -21,6 +21,7 @@ import { useRegister } from "@/hooks/auth.hooks";
 import { RegisterCredentials, RegisterSchema } from "@/schemas/auth.schema";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Send } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -151,12 +152,8 @@ const EmailSentAlert = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            <div className="w-full">
-              <img
-                className="w-1/2 mx-auto"
-                src="/gif/email.gif"
-                alt="email.gif"
-              />
+            <div className="w-full flex flex-col items-center gap-5">
+              <Send size={70} />
               <h1 className="text-center text-2xl font-semibold">
                 Tautan verifikasi telah terkirim
               </h1>

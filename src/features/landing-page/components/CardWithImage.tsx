@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import React from 'react'
 
 const CardWithImage = ({
   imagePosition = "left",
@@ -7,18 +6,43 @@ const CardWithImage = ({
   title,
   description
 }: {
-  imagePosition: "right" | "left",
+  imagePosition: string,
   imageSrc: string,
   title: string,
   description: string
 }) => {
+  const isLeft = imagePosition === "left"
+ 
   return (
-    <div className='bg-background w-full max-w-152 grid grid-cols-1 xs:grid-cols-2 rounded-xl overflow-hidden'>
-      <div className='w-full overflow-hidden relative'>
-        <Image src={imageSrc} alt='' fill/>
+    <li
+      className={`
+        bg-background w-full rounded-md overflow-hidden shadow-md
+        flex flex-col
+        xs:grid xs:grid-cols-2
+        ${isLeft ? '' : 'xs:[direction:rtl]'}
+      `}
+    >
+      <div className="w-full xs:h-full h-48 overflow-hidden relative xs:[direction:ltr] aspect-square">
+        <Image
+          src={imageSrc}
+          alt={title}
+          fill
+          className="object-cover"
+        />
       </div>
-      <div></div>
-    </div>
+ 
+      <div className={`
+        flex flex-col justify-center gap-4 p-5
+        xs:[direction:ltr]
+      `}>
+        <h3 className="font-lora font-medium italic text-2xl sm:text-[32px] text-neutral-100">
+          {title}
+        </h3>
+        <p className="text-lg sm:text-[20px] text-neutral-70 leading-relaxed">
+          {description}
+        </p>
+      </div>
+    </li>
   )
 }
 
