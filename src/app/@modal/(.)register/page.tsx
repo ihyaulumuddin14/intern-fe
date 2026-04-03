@@ -15,7 +15,7 @@ const RegisterPageInterceptor = () => {
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/register");
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = searchParams.get("callbackUrl") || "";
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
@@ -30,12 +30,15 @@ const RegisterPageInterceptor = () => {
       onOpenChange={handleOpenChange}
     >
       <DialogContent>
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <AuthCard
-          title="Register"
-          description="Lorem ipsum dolor sit amet"
+          title="Buat Akun Baru"
+          description="Isi data di bawah ini untuk memulai perjalananmu bersama kami."
           footerText="Sudah punya akun?"
           footerLink="Login"
-          footerLinkTarget={`/login${callbackUrl ? `?callbackUrl${callbackUrl}` : ``}`}
+          footerLinkTarget={`/login${callbackUrl ? `?callbackUrl=${callbackUrl}` : ``}`}
         >
           <RegisterForm />
         </AuthCard>

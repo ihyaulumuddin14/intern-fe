@@ -11,11 +11,14 @@ const HeroSection = () => {
         <div className="w-full flex flex-col items-center gap-8 lg:gap-5 text-center">
           <h1 className="text-3xl  sm:text-5xl lg:text-[64px] font-semibold px-[clamp(10px,5vw,50px)] leading-[1.2]">
             Ketahui Seberapa Siap{" "}
-            <span className="font-bold font-lora text-primary">Skill</span> Kamu
+            <span className="font-bold font-lora inline-block text-primary relative">
+              Skill
+              <img className="absolute -bottom-1 sm:-bottom-2" src="/assets/underline.png" alt="underline.png" />
+            </span> Kamu
             untuk <span className="text-primary">Karier Impian</span>
           </h1>
 
-          <p className="text-base sm:text-lg lg:text-2xl text-neutral-70 max-w-219.5 font-normal">
+          <p className="text-xs sm:text-base lg:text-2xl text-neutral-70 max-w-219.5 font-normal">
             SkillGap membantu kamu menganalisis skill yang sudah dimiliki,
             menemukan skill yang masih kurang, dan memberikan rekomendasi untuk
             berkembang.
@@ -30,17 +33,17 @@ const HeroSection = () => {
           <CardCTA
             title="Frontend Developer"
             imageSrc="/assets/frontend-hooks.webp"
-            targetUrl="#"
+            targetUrl="/dashboard"
           />
           <CardCTA
             title="UI/UX Design"
             imageSrc="/assets/uiux-hooks.webp"
-            targetUrl="#"
+            targetUrl="/dashboard"
           />
           <CardCTA
             title="Product Management"
             imageSrc="/assets/pm-hooks.webp"
-            targetUrl="#"
+            targetUrl="/dashboard"
           />
         </div>
       </Container>

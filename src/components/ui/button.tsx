@@ -12,22 +12,23 @@ const buttonVariants = cva(
       variant: {
         default:
           "bg-primary text-primary-foreground hover:bg-primary-hover focus:bg-primary-focus active:bg-primary-pressed",
-          destructive:
+        destructive:
           "bg-error text-error-foreground hover:bg-error-hover focus:bg-error-focus active:bg-error-pressed",
         outline:
-          "border-primary border-[1.5px] bg-transparent hover:bg-primary-surface text-primary disabled:border-muted-foreground disabled:bg-transparent",
+          "border-primary border-[1.5px] bg-transparent hover:bg-primary-surface text-primary disabled:border-neutral-40 disabled:bg-transparent disabled:text-muted-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
           "bg-transparent hover:bg-primary-surface focus:shadow-input text-primary disabled:bg-transparent",
         link: "text-primary underline-offset-4 hover:underline",
+        muted: "border-[1.5px] text-muted-foreground border-neutral-40 bg-transparent hover:opacity-70"
       },
       size: {
-        tn: "h-3 gap-1.5 rounded-[8px] py-1.5 px-4 text-[10px] has-[>svg]:px-4",
-        sm: "h-8 gap-1 rounded-[8px] px-5 py-2 text-xs has-[>svg]:px-5 [&_svg:not([class*='size-'])]:size-3",
-        default: "h-10 rounded-[12px] px-6 py-3 has-[>svg]:px-6",
-        lg: "h-12 rounded-[12px] px-7 py-3.5 text-base has-[>svg]:px-7",
-        gt: "h-14 rounded-[12px] px-8 py-4 text-lg",
+          tn: "h-3 gap-1.5 rounded-[8px] py-1.5 px-4 text-[10px] has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
+          sm: "h-8 gap-1 rounded-[8px] px-5 py-2 text-xs has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square [&_svg:not([class*='size-'])]:size-4",
+          default: "h-10 rounded-[12px] px-6 py-3 has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
+          lg: "h-12 rounded-[12px] px-7 py-3.5 text-base has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
+          gt: "h-14 rounded-[12px] px-8 py-4 text-lg has-[>svg:only-child]:px-0 has-[>svg:only-child]:aspect-square",
         icon: "size-9",
         "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
         "icon-sm": "size-8",

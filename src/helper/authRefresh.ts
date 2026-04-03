@@ -1,25 +1,36 @@
-'use client'
+import privateApi from "@/api/axiosInstance"
+import { toCamel } from "@/lib/case"
+import axios, { AxiosError } from "axios"
+import { handleLogout } from "./handleLogout"
 
-import axios from "axios"
-import { API_URL } from "@/config/env"
-
-const refreshApi = axios.create({
-  // comment for using Nextjs route handler, without api url domain
-  // baseURL: API_URL,
-  withCredentials: true
-})
-
-let refreshPromise: Promise<{ success: boolean }> | null = null
+let refreshPromise: Promise<string> | null = null
 
 export async function refreshAccessToken() {
   if (!refreshPromise) {
-    refreshPromise = refreshApi.post('/auth/refresh')
+    refreshPromise = axios.post(`${process.env.NEXT_PUBLIC_FE_URL}/auth/refresh`, {}, {
+      withCredentials: true
+    })
       .then(response => {
-        console.log(response.data)
-        return response.data
+        if (!response.data.success) throw new Error(response.data?.message || "Gagal melakukan refresh")
+
+        const camelData = toCamel(response)
+        const newAccessToken = camelData.data?.data?.accessToken
+        /**
+         * Update global axios instance with new access token
+         */
+        privateApi.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`
+        return newAccessToken
       })
       .catch(error => {
-        console.log(error)
+        if (error instanceof AxiosError) {
+          /**
+           * Automatic logout when refresh token has expired with 401 custom status code
+           */
+          if (error.response?.status === 401) {
+            handleLogout()
+            throw error
+          }
+        }
         throw error
       })
       .finally(() => {

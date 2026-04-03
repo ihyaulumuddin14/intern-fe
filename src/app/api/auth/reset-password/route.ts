@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
     // mock bandwith
     await new Promise(res => setTimeout(res, 2000))
 
+    const body = await req.json();
     console.log("reset-password", body)
 
     const isSuccess = true;
@@ -15,10 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: {
-            message: "(Mock) Reset password gagal",
-            status: 400
-          }
+          message: "(Mock) Reset password gagal",
         },
         { status: 400 }
       );
@@ -36,10 +32,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: {
-          message: "Internal server error",
-          status: 500
-        }
+        message: "Internal server error",
       },
       { status: 500 }
     );

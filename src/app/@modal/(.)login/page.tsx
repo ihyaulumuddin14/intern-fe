@@ -15,7 +15,7 @@ const LoginPageInterceptor = () => {
   const pathname = usePathname();
   const isOpen = pathname.startsWith("/login");
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = searchParams.get("callbackUrl") || "";
 
   const handleOpenChange = (open: boolean) => {
     if (open) return;
@@ -30,12 +30,15 @@ const LoginPageInterceptor = () => {
       onOpenChange={handleOpenChange}
     >
       <DialogContent>
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+        </DialogHeader>
         <AuthCard
-          title="Login"
-          description="Lorem ipsum dolor sit amet"
+          title="Selamat Datang Kembali"
+          description="Masukkan detail akun kamu untuk melanjutkan sesi."
           footerText="Belum punya akun?"
           footerLink="Daftar"
-          footerLinkTarget={`/register${callbackUrl ? `?callbackUrl${callbackUrl}` : ``}`}
+          footerLinkTarget={`/register${callbackUrl ? `?callbackUrl=${callbackUrl}` : ``}`}
         >
           <LoginForm />
         </AuthCard>

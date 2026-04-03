@@ -12,45 +12,59 @@ import {
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { OnboardingCredentials } from "@/schemas/onboarding.schema";
+import { EDUCATION_LEVEL_LABEL, EDUCATION_LEVEL_OPTIONS, OnboardingCredentials } from "@/schemas/onboarding.schema";
 import { useOnboardingStepStore } from "@/stores/useOnboardingStepStore";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
-
-const educationLevels = ["SMA / SMK", "Diploma 3", "Diploma 4", "Sarjana (S1)"];
+import {
+  Controller,
+  useFormContext,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
+import { useShallow } from "zustand/react/shallow";
 
 export default function InputEducationStep() {
-  const { nextStep } = useOnboardingStepStore();
   const [isOpen, setIsOpen] = useState(false);
-  const {
-    register,
-    control,
-    trigger,
-    formState: { errors },
-  } = useFormContext<OnboardingCredentials>();
+  const { register, control, trigger } = useFormContext<OnboardingCredentials>();
+  const { errors } = useFormState({ control, name: "education" });
+  const { nextStep, direction } = useOnboardingStepStore(useShallow(state => ({
+    nextStep: state.nextStep,
+    direction: state.direction
+  })));
 
-  const educationData = useWatch({
+  const education = useWatch({
     control,
     name: "education",
   });
 
-  useEffect(() => {
-    if (educationData) {
-      trigger("education");
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !errors.education) {
+      e.preventDefault();
+      nextStep();
     }
-  }, [educationData, trigger]);
+  };
+
+  /**
+   * Must manually trigger for nested object + superRefine
+   */
+  useEffect(() => {
+    trigger("education");
+  }, [education, trigger]);
 
   return (
     <FormStepCard
+      direction={direction}
       title={
-        <>
+        <div className="w-full max-w-3xl text-center">
           Apa Tingkat <span className="text-primary">Pendidikan</span>{" "}
           Terakhirmu?
-        </>
+        </div>
       }
     >
-      <FieldGroup>
+      <FieldGroup
+        className="w-full max-w-137.75 flex flex-col gap-8"
+        >
         <Field>
           <Controller
             name="education.educationLevel"
@@ -66,7 +80,7 @@ export default function InputEducationStep() {
                   className="text-start relative cursor-pointer"
                 >
                   <DropdownTrigger
-                    value={educationData.educationLevel}
+                    value={EDUCATION_LEVEL_LABEL[education?.educationLevel] ?? ""}
                     placeholder="Pilih tingkat pendidikan kamu"
                     isOpen={isOpen}
                   >
@@ -77,7 +91,7 @@ export default function InputEducationStep() {
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-(--radix-dropdown-menu-trigger-width) p-0 rounded-t-none"
                   align="start"
                 >
-                  {educationLevels.map((level) => (
+                  {EDUCATION_LEVEL_OPTIONS.map((level) => (
                     <DropdownMenuItem
                       key={level}
                       className={cn(
@@ -86,7 +100,7 @@ export default function InputEducationStep() {
                       )}
                       onSelect={() => field.onChange(level)}
                     >
-                      {level}
+                      {EDUCATION_LEVEL_LABEL[level]}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -94,12 +108,14 @@ export default function InputEducationStep() {
             )}
           ></Controller>
           <Input
+            onKeyDown={handleKeyDown}
             className="w-full"
             id="major-input"
             placeholder="Jurusan"
             {...register("education.major")}
           />
           <Input
+            onKeyDown={handleKeyDown}
             className="w-full"
             id="institution-input"
             placeholder="Nama Sekolah / Universitas"
@@ -120,9 +136,9 @@ export default function InputEducationStep() {
             type="button"
             disabled={!!errors.education}
             onClick={nextStep}
+            withArrow
           >
             Lanjut
-            <ArrowRight />
           </Button>
         </Field>
       </FieldGroup>

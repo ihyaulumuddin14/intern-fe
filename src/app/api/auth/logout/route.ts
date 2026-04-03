@@ -1,50 +1,41 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { apiConfig } from "@/config/env";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  try {
-    const cookieStore = await cookies();
+  const res = await fetch(`${apiConfig.BASE_URL}/auth/logout`, {
+    method: "POST",
+    headers: {
+      cookie: req.headers.get("cookie") ?? "",
+    },
+  });
 
-    // mock bandwith
-    await new Promise(res => setTimeout(res, 2000))
+  const body = await res.text();
 
-    // hapus cookie access_token dan refresh_token
-    cookieStore.delete("access_token");
-    cookieStore.delete("refresh_token");
+  const response = new Response(body, {
+    status: res.status,
+    headers: {
+      "Content-Type":
+        res.headers.get("content-type") ?? "application/json",
+    },
+  });
 
-    const isSuccess = true; // toggle debug
+  const cookies = res.headers.getSetCookie?.() ?? [];
 
-    if (!isSuccess) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            message: "(Mock) Logout gagal",
-            status: 400
-          }
-        },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "(Mock) Logout berhasil",
-        data: null
-      },
-      { status: 200 }
+  if (cookies.length > 0) {
+    cookies.forEach((cookie) => {
+      response.headers.append("Set-Cookie", cookie);
+    });
+  } else {
+    response.headers.append(
+      "Set-Cookie",
+      "refresh_token=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure"
     );
-  } catch (err) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: {
-          message: "Internal server error",
-          status: 500
-        }
-      },
-      { status: 500 }
+
+    response.headers.append(
+      "Set-Cookie",
+      "role=; Path=/; Max-Age=0; HttpOnly; SameSite=None; Secure"
     );
   }
+
+  return response;
 }

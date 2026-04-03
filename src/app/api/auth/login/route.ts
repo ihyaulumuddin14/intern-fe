@@ -1,62 +1,36 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { apiConfig } from "@/config/env";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
+  const backendRes = await fetch(`${apiConfig.BASE_URL}/auth/login`, {
+    method: "POST",
+    body: await req.text(),
+    headers: { "Content-Type": "application/json" },
+  });
 
-    // mock bandwith
-    await new Promise(res => setTimeout(res, 2000))
+  const body = await backendRes.text();
 
-    console.log("login", body)
-
-    const isSuccess = true
-
-    if (!isSuccess) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: {
-            message: "(Mock) Gagal Login",
-            status: 400
-          }
-        },
-        { status: 400 }
-      )
-    }
-
-    const cookieStore = await cookies();
-
-    cookieStore.set("access_token", "accesstokengila", {
-      httpOnly: true,
-      path: "/",
-      maxAge: 15 * 60 * 1000
-    })
-
-    cookieStore.set("refresh_token", "refreshtokengila", {
-      httpOnly: true,
-      path: "/api/auth/refresh",
-      maxAge: body.rememberMe ? 24 * 60 * 60 : 60 * 60
-    })
-
-    cookieStore.set("role", "user", {
-      httpOnly: true,
-      path: "/api",
-      maxAge: body.rememberMe ? 24 * 60 * 60 : 60 * 60
-    })
-
-    return NextResponse.json(
-      { 
-        success: true,
-        message: "(Mock) Berhasil Login",
-        data: null
+  const response = new Response(body, {
+    status: backendRes.status,
+    headers: {
+      "Content-Type":
+        backendRes.headers.get("content-type") ?? "application/json",
       },
-      { status: 200 }
-    )
-  } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
+  });
+
+  const data = JSON.parse(body);
+  if (data?.data?.access_token) {
+    response.headers.append(
+      "Set-Cookie",
+      `access_token=${data.data.access_token}; Path=/; HttpOnly; SameSite=Lax`
     )
   }
+    
+  const cookies = backendRes.headers.getSetCookie?.() ?? [];
+
+  cookies.forEach((cookie) => {
+    response.headers.append("Set-Cookie", cookie);
+  });
+
+  return response;
 }

@@ -1,7 +1,15 @@
-import OnboardingClient from "@/features/onboarding/containers/OnboardingClient"
+import OnboardingContainer from "@/features/onboarding/containers/OnboardingContainer";
+import type { Metadata } from "next";
 
-const OnboardingPage = async () => {
-  return <OnboardingClient/>
-}
+export const metadata: Metadata = {
+  title: "Onboarding | SkillGap",
+  description:
+    "Lengkapi profil Anda dan mulai perjalanan pengembangan karier bersama SkillGap dengan diagnosis kesiapan yang akurat.",
+  keywords: ["onboarding", "profil", "pengembangan", "karier"],
+};
 
-export default OnboardingPage
+const OnboardingPage = () => {
+  return <OnboardingContainer />;
+};
+
+export default OnboardingPage;

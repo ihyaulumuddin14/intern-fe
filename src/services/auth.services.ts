@@ -1,16 +1,21 @@
-import { authApi } from "@/api/axiosInstance"
+import privateApi, { authApi } from "@/api/axiosInstance"
 import { toCamel, toSnake } from "@/lib/case"
 import { ForgotPasswordCredentials, LoginCredentials, RegisterCredentials, ResendVerifyCredentials, ResetPasswordCredentials, VerifyCredentials } from "@/schemas/auth.schema"
+import axios from "axios"
 
-export async function registerUser(data: RegisterCredentials) {
+/**
+ * Callback URLs are added to support direct redirects
+ * to the intended page, especially for the onboarding process.
+ */
+export async function registerUser(data: RegisterCredentials & { callbackUrl: string }) {
   const convertedPayload = toSnake(data)
 
   const response = await authApi.post(
-    "/api/auth/register",
+    "/auth/register",
     JSON.stringify(convertedPayload)
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Register gagal")
+  if (!response.data.success) throw new Error(response.data?.message || "Register gagal")
 
   return toCamel(response.data)
 }
@@ -18,22 +23,22 @@ export async function registerUser(data: RegisterCredentials) {
 export async function loginUser(data: LoginCredentials) {
   const convertedPayload = toSnake(data)
 
-  const response = await authApi.post(
+  const response = await axios.post(
     "/api/auth/login",
     JSON.stringify(convertedPayload)
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Login gagal")
+  if (!response.data.success) throw new Error(response.data?.message || "Login gagal")
 
   return toCamel(response.data)
 }
 
 export async function logoutUser() {
-  const response = await authApi.post(
+  const response = await axios.post(
     "/api/auth/logout"
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Logout gagal")
+  if (!response.data.success) throw new Error(response.data?.message || "Logout gagal")
 
   return toCamel(response.data)
 }
@@ -42,24 +47,24 @@ export async function verifyEmail(data: VerifyCredentials) {
   const convertedPayload = toSnake(data)
 
   const response = await authApi.post(
-    "/api/auth/verify",
+    "/auth/verify",
     JSON.stringify(convertedPayload)
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Verifikasi gagal")
+  if (!response.data.success) throw new Error(response.data?.message || "Verifikasi gagal")
 
   return toCamel(response.data)
 }
 
-export async function resendVerify(data: ResendVerifyCredentials) {
+export async function resendVerify(data: ResendVerifyCredentials & { callbackUrl: string }) {
   const convertedPayload = toSnake(data)
 
   const response = await authApi.post(
-    "/api/auth/resend-verify",
+    "/auth/resend-verify",
     JSON.stringify(convertedPayload)
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Gagal kirim ulang verifikasi")
+  if (!response.data.success) throw new Error(response.data?.message || "Gagal kirim ulang verifikasi")
 
   return toCamel(response.data)
 }
@@ -68,11 +73,11 @@ export async function forgotPassword(data: ForgotPasswordCredentials) {
   const convertedPayload = toSnake(data)
 
   const response = await authApi.post(
-    "/api/auth/forgot-password",
+    "/auth/forgot-password",
     JSON.stringify(convertedPayload)
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Permintaan reset password gagal")
+  if (!response.data.success) throw new Error(response.data?.message || "Permintaan reset password gagal")
 
   return toCamel(response.data)
 }
@@ -81,11 +86,11 @@ export async function resetPassword(data: ResetPasswordCredentials) {
   const convertedPayload = toSnake(data)
 
   const response = await authApi.post(
-    "/api/auth/reset-password",
+    "/auth/reset-password",
     JSON.stringify(convertedPayload)
   )
 
-  if (!response.data.success) throw new Error(response.data.error?.message || "Reset password gagal")
+  if (!response.data.success) throw new Error(response.data?.message || "Reset password gagal")
 
   return toCamel(response.data)
 }

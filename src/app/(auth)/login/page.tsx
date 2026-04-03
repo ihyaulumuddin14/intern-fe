@@ -6,15 +6,15 @@ import { useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = searchParams.get("callbackUrl") || "";
 
   return (
     <AuthCard
-      title="Login"
-      description="Lorem ipsum dolor sit amet"
+      title="Selamat Datang Kembali"
+      description="Masukkan detail akun kamu untuk melanjutkan sesi."
       footerText="Belum punya akun?"
       footerLink="Daftar"
-      footerLinkTarget={`/register${callbackUrl ? `?callbackUrl${callbackUrl}` : ``}`}
+      footerLinkTarget={`/register${callbackUrl ? `?callbackUrl=${callbackUrl}` : ``}`}
     >
       <LoginForm />
     </AuthCard>

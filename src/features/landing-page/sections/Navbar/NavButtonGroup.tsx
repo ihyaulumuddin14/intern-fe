@@ -1,38 +1,44 @@
 "use client";
 
+import Skeleton from "@/components/shared/Skeleton";
 import { Button } from "@/components/ui/button";
-import useUser from "@/hooks/users.hooks";
+import { useUser } from "@/hooks/users.hooks";
 import { useRouter } from "next/navigation";
 
 const NavButtonGroup = () => {
-  const { user } = useUser();
+  const { user, isPending, error } = useUser();
   const router = useRouter();
 
   return (
     <ul className="flex gap-4 items-center">
-      {user ? (
-        <Button
-          onClick={() =>
-            router.push(user.role === "ADMIN" ? "/admin" : "/dashboard")
-          }
-        >
-          Go to Dashboard
-        </Button>
+
+      {isPending && !error ? (
+        <Skeleton className="w-30.25 h-10"/>
       ) : (
-        <>
+        user ? (
           <Button
-            variant={"outline"}
-            onClick={() => router.push("/login")}
+            onClick={() =>
+              router.push(user.role === "admin" ? "/admin" : "/dashboard")
+            }
           >
-            Masuk
+            Dashboard
           </Button>
-          <Button
-            className="hidden xl:inline-flex"
-            onClick={() => router.push("/register")}
-          >
-            Register
-          </Button>
-        </>
+        ) : (
+          <>
+            <Button
+              variant={"outline"}
+              onClick={() => router.push("/login")}
+            >
+              Masuk
+            </Button>
+            <Button
+              className="hidden xl:inline-flex"
+              onClick={() => router.push("/register")}
+            >
+              Register
+            </Button>
+          </>
+        )
       )}
     </ul>
   );

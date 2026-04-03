@@ -1,14 +1,16 @@
+import { EducationLevel } from "@/schemas/onboarding.schema";
+import { Career } from "@/types/entities.type";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type OnboardingFormType = {
-  fullName?: string;
-  education?: {
-    educationLevel?: "SMA / SMK" | "Diploma 3" | "Diploma 4" | "Sarjana (S1)";
+export type OnboardingFormType = {
+  fullName: string;
+  education: {
+    educationLevel?: EducationLevel
     major?: string;
     institution?: string;
   };
-  career?: string;
+  career: Career;
 };
 
 type Store = {
@@ -25,7 +27,11 @@ export const useOnboardingFormStore = create<Store>()(
       formStore: {
         fullName: "",
         education: {},
-        career: "",
+        career: {
+          id: "",
+          name: "",
+          description: ""
+        },
       },
       hasHydrated: false,
 
@@ -34,7 +40,17 @@ export const useOnboardingFormStore = create<Store>()(
           formStore: { ...state.formStore, ...data },
         })),
 
-      resetForm: () => set({ formStore: {} }),
+      resetForm: () => set({
+        formStore: {
+          fullName: "",
+          education: {},
+          career: {
+            id: "",
+            name: "",
+            description: ""
+          },
+        }
+      }),
 
       setHasHydrated: (state) => set({ hasHydrated: state }),
     }),

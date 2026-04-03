@@ -1,13 +1,14 @@
+import { Career } from "@/types/entities.type";
 import { NextResponse } from "next/server";
 
-const careers = [
-  { id: 1, name: "Frontend Developer"},
-  { id: 2, name: "Backend Developer"},
-  { id: 3, name: "UI/UX Designer"},
-  { id: 4, name: "Data Scientist"},
-  { id: 5, name: "DevOps Engineer"},
-  { id: 6, name: "Product Manager"},
-  { id: 7, name: "Mobile Developer"},
+const careers: Career[] = [
+  { id: "1", name: "Frontend Developer", description: "Lorem ipsum"},
+  { id: "2", name: "Backend Developer", description: "Lorem ipsum"},
+  { id: "3", name: "UI/UX Designer", description: "Lorem ipsum"},
+  { id: "4", name: "Data Scientist", description: "Lorem ipsum"},
+  { id: "5", name: "DevOps Engineer", description: "Lorem ipsum"},
+  { id: "6", name: "Product Manager", description: "Lorem ipsum"},
+  { id: "7", name: "Mobile Developer", description: "Lorem ipsum"},
 ];
 
 export async function GET() {

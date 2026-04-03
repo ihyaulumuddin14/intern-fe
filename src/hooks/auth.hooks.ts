@@ -1,141 +1,183 @@
-import { getSafeCallback } from "@/helper/safeCallback"
-import { forgotPassword, loginUser, logoutUser, registerUser, resendVerify, resetPassword, verifyEmail } from "@/services/auth.services"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { AxiosError } from "axios"
-import { useRouter, useSearchParams } from "next/navigation"
-import { toast } from "sonner"
-import { API_URL } from "@/config/env"
+"use client";
+
+import privateApi from "@/api/axiosInstance";
+import { getSafeCallback } from "@/helper/safeCallback";
+import { getQueryClient } from "@/lib/queryClient";
+import {
+  forgotPassword,
+  loginUser,
+  logoutUser,
+  registerUser,
+  resendVerify,
+  resetPassword,
+  verifyEmail,
+} from "@/services/auth.services";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 export const useRegister = () => {
   return useMutation({
     mutationFn: registerUser,
-    onSuccess: (response) => {
-      // dummy
-      console.log(`link verify: ${API_URL}/verify-email?token=FDSefqo87c43yrUGYU8968&callbackUrl=dashboard`)
-      toast.success(response.message || "Register berhasil")
+    onSuccess: (data, credentials) => {
+      toast.dismiss()
+      toast.success(data.message || "Register berhasil");
+      sessionStorage.setItem("pending-verification-email", credentials.email);
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
       );
-    }
-  })
-}
+    },
+  });
+};
 
 export const useLogin = () => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const queryClient = useQueryClient()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
 
-  const callbackUrl = getSafeCallback(searchParams)
+  const callbackUrl = getSafeCallback(searchParams);
 
   return useMutation({
     mutationFn: loginUser,
     onSuccess: (response) => {
-      toast.success(response.message || "Login berhasil")
-      queryClient.setQueryData(["users"], response.data)
-      router.replace(callbackUrl)
-      router.refresh()
+      const accessToken = response.data.accessToken;
+      privateApi.defaults.headers.common["Authorization"] =
+        `Bearer ${accessToken}`;
+
+      toast.success(response.message || "Login berhasil");
+      toast.dismiss()
+
+      queryClient.setQueryData(["users"], response.data);
+      toast.loading("Halaman dialihkan")
+      /**
+       * Ensure cookies reach the client browser
+       * as there is latency in production builds
+       */
+      setTimeout(() => {
+        toast.dismiss()
+        window.location.href = callbackUrl
+      }, 1000);
     },
     onError: (error) => {
-      toast.error(
-        error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
-      );
-    }
-  })
-}
+      if (error instanceof AxiosError) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        if (status === 403) {
+          const unverifiedEmail = error.response?.data?.data?.email;
+
+          sessionStorage.setItem("pending-verification-email", unverifiedEmail);
+          router.push("/verify");
+          return;
+        }
+
+        toast.error(message || "Terjadi kesalahan sistem");
+      } else {
+        toast.error((error as Error).message);
+      }
+    },
+  });
+};
 
 export const useLogout = () => {
-  const router = useRouter()
-  const queryClient = useQueryClient()
+  const router = useRouter();
+  const queryClient = getQueryClient()
 
   return useMutation({
     mutationFn: logoutUser,
     onSuccess: (response) => {
-      toast.success(response.message || "Logout berhasil")
-      queryClient.clear()
-      router.push("/")
-      router.refresh()
+      router.push("/");
+      router.refresh();
+      toast.dismiss()
+      toast.success(response.message || "Logout berhasil");
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
+        ? error.response?.data?.message
+        : (error as Error).message,
       );
-    }
-  })
-}
+    },
+    onSettled: () => {
+      localStorage.removeItem("selected-career-session-id")
+      queryClient.clear();
+      delete privateApi.defaults.headers.common["Authorization"];
+    },
+  });
+};
 
 export const useVerifyEmail = () => {
   return useMutation({
     mutationFn: verifyEmail,
     onSuccess: (_response) => {
-      toast.loading("Mengalihkan ke halaman login")
+      toast.loading("Mengalihkan ke halaman login");
+      sessionStorage.removeItem("pending-verification-email");
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
       );
-    }
-  })
-}
+    },
+  });
+};
 
 export const useResendVerifyEmail = () => {
   return useMutation({
     mutationFn: resendVerify,
     onSuccess: (response) => {
-      toast.success(response.message || "Berhasil kirim email verifikasi")
+      toast.dismiss()
+      toast.success(response.message || "Berhasil kirim email verifikasi");
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
       );
-    }
-  })
-}
+    },
+  });
+};
 
-export const useForgotPassword = () => {  
+export const useForgotPassword = () => {
   return useMutation({
     mutationFn: forgotPassword,
     onSuccess: (response) => {
-      toast.success(response.message || "Tautan reset berhasil dikirim")
-      // dummy
-      console.log(`link reset: ${API_URL}/reset-password?token=FDSefqo87c43yrUGYU8968`)
+      toast.dismiss()
+      toast.success(response.message || "Tautan reset berhasil dikirim");
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
-      )
-    }
-  })
-}
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
+      );
+    },
+  });
+};
 
-export const useResetPassword = () => {  
-  const router = useRouter()
+export const useResetPassword = () => {
+  const router = useRouter();
 
   return useMutation({
     mutationFn: resetPassword,
     onSuccess: (response) => {
-      toast.success(response.message || "Password berhasil direset!")
-      router.replace("/login")
+      toast.dismiss()
+      toast.success(response.message || "Password berhasil direset!");
+      router.replace("/login");
     },
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-          ? error.response?.data?.error?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message
-      )
-    }
-  })
-}
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
+      );
+    },
+  });
+};

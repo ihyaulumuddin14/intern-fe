@@ -1,76 +1,65 @@
 import ClientProvider from "@/components/providers/ClientProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { toCamel } from "@/lib/case";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Inter, Lora } from "next/font/google";
-import { cookies } from "next/headers";
 import "./globals.css";
-import { getQueryClient } from "@/lib/queryClient";
-import { API_URL } from "@/config/env"
+import QuizSessionGuard from "@/components/providers/QuizSessionGuard";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["700", "600", "500", "400"]
-})
+  weight: ["700", "600", "500", "400", "300", "200", "100"],
+});
 
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin"],
   style: "italic",
-  weight: ["700", "600", "500", "400"]
-})
+  weight: ["700", "600", "500", "400"],
+});
 
 export const metadata: Metadata = {
-  title: "SkillGap",
-  description: "Website diagnosis kesiapan karier dengan fitur unggulan dan memberikan rekomendasi pengembangan kompetensi.",
+  title: "SkillGap - Platform Diagnosis Kesiapan Karier",
+  description:
+    "Website diagnosis kesiapan karier dengan fitur unggulan dan memberikan rekomendasi pengembangan kompetensi.",
+  keywords: [
+    "karier",
+    "diagnosis",
+    "kesiapan",
+    "kompetensi",
+    "pengembangan diri",
+  ],
+  authors: [{ name: "SkillGap Team" }],
+  creator: "SkillGap",
+  publisher: "SkillGap",
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: "https://skillgap-fe.vercel.app",
+    title: "SkillGap - Platform Diagnosis Kesiapan Karier",
+    description:
+      "Diagnosis kesiapan karier dan rekomendasi pengembangan kompetensi",
+    siteName: "SkillGap",
+  },
 };
 
 export default async function RootLayout({
   children,
-  modal
+  modal,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode
+  modal: React.ReactNode;
 }>) {
-  /**
-   * because it must run on the server
-   */
-  const queryClient = getQueryClient()
-  const cookieStore = await cookies()
-
-  await queryClient.prefetchQuery({
-    queryKey: ['users'],
-    queryFn: async () => {
-      const res = await fetch(`${API_URL}/api/users/profile`, {
-        cache: 'no-store',
-        headers: {
-          Cookie: cookieStore.toString()
-        }
-      })
-      
-      if (!res.ok) {
-        throw new Error("Unauthorized");
-      }
-      const data = await res.json()
-      console.log("dari server", toCamel(data.data))
-      return toCamel(data.data)
-    }
-  })
-
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${lora.variable} antialiased`}
-      >
-        <ClientProvider>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <Toaster position="top-center"/>
+      <body className={`${inter.variable} ${lora.variable} antialiased`}>
+        <QuizSessionGuard>
+          <ClientProvider>
+            <Toaster position="top-center" />
             {children}
             {modal}
-          </HydrationBoundary>
-        </ClientProvider>
+          </ClientProvider>
+        </QuizSessionGuard>
       </body>
     </html>
   );

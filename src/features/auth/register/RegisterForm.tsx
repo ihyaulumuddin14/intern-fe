@@ -13,24 +13,26 @@ import {
   Field,
   FieldDescription,
   FieldError,
-  FieldGroup
+  FieldGroup,
+  FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRegister } from "@/hooks/auth.hooks";
 import { RegisterCredentials, RegisterSchema } from "@/schemas/auth.schema";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { Send } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const RegisterForm = () => {
-  const { mutateAsync, isPending } = useRegister();
+  const searchParams = useSearchParams();
+  const { mutate: mutateRegister, isPending: isPendingRegister } = useRegister();
   const { formStore } = useOnboardingFormStore();
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<RegisterCredentials>({
     resolver: zodResolver(RegisterSchema),
@@ -39,16 +41,11 @@ const RegisterForm = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRegisterSubmit = async (credentials: RegisterCredentials) => {
-    await mutateAsync(credentials)
-      .then(() => {
-        reset({
-          fullName: "",
-          email: "",
-          password: "",
-        });
-        setIsOpen(true);
-      })
-      .catch(() => {});
+    const credentialsWithCallbackUrl = {
+      ...credentials,
+      callbackUrl: encodeURIComponent(searchParams.get("callbackUrl") || ""),
+    };
+    mutateRegister(credentialsWithCallbackUrl)  
   };
 
   return (
@@ -60,27 +57,30 @@ const RegisterForm = () => {
       >
         <FieldGroup>
           <Field>
+            <FieldLabel htmlFor="fullName">Nama Lengkap</FieldLabel>
             <Input
               {...register("fullName")}
-              id="fullname"
+              id="fullName"
               type="text"
               placeholder="Masukkan nama kamu"
-              {...(formStore.fullName ? { value: formStore.fullName } : {})}
-            />
+              {...(formStore.fullName ? { defaultValue: formStore.fullName } : {})}
+              />
             {errors.fullName && (
               <FieldError>{errors.fullName.message}</FieldError>
             )}
           </Field>
           <Field>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               {...register("email")}
               id="email"
               type="email"
               placeholder="Masukkan alamat email kamu"
-            />
+              />
             {errors.email && <FieldError>{errors.email.message}</FieldError>}
           </Field>
           <Field>
+            <FieldLabel htmlFor="password">Kata sandi</FieldLabel>
             <Input
               {...register("password")}
               id="password"
@@ -95,10 +95,10 @@ const RegisterForm = () => {
           <Field>
             <Button
               size="lg"
-              disabled={isPending}
+              disabled={isPendingRegister}
               type="submit"
             >
-              {isPending ? "Mengirim..." : "Daftar"}
+              {isPendingRegister ? "Mengirim..." : "Daftar"}
             </Button>
           </Field>
         </FieldGroup>
@@ -125,6 +125,7 @@ const EmailSentAlert = ({
   const router = useRouter();
 
   useEffect(() => {
+    if (!isOpen) return
     setCountRedirect(30);
 
     const interval = setInterval(() => {
@@ -151,12 +152,8 @@ const EmailSentAlert = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            <div className="w-full">
-              <img
-                className="w-1/2 mx-auto"
-                src="/gif/email.gif"
-                alt="email.gif"
-              />
+            <div className="w-full flex flex-col items-center gap-5">
+              <Send size={70} />
               <h1 className="text-center text-2xl font-semibold">
                 Tautan verifikasi telah terkirim
               </h1>
@@ -165,7 +162,7 @@ const EmailSentAlert = ({
           <AlertDialogDescription className="text-center">
             <>
               Akun kamu berhasil terdaftar, silakan cek email kamu untuk dapat
-              melakukan verifikasi akun. Kamu akan diarahkan kembali ke Beranda
+              melakukan verifikasi akun. Kamu akan diarahkan kembali ke Login
               secara otomatis dalam ({countRedirect}) detik.
             </>
           </AlertDialogDescription>

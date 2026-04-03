@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { OnboardingSchema } from "@/schemas/onboarding.schema";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
+import { Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -22,7 +23,7 @@ const ConfirmationCallbackModal = ({
       const result = OnboardingSchema.safeParse(formStore);
 
       if (!result.success) {
-        toast.error("Tolong lengkapi data dulu ya");
+        toast.warning("Tolong lengkapi data dulu ya");
         router.replace("/onboarding");
       } else {
         setIsValid(true);
@@ -39,12 +40,17 @@ const ConfirmationCallbackModal = ({
         onEscapeKeyDown={(e) => e.preventDefault()}
         className="[&>button]:hidden"
       >
+        <DialogHeader>
+          <DialogTitle>Konfirmasi</DialogTitle>
+        </DialogHeader>
         <div className="w-full">
-          <img
-            className="w-1/2 mx-auto"
-            src="/gif/goal.gif"
-            alt="goal.gif"
-          />
+          <div className="w-1/2 mx-auto flex justify-center items-center">
+            <Rocket
+              size={96}
+              strokeWidth={1.5}
+              className="text-foreground animate-bounce"
+            />
+          </div>
         </div>
 
         <main className="text-center mb-7">
@@ -52,12 +58,11 @@ const ConfirmationCallbackModal = ({
             Persiapanmu hampir matang
             {namePlaceholder ? `, ${namePlaceholder}` : ""}!
           </h1>
-          <h2 className="text-3xl font-semibold">
+          <h2 className="text-2xl sm:text-3xl font-semibold my-2">
             Mau analisis skill sekarang?
           </h2>
-          <p className="text-sm text-muted-foreground mt-5">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo,
-            voluptate?
+          <p className="text-sm text-muted-foreground text-left sm:text-center mt-5">
+            Tip: Di tahap analisis skill kamu akan menjalani beberapa assessment, jika pilih nanti aja kamu akan diarahkan ke dashboard
           </p>
         </main>
 

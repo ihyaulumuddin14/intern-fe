@@ -14,7 +14,6 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
-    reset,
     control,
     formState: { errors },
   } = useForm<LoginCredentials>({
@@ -26,15 +25,10 @@ const LoginForm = () => {
       rememberMe: false,
     },
   });
-  const { mutate, isPending } = useLogin()
+  const { mutate: mutateLogin, isPending: isPendingLogin } = useLogin()
 
   const handleLoginSubmit = async (credentials: LoginCredentials) => {
-    mutate(credentials)
-    reset({
-      email: "",
-      password: "",
-      rememberMe: false,
-    });
+    mutateLogin(credentials)
   };
 
   return (
@@ -45,19 +39,19 @@ const LoginForm = () => {
     >
       <FieldGroup>
         <Field>
-          <FieldLabel htmlFor="email">Alamat email *</FieldLabel>
+          <FieldLabel>Email</FieldLabel>
           <Input
             {...register("email")}
             id="email"
             type="email"
             placeholder="Masukkan alamat email kamu"
-          />
+            />
           {errors.email && (
             <FieldError>{errors.email.message}</FieldError>
           )}
         </Field>
         <Field>
-          <FieldLabel htmlFor="password">Kata sandi *</FieldLabel>
+          <FieldLabel>Kata sandi</FieldLabel>
           <Input
             {...register("password")}
             id="password"
@@ -95,10 +89,10 @@ const LoginForm = () => {
         <Field>
           <Button
             size="lg"
-            disabled={isPending}
+            disabled={isPendingLogin}
             type="submit"
           >
-            {isPending ? "Mengirim..." : "Login"}
+            {isPendingLogin ? "Mengirim..." : "Login"}
           </Button>
         </Field>
       </FieldGroup>

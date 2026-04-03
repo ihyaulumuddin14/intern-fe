@@ -32,10 +32,12 @@ export const VerifySchema = z.object({
   token: z
     .string()
   })
-  
-  export const ResendVerifySchema = z.object({
-    token: z
-      .string()
+
+export const ResendVerifySchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email harus diisi")
+    .email("Email tidak valid"),
 })
 
 export const ForgotPasswordSchema = z.object({
@@ -46,7 +48,7 @@ export const ForgotPasswordSchema = z.object({
 })
 
 export const ResetPasswordSchema = z.object({
-  newPassword: z
+  password: z
     .string()
     .min(1, "Kata sandi harus diisi")
     .min(8, "Kata sandi minimal 8 karakter"),
