@@ -54,7 +54,7 @@ export const answerQuestion = async (
   quizSessionId: string,
   credentials: {
     quizAnswerId: string;
-    answer: AnswerOption;
+    userAnswer: AnswerOption;
   },
 ) => {
   const convertedPayload = toSnake(credentials);

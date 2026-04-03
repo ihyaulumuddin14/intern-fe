@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useCreateSelfAssessment } from "@/hooks/career-sessions.hooks";
 import { SelfAssessmentCredentials, SkillRating } from "@/schemas/career-sessions.schema";
+import { SendHorizonal } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const ConfirmationQuizModal = ({
@@ -39,11 +40,13 @@ const ConfirmationQuizModal = ({
           <DialogTitle>Konfirmasi Kuis</DialogTitle>
         </DialogHeader>
         <div className="w-full">
-          <img
-            className="w-1/2 mx-auto"
-            src="/gif/evaluate.gif"
-            alt="evaluate.gif"
-          />
+          <div className="w-1/2 mx-auto flex justify-center items-center">
+            <SendHorizonal
+              size={96}
+              strokeWidth={1.5}
+              className="text-foreground"
+            />
+          </div>
         </div>
 
         <main className="text-center mb-7">

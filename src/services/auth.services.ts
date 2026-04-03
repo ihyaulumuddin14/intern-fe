@@ -24,7 +24,7 @@ export async function loginUser(data: LoginCredentials) {
   const convertedPayload = toSnake(data)
 
   const response = await axios.post(
-    "api/auth/login",
+    "/api/auth/login",
     JSON.stringify(convertedPayload)
   )
 
@@ -35,7 +35,7 @@ export async function loginUser(data: LoginCredentials) {
 
 export async function logoutUser() {
   const response = await axios.post(
-    "api/auth/logout"
+    "/api/auth/logout"
   )
 
   if (!response.data.success) throw new Error(response.data?.message || "Logout gagal")

@@ -78,3 +78,30 @@ export const STEP_LIST = [
     description: "Perbandingan antara skill pengguna dan kebutuhan industri dan akan mendapatkan rekomendasi skill yang perlu dipelajari untuk meningkatkan kesiapan karier."
   }
 ]
+
+export const FEATURE_LIST = [
+  {
+    imagePosition: "left",
+    imageSrc: "/assets/skill-assessment.webp",
+    title: "Skill Assessment",
+    description: "Mengidentifikasi skill yang sudah dimiliki melalui self assessment."
+  },
+  {
+    imagePosition: "left",
+    imageSrc: "/assets/skill-quiz.webp",
+    title: "Skill Quiz",
+    description: "Menguji kemampuan melalui kuis skill untuk mengukur pemahaman."
+  },
+  {
+    imagePosition: "right",
+    imageSrc: "/assets/skillgap-analysis.webp",
+    title: "Skill Gap Analysis",
+    description: "Menganalisis perbedaan antara skill kamu dan kebutuhan industri."
+  },
+  {
+    imagePosition: "right",
+    imageSrc: "/assets/skill-assessment.webp",
+    title: "Learning Recommendation",
+    description: "Memberikan rekomendasi skill yang perlu dipelajari untuk kesiapan karier."
+  },
+]

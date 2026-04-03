@@ -1,10 +1,11 @@
 import OnboardingSync from '../components/OnboardingSync'
 
-const UserDashboardContainer = () => {
+const UserDashboardContainer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
+    <>
       <OnboardingSync />
-    </div>
+      { children }
+    </>
   )
 }
 

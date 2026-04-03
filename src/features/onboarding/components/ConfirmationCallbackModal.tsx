@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { OnboardingSchema } from "@/schemas/onboarding.schema";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
+import { Rocket } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -43,11 +44,13 @@ const ConfirmationCallbackModal = ({
           <DialogTitle>Konfirmasi</DialogTitle>
         </DialogHeader>
         <div className="w-full">
-          <img
-            className="w-1/2 mx-auto"
-            src="/gif/goal.gif"
-            alt="goal.gif"
-          />
+          <div className="w-1/2 mx-auto flex justify-center items-center">
+            <Rocket
+              size={96}
+              strokeWidth={1.5}
+              className="text-foreground animate-bounce"
+            />
+          </div>
         </div>
 
         <main className="text-center mb-7">

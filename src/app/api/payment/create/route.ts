@@ -23,8 +23,8 @@ interface SnapTransactionParametersExtended extends SnapTransactionParameters {
 }
 
 const user = {
-  fullname: "Somebody Pleasure",
-  email: "capek@gmail.com",
+  fullname: "user",
+  email: "user@gmail.com",
 }
 
 const BASE_URL = "http://localhost:3000"

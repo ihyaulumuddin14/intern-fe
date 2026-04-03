@@ -1,105 +1,31 @@
-"use client";
-
-import privateApi from "@/api/axiosInstance";
-import { Button } from "@/components/ui/button";
-import OnboardingSync from "@/features/user-dashboard/components/OnboardingSync";
-import { useLogout } from "@/hooks/auth.hooks";
-import { useCareers } from "@/hooks/careers.hooks";
-import { useUser } from "@/hooks/users.hooks";
+import DashboardHomePage from "@/features/user-dashboard/section/Home";
 import { toCamel } from "@/lib/case";
-import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import { serverApi } from "@/lib/serverApi";
+import { CareerSessionItem } from "@/types/common.type";
+import type { Metadata } from "next";
 
-export default function UserDashboardPage() {
-  const { mutate, isPending } = useLogout();
-  const router = useRouter();
-  const { user } = useUser();
-  const { data: careers } = useCareers();
+export const metadata: Metadata = {
+  title: "Dashboard Pengguna | SkillGap",
+  description:
+    "Kelola sesi karier, pantau perkembangan kompetensi, dan lihat rekomendasi pengembangan diri Anda di dashboard SkillGap.",
+  keywords: ["dashboard", "sesi karier", "kompetensi", "perkembangan diri"],
+};
 
-  const handleLogout = () => mutate();
+const getCareerSessionsListServer = async () => {
+  const api = await serverApi();
+  const response = await api.get(`/career-sessions`);
 
-  const handlePayment = async () => {
-    try {
-      const response = await privateApi.post("/payment/create");
-      const data = toCamel(response.data);
+  const sessions = toCamel(response.data.data);
+  return sessions as CareerSessionItem[];
+};
 
-      window.snap.pay(data.data.token, {
-        onSuccess: (result) => {
-          toast.dismiss()
-          toast.success("Pembayaran berhasil!");
-          router.push("/dashboard");
-        },
-
-        onPending: (result) => {
-          if (result.transaction_status === "pending") {
-            if (
-              result.payment_type === "qris" ||
-              result.payment_type === "bank_transfer"
-            ) {
-              toast.info("Selesaikan pembayaran kamu!");
-              router.push(`/payment/pending?order_id=${result.order_id}`);
-            }
-          }
-        },
-
-        onError: () => {
-          toast.error("Pembayaran gagal, coba lagi");
-        },
-
-        onClose: () => {
-          toast.warning("Pembayaran dibatalkan");
-        },
-      });
-    } catch (error) {
-      toast.error(
-        error instanceof AxiosError
-          ? error.response?.data?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message,
-      );
-    }
-  };
-
-  useEffect(() => {
-    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
-    const clientKey = process.env.NEXT_PUBLIC_CLIENT_MIDTRANS_KEY || "";
-
-    const script = document.createElement("script");
-    script.src = snapScript;
-    script.setAttribute("data-client-key", clientKey);
-    script.async = true;
-
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  
+export default async function UserDashboardPage() {
+  const careerSessionsList: CareerSessionItem[] =
+    await getCareerSessionsListServer();
 
   return (
-    <section>
-      <OnboardingSync />
-
-      User Dashboard Page
-      <Button
-        variant={"destructive"}
-        disabled={isPending}
-        onClick={handleLogout}
-      >
-        {isPending ? "..." : "Logout"}
-      </Button>
-      {/* <Button
-        onClick={handlePayment}
-        variant={"outline"}
-      >
-        Upgrade Premium
-      </Button> */}
-      {/* <div>{JSON.stringify(user)}</div>
-      <div>{JSON.stringify(careers)}</div> */}
-      {/* <UserDashboardContainer /> */}
-    </section>
+    <>
+      <DashboardHomePage careerSessionList={careerSessionsList} />
+    </>
   );
 }

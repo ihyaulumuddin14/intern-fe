@@ -18,7 +18,7 @@ const NavButtonGroup = () => {
         user ? (
           <Button
             onClick={() =>
-              router.push(user.role === "ADMIN" ? "/admin" : "/dashboard")
+              router.push(user.role === "admin" ? "/admin" : "/dashboard")
             }
           >
             Dashboard

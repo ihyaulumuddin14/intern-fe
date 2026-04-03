@@ -23,7 +23,7 @@ const Answers = ({
   currentQuestion: Question;
   selectedAnswer: AnswerOption | null;
   currentIndex: number;
-  setSelectedAnswer: (answer: AnswerOption | null) => void;
+  setSelectedAnswer: (userAnswer: AnswerOption | null) => void;
 }) => {
   const { questions, setAnswer, quizSessionId, removeAnswerFromStore } =
     useQuizStore(
@@ -41,7 +41,7 @@ const Answers = ({
   });
   const { mutate: mutateAnswer } = useAnswerQuestion();
 
-  const handleSelectAnswer = (answer: AnswerOption) => {
+  const handleSelectAnswer = (userAnswer: AnswerOption) => {
     const quizAnswerId = currentQuestion.quizAnswerId;
 
     // Find the target index dynamically to avoid stale closure
@@ -54,16 +54,16 @@ const Answers = ({
       return;
     }
 
-    const previousAnswer = fields[currentTargetIndex]?.answer;
+    const previousAnswer = fields[currentTargetIndex]?.userAnswer;
 
     // update rhf
     update(currentTargetIndex, {
       ...fields[currentTargetIndex],
-      answer,
+      userAnswer,
     });
 
     // update Zustand Store (Optimistic)
-    setAnswer(quizAnswerId, answer);
+    setAnswer(quizAnswerId, userAnswer);
 
     // hit answer endpoint, using react-query mutation, rollback when error
     if (quizSessionId) {
@@ -72,7 +72,7 @@ const Answers = ({
           quizSessionId,
           credentials: {
             quizAnswerId,
-            answer,
+            userAnswer,
           },
         },
         {
@@ -80,7 +80,7 @@ const Answers = ({
             // ROLLBACK
             update(currentTargetIndex, {
               ...fields[currentTargetIndex],
-              answer: previousAnswer,
+              userAnswer: previousAnswer,
             });
 
             // back to the previous answer
@@ -115,7 +115,7 @@ const Answers = ({
        */
       const initialQuizAnswers = questions.map((question) => ({
         quizAnswerId: question.quizAnswerId,
-        answer: undefined,
+        userAnswer: undefined,
       }));
       replace(initialQuizAnswers);
     } else if (fields.length > 0 && questionAnswerIds.length > 0) {
@@ -128,7 +128,7 @@ const Answers = ({
         );
         return {
           quizAnswerId,
-          answer: existingField?.answer ?? undefined,
+          userAnswer: existingField?.userAnswer ?? undefined,
         };
       });
 
@@ -147,8 +147,8 @@ const Answers = ({
 
   useEffect(() => {
     const currentField = fields[targetIndex];
-    if (currentField?.answer) {
-      setSelectedAnswer(currentField.answer);
+    if (currentField?.userAnswer) {
+      setSelectedAnswer(currentField.userAnswer);
     }
   }, [currentIndex, fields]);
 

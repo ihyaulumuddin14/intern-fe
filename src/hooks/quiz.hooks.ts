@@ -1,6 +1,5 @@
 import { AnswerOption } from "@/schemas/quiz.schema";
 import { answerQuestion, startQuiz, submitQuiz } from "@/services/quiz.service";
-import { useQuizResultStore } from "@/stores/useQuizResultStore";
 import { useQuizStore } from "@/stores/useQuizStore";
 import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
 import { useMutation } from "@tanstack/react-query";
@@ -38,7 +37,7 @@ export const useAnswerQuestion = () => {
       quizSessionId: string;
       credentials: {
         quizAnswerId: string;
-        answer: AnswerOption
+        userAnswer: AnswerOption
       }
     }) => answerQuestion(quizSessionId, credentials),
     onSuccess: (data) => {
@@ -57,7 +56,6 @@ export const useAnswerQuestion = () => {
 
 export const useSubmitQuiz = () => {
   const { resetForm } = useSelfAssessmentFormStore()
-  const { setResult } = useQuizResultStore()
 
   return useMutation({
     mutationFn: submitQuiz,
@@ -65,7 +63,6 @@ export const useSubmitQuiz = () => {
       localStorage.removeItem("self-assessment-form")
       resetForm()
 
-      setResult(data.data)
       toast.dismiss()
       toast.success(data.message || "Kuis berhasil diselesaikan")
     },
