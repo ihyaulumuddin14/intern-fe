@@ -51,6 +51,17 @@ const QuizContainer = ({
       }
     }
 
+    if (urlStatus === "confirmation" || urlStatus === "result") {
+      return;
+    }
+
+    if (careerSessionStatus === "on_learning") {
+      if (!quizSessionId && !user.isPremium) {
+        router.replace("/dashboard");
+        return;
+      }
+    }
+
     const checkQuizSession = async () => {
       setIsChecking(true);
 
