@@ -5,14 +5,15 @@ import { AnswerOption } from "@/schemas/quiz.schema";
 
 export type User = {
   fullName: string;
-  userName: string;
   email: string;
   role: Role;
+  userId: string,
   educationLevel: EducationLevel;
   major?: string;
   institution?: string;
   graduationYear?: number;
   isPremium: boolean;
+  isVerified: boolean;
 };
 
 export type Career = {

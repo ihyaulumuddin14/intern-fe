@@ -1,4 +1,5 @@
 import { deleteMe, getUser, updateMe } from "@/services/user.services";
+import { User } from "@/types/entities.type";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,7 @@ export const useUser = () =>  {
   })
 
   return {
-    user: data,
+    user: data as User,
     isPending,
     isFetching,
     error
@@ -32,6 +33,7 @@ export const useDeleteMe = () => {
       queryClient.setQueryData(["user"], null)
 
       router.replace("/")
+      window.location.reload()
     },
     onError: (error) => {
       toast.error(

@@ -2,11 +2,12 @@ import { SelfAssessmentCredentials } from "@/schemas/career-sessions.schema";
 import {
   createCareerSession,
   createSelfAssessment,
+  getAnalytics,
 } from "@/services/career-session.services";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
 import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useMutationState } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -71,3 +72,19 @@ export const useCreateSelfAssessment = () => {
     },
   });
 };
+
+export const useAnalytics = () => {
+  return useMutation({
+    mutationFn: getAnalytics,
+    onSuccess: (data) => {
+      // console.log("Analitycs: ", data)
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof AxiosError
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
+      );
+    }
+  })
+}

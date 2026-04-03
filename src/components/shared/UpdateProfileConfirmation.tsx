@@ -164,7 +164,7 @@ const ListWillChangeData = ({
         <p className="text-[11px] text-muted-foreground font-medium">
           {FIELD_LABELS[keyLabel] ?? keyLabel}
         </p>
-        <p className="text-sm font-medium text-foreground truncate">{value}</p>
+        <p className="text-sm font-medium text-foreground truncate">{keyLabel !== "fullName" ? value.toUpperCase() : value}</p>
       </div>
     </li>
   );

@@ -38,7 +38,7 @@ export const useAnswerQuestion = () => {
       quizSessionId: string;
       credentials: {
         quizAnswerId: string;
-        answer: AnswerOption
+        userAnswer: AnswerOption
       }
     }) => answerQuestion(quizSessionId, credentials),
     onSuccess: (data) => {

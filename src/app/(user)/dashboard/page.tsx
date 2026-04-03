@@ -3,6 +3,7 @@
 import privateApi from "@/api/axiosInstance";
 import { Button } from "@/components/ui/button";
 import OnboardingSync from "@/features/user-dashboard/components/OnboardingSync";
+import DashboardHomePage from "@/features/user-dashboard/section/Home";
 import { useLogout } from "@/hooks/auth.hooks";
 import { useCareers } from "@/hooks/careers.hooks";
 import { useUser } from "@/hooks/users.hooks";
@@ -80,26 +81,29 @@ export default function UserDashboardPage() {
   
 
   return (
-    <section>
-      <OnboardingSync />
+    // <section>
+    //   <OnboardingSync />
 
-      User Dashboard Page
-      <Button
-        variant={"destructive"}
-        disabled={isPending}
-        onClick={handleLogout}
-      >
-        {isPending ? "..." : "Logout"}
-      </Button>
-      {/* <Button
-        onClick={handlePayment}
-        variant={"outline"}
-      >
-        Upgrade Premium
-      </Button> */}
-      {/* <div>{JSON.stringify(user)}</div>
-      <div>{JSON.stringify(careers)}</div> */}
-      {/* <UserDashboardContainer /> */}
-    </section>
+    //   User Dashboard Page
+    //   <Button
+    //     variant={"destructive"}
+    //     disabled={isPending}
+    //     onClick={handleLogout}
+    //   >
+    //     {isPending ? "..." : "Logout"}
+    //   </Button>
+    //   {/* <Button
+    //     onClick={handlePayment}
+    //     variant={"outline"}
+    //   >
+    //     Upgrade Premium
+    //   </Button> */}
+    //   {/* <div>{JSON.stringify(user)}</div>
+    //   <div>{JSON.stringify(careers)}</div> */}
+    //   {/* <UserDashboardContainer /> */}
+    // </section>
+    <>
+      <DashboardHomePage />
+    </>
   );
 }

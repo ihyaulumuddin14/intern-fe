@@ -42,3 +42,17 @@ export async function createSelfAssessment(
 
   return toCamel(response.data);
 }
+
+export async function getAnalytics(
+  careerSessionId: string
+) {
+  const response = await privateApi.get(`/career-sessions/${careerSessionId}/analytics`)
+
+  if (!response.data.success)
+    throw new Error(
+      response.data?.message ||
+        "Gagal mengambil data analitik, silakan coba lagi",
+    );
+
+  return toCamel(response.data);
+}

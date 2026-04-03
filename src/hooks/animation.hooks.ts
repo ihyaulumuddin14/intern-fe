@@ -26,7 +26,8 @@ export function useActiveSection (sectionIds: string[]) {
   return activeSection
 }
 
-const MOBILE_BREAKPOINT = 1024
+const MOBILE_BREAKPOINT = 768
+const MOBILE_DASHBOARD_BREAKPOINT = 1024
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
@@ -42,4 +43,20 @@ export function useIsMobile() {
   }, [])
 
   return !!isMobile
+}
+
+export function useIsMobileDashboard() {
+  const [isMobileDashboard, setIsMobileDashboard] = useState<boolean | undefined>(undefined)
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_DASHBOARD_BREAKPOINT - 1}px)`)
+    const update = () => setIsMobileDashboard(mql.matches)
+
+    update()
+    mql.addEventListener("change", update)
+
+    return () => mql.removeEventListener("change", update)
+  }, [])
+
+  return !!isMobileDashboard
 }

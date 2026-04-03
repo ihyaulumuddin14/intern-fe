@@ -8,7 +8,7 @@ import QuizSessionGuard from "@/components/providers/QuizSessionGuard";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["700", "600", "500", "400"]
+  weight: ["700", "600", "500", "400", "300", "200", "100"]
 })
 
 const lora = Lora({

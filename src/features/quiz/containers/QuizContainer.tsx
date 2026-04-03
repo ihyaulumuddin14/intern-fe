@@ -14,11 +14,12 @@ import LoadingStartingNewQuiz from "../components/LoadingStartingNewQuiz";
 import QuestionAnswer from "../components/Question";
 
 import { CareerSessionStatus } from "@/types/common.type";
+import { useAnalytics } from "@/hooks/career-sessions.hooks";
 
-const QuizContainer = ({ 
+const QuizContainer = ({
   careerSessionId,
-  careerSessionStatus
-}: { 
+  careerSessionStatus,
+}: {
   careerSessionId: string;
   careerSessionStatus: CareerSessionStatus;
 }) => {
@@ -27,12 +28,14 @@ const QuizContainer = ({
   const urlStatus = params.get("status");
   const { mutateAsync, isPending } = useStartQuiz();
   const [isChecking, setIsChecking] = useState(true);
-  const { questions, setCareerId, hasHydrated, quizSessionId } = useQuizStore(useShallow((state) => ({
-    questions: state.questions,
-    setCareerId: state.setCareerId,
-    hasHydrated: state.hasHydrated,
-    quizSessionId: state.quizSessionId,
-  })));
+  const { questions, setCareerId, hasHydrated, quizSessionId } = useQuizStore(
+    useShallow((state) => ({
+      questions: state.questions,
+      setCareerId: state.setCareerId,
+      hasHydrated: state.hasHydrated,
+      quizSessionId: state.quizSessionId,
+    })),
+  );
   const { result, hasHydrated: hasHydratedResult } = useQuizResultStore();
 
   useEffect(() => {
@@ -57,11 +60,10 @@ const QuizContainer = ({
         /**
          * If there is no quiz session in the store, start a new quiz session.
          */
-        await mutateAsync(careerSessionId);
         const [, careerSessionData] = await Promise.all([
           mutateAsync(careerSessionId),
-          privateApi.get(`/career-sessions/${careerSessionId}`)
-        ])
+          privateApi.get(`/career-sessions/${careerSessionId}`),
+        ]);
 
         setCareerId(toCamel(careerSessionData.data).data.careerId);
       } else {
@@ -74,11 +76,10 @@ const QuizContainer = ({
         }
         setIsChecking(false);
       }
-
     };
 
     checkQuizSession();
-  }, [careerSessionId, hasHydrated, hasHydratedResult, urlStatus, careerSessionStatus, quizSessionId, result, router]);
+  }, [careerSessionId, hasHydrated, hasHydratedResult, urlStatus, careerSessionStatus]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -95,7 +96,7 @@ const QuizContainer = ({
       {isChecking && <LoadingCheckingQuizSession />}
       {!isChecking && isPending && <LoadingStartingNewQuiz />}
 
-      {!!questions.length && !isPending && <QuestionAnswer /> }
+      {!!questions.length && !isPending && <QuestionAnswer />}
     </section>
   );
 };
