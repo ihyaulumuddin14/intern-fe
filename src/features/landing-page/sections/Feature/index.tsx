@@ -1,4 +1,6 @@
+import CardWithImage from "../../components/CardWithImage"
 import Container from "../../components/Container"
+import { FEATURE_LIST } from "../../constants"
 
 const FeatureSection = () => {
   return (
@@ -10,7 +12,19 @@ const FeatureSection = () => {
             SkillGap menyediakan berbagai fitur untuk membantu kamu memahami, mengukur, dan meningkatkan skill secara efektif.
           </p>
         </div>
-        <div></div>
+        <div className="w-full">
+          <ul className="w-full grid grid-cols-1 lg:grid-cols-2 lg:gap-y-10 gap-6">
+            {FEATURE_LIST.map(feature => (
+              <CardWithImage
+                key={feature.title}
+                imageSrc={feature.imageSrc}
+                imagePosition={feature.imagePosition}
+                title={feature.title}
+                description={feature.description}
+              />
+            ))}
+          </ul>
+        </div>
       </Container>
     </section>
   )
