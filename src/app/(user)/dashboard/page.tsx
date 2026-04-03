@@ -1,8 +1,6 @@
 "use client";
 
 import privateApi from "@/api/axiosInstance";
-import { Button } from "@/components/ui/button";
-import OnboardingSync from "@/features/user-dashboard/components/OnboardingSync";
 import DashboardHomePage from "@/features/user-dashboard/section/Home";
 import { useLogout } from "@/hooks/auth.hooks";
 import { useCareers } from "@/hooks/careers.hooks";

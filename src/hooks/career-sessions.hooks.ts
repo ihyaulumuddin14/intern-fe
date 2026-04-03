@@ -7,7 +7,8 @@ import {
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
 import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
-import { useMutation, useMutationState } from "@tanstack/react-query";
+import { CareerSession } from "@/types/common.type";
+import { useMutation, useMutationState, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -73,18 +74,17 @@ export const useCreateSelfAssessment = () => {
   });
 };
 
-export const useAnalytics = () => {
-  return useMutation({
-    mutationFn: getAnalytics,
-    onSuccess: (data) => {
-      // console.log("Analitycs: ", data)
-    },
-    onError: (error) => {
-      toast.error(
-        error instanceof AxiosError
-          ? error.response?.data?.message || "Terjadi kesalahan sistem"
-          : (error as Error).message,
-      );
-    }
-  })
-}
+export const useAnalytics = (careerSessionId: string) => {
+  const { data, isPending, isFetching, error } = useQuery({
+    queryKey: ["analytics", careerSessionId],
+    queryFn: () => getAnalytics(careerSessionId),
+    enabled: !!careerSessionId,
+  });
+
+  return {
+    analytics: data?.data as CareerSession,
+    isPending,
+    isFetching,
+    error
+  }
+};

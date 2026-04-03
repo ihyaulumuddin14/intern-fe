@@ -24,16 +24,35 @@ export type UpdateProfilePayload = {
   graduationYear: number
 }
 
-export type SkillResult = {
-  finalUserLevel: UserLevel,
-  skillId: string,
-  skillName: string,
-  skillScore: number,
-  userLevel: UserLevel
-}
-
 export type QuizResult = {
   quizSessionId: string,
   skillsResult: SkillResult[],
   totalScore: number
+}
+
+export interface Recommendation {
+  skillId: string;
+  skillName: string;
+  currentLevel: UserLevel;
+  targetLevel: UserLevel;
+  priority: number;
+}
+ 
+export interface SkillResult {
+  skillId: string;
+  skillName: string;
+  userLevel: UserLevel;
+  finalUserLevel: UserLevel;
+  requiredLevel: UserLevel;
+  gapLevel: number;
+  skillScore: number;
+  status: string;
+  suggestionLevel: UserLevel[];
+}
+ 
+export interface CareerSession {
+  careerSessionId: string;
+  recommendations: Recommendation[];
+  skillsResult: SkillResult[];
+  totalScore: number;
 }
