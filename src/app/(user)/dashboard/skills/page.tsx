@@ -1,7 +1,10 @@
+import DashboardSkillsPage from "@/features/user-dashboard/section/Skills"
 
 const SkillPage = () => {
   return (
-    <div>SkillPage</div>
+    <>
+      <DashboardSkillsPage />
+    </>
   )
 }
 

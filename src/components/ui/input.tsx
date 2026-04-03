@@ -8,9 +8,9 @@ import React from "react"
 export function Input({
   className,
   type,
-  leftIcon,
+  rightIcon,
   ...props
-}: React.ComponentProps<"input"> & { leftIcon?: React.ReactNode }) {
+}: React.ComponentProps<"input"> & { rightIcon?: React.ReactNode }) {
   const [showPassword, setShowPassword] = React.useState(false)
  
   const isPassword = type === "password"
@@ -19,9 +19,9 @@ export function Input({
  
   return (
     <div className="relative w-full" data-slot="input-wrapper">
-      {leftIcon && (
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none flex items-center">
-          {leftIcon}
+      {rightIcon && (
+        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none flex items-center">
+          {rightIcon}
         </span>
       )}
       <input
@@ -31,7 +31,7 @@ export function Input({
           "h-13 md:h-15.5 w-full min-w-0 rounded-xl border border-input bg-transparent px-4 py-4 text-base shadow-xs transition-[color,box-shadow] outline-none selection:bg-primary selection:text-primary-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-lg dark:bg-input/30",
           "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
           "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
-          leftIcon && "pl-11",
+          rightIcon && "pr-12",
           isPassword && "pr-12",
           className
         )}

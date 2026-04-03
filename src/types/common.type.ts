@@ -1,11 +1,16 @@
-import { UserLevel } from "@/schemas/career-sessions.schema"
-import { EducationLevel } from "@/schemas/onboarding.schema"
+import { UserLevel } from "@/schemas/career-sessions.schema";
+import { EducationLevel } from "@/schemas/onboarding.schema";
 
-export type Role = "user" | "admin"
+export type Role = "user" | "admin";
 
-export type StepDirection = "forward" | "backward"
+export type StepDirection = "forward" | "backward";
 
-export type CareerSessionStatus = "not_started" | "on_assessment" | "on_quiz" | "on_learning" | "complete"
+export type CareerSessionStatus =
+  | "not_started"
+  | "on_assessment"
+  | "on_quiz"
+  | "on_learning"
+  | "complete";
 
 export const PAYMENT_TYPE_LABEL: Record<string, string> = {
   creditCard: "Kartu Kredit",
@@ -14,21 +19,21 @@ export const PAYMENT_TYPE_LABEL: Record<string, string> = {
   gopay: "GoPay",
   shopeepay: "ShopeePay",
   otherQris: "QRIS",
-}
+};
 
 export type UpdateProfilePayload = {
-  fullName: string,
-  educationLevel: EducationLevel,
-  major: string,
-  institution: string,
-  graduationYear: number
-}
+  fullName: string;
+  educationLevel: EducationLevel;
+  major: string;
+  institution: string;
+  graduationYear: number;
+};
 
 export type QuizResult = {
-  quizSessionId: string,
-  skillsResult: SkillResult[],
-  totalScore: number
-}
+  quizSessionId: string;
+  skillsResult: SkillResult[];
+  totalScore: number;
+};
 
 export interface Recommendation {
   skillId: string;
@@ -37,7 +42,7 @@ export interface Recommendation {
   targetLevel: UserLevel;
   priority: number;
 }
- 
+
 export interface SkillResult {
   skillId: string;
   skillName: string;
@@ -49,10 +54,17 @@ export interface SkillResult {
   status: string;
   suggestionLevel: UserLevel[];
 }
- 
+
 export interface CareerSession {
   careerSessionId: string;
   recommendations: Recommendation[];
   skillsResult: SkillResult[];
   totalScore: number;
+}
+
+export interface CareerSessionItem {
+  careerSessionId: string;
+  careerId: string;
+  careerName: string;
+  status: CareerSessionStatus;
 }

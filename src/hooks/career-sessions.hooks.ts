@@ -3,12 +3,13 @@ import {
   createCareerSession,
   createSelfAssessment,
   getAnalytics,
+  getCareerSessionsList,
 } from "@/services/career-session.services";
 import { useOnboardingFormStore } from "@/stores/useOnboardingFormStore";
 import { useSelfAssessmentFormStore } from "@/stores/useSelfAssessmentFormStore";
 import { useSelfAssessmentStepStore } from "@/stores/useSelfAssessmentStepStore";
-import { CareerSession } from "@/types/common.type";
-import { useMutation, useMutationState, useQuery } from "@tanstack/react-query";
+import { CareerSession, CareerSessionItem } from "@/types/common.type";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -24,8 +25,8 @@ export const useCreateCareerSession = () => {
     onError: (error) => {
       toast.error(
         error instanceof AxiosError
-        ? error.response?.data?.message || "Terjadi kesalahan sistem"
-        : (error as Error).message,
+          ? error.response?.data?.message || "Terjadi kesalahan sistem"
+          : (error as Error).message,
       );
     },
     onSettled: () => {
@@ -35,7 +36,7 @@ export const useCreateCareerSession = () => {
        * when the session successfully created
        */
       return;
-    }
+    },
   });
 };
 
@@ -47,7 +48,7 @@ export const useCreateSelfAssessment = () => {
   return useMutation({
     mutationFn: ({
       credentials,
-      careerSessionId
+      careerSessionId,
     }: {
       credentials: SelfAssessmentCredentials["skillRatings"];
       careerSessionId: string;
@@ -85,6 +86,21 @@ export const useAnalytics = (careerSessionId: string) => {
     analytics: data?.data as CareerSession,
     isPending,
     isFetching,
-    error
-  }
+    error,
+  };
+};
+
+export const useCareerSessionsList = () => {
+  const { data, isPending, isFetching, error } = useQuery({
+    queryKey: ["career-sessions-list"],
+    queryFn: getCareerSessionsList,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
+
+  return {
+    sessions: data as CareerSessionItem[] | undefined,
+    isPending,
+    isFetching,
+    error,
+  };
 };

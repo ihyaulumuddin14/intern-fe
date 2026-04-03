@@ -4,7 +4,20 @@ import {
   CreateCareerSessionCredentials,
   SelfAssessmentCredentials,
 } from "@/schemas/career-sessions.schema";
+import { CareerSessionItem } from "@/types/common.type";
 
+export async function getCareerSessionsList() {
+  const response = await privateApi.get("/career-sessions");
+
+  if (!response.data.success)
+    throw new Error(
+      response.data?.message ||
+        "Gagal mengambil data sesi karier, silakan coba lagi",
+    );
+
+  const sessions = toCamel(response.data.data);
+  return sessions as CareerSessionItem[];
+}
 
 export async function createCareerSession(
   credentials: CreateCareerSessionCredentials,
@@ -43,10 +56,11 @@ export async function createSelfAssessment(
   return toCamel(response.data);
 }
 
-export async function getAnalytics(
-  careerSessionId: string
-) {
-  const response = await privateApi.get(`/career-sessions/${careerSessionId}/analytics`)
+export async function getAnalytics(careerSessionId: string) {
+  const response = await privateApi.get(
+    `/career-sessions/${careerSessionId}/analytics`,
+  );
+  
 
   if (!response.data.success)
     throw new Error(
@@ -55,4 +69,17 @@ export async function getAnalytics(
     );
 
   return toCamel(response.data);
+}
+
+export async function getCareerSessionsListServer() {
+  const response = await privateApi.get("/career-sessions");
+
+  if (!response.data.success)
+    throw new Error(
+      response.data?.message ||
+        "Gagal mengambil data sesi karier, silakan coba lagi",
+    );
+
+  const sessions = toCamel(response.data.data);
+  return sessions as CareerSessionItem[];
 }

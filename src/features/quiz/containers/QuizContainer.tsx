@@ -13,6 +13,7 @@ import LoadingStartingNewQuiz from "../components/LoadingStartingNewQuiz";
 import QuestionAnswer from "../components/Question";
 
 import { CareerSessionStatus } from "@/types/common.type";
+import { useUser } from "@/hooks/users.hooks";
 
 const QuizContainer = ({
   careerSessionId,
@@ -22,6 +23,7 @@ const QuizContainer = ({
   careerSessionStatus: CareerSessionStatus;
 }) => {
   const router = useRouter();
+  const { user } = useUser();
   const params = useSearchParams();
   const urlStatus = params.get("status");
   const { mutateAsync, isPending } = useStartQuiz();
@@ -43,7 +45,7 @@ const QuizContainer = ({
     }
 
     if (careerSessionStatus === "on_learning") {
-      if (!quizSessionId) {
+      if (!quizSessionId && !user.isPremium) {
         router.replace("/dashboard");
         return;
       }
@@ -76,12 +78,7 @@ const QuizContainer = ({
     };
 
     checkQuizSession();
-  }, [
-    careerSessionId,
-    hasHydrated,
-    urlStatus,
-    careerSessionStatus,
-  ]);
+  }, [careerSessionId, hasHydrated, urlStatus, careerSessionStatus]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {

@@ -1,8 +1,11 @@
+import DashboardPaymentPage from "@/features/user-dashboard/section/Payment";
 
 const PaymentPage = () => {
   return (
-    <div>PaymentPage</div>
-  )
-}
+    <>
+      <DashboardPaymentPage />
+    </>
+  );
+};
 
-export default PaymentPage
+export default PaymentPage;

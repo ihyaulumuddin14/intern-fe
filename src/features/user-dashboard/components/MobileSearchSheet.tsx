@@ -2,10 +2,15 @@ import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Search } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import CareerSearchInput from "./CareerSearchInput"
+import { Career } from "@/types/entities.type"
+import CreateCareerSessionModal from "@/components/shared/CreateCareerSessionModal"
 
 export default function MobileSearchSheet() {
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const [selectedCareer, setSelectedCareer] = useState<Career | null>(null)
+  const [openModal, setOpenModal] = useState(false)
  
   useEffect(() => {
     if (open) {
@@ -31,15 +36,21 @@ export default function MobileSearchSheet() {
               Cari Rekomendasi Skill
             </SheetTitle>
           </SheetHeader>
-          <Input
-            ref={inputRef}
-            type="text"
-            placeholder="Cari rekomendasi skill..."
-            leftIcon={<Search size={18} />}
-            className="h-12 md:h-12 text-base"
+          <CareerSearchInput
+            inputRef={inputRef}
+            onSelect={(career) => {
+              setSelectedCareer(career)
+              setOpenModal(true)
+            }}
           />
         </SheetContent>
       </Sheet>
+
+      <CreateCareerSessionModal
+        open={openModal}
+        onOpenChange={setOpenModal}
+        career={selectedCareer}
+      />
     </>
   )
 }

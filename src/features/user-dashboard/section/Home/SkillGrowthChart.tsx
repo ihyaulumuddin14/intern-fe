@@ -2,23 +2,12 @@
 
 import {
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
+  type ChartConfig
 } from "@/components/ui/chart"
+import { SkillResult } from "@/types/common.type"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-
-const SKILL_GROWTH_DATA = [
-  { skill: "SQL",        currentLevel: 3, targetLevel: 3 },
-  { skill: "Python",     currentLevel: 2, targetLevel: 3 },
-  { skill: "Stats",      currentLevel: 2, targetLevel: 3 },
-  { skill: "Tableau",    currentLevel: 1, targetLevel: 2 },
-  { skill: "ML",         currentLevel: 1, targetLevel: 3 },
-  { skill: "Excel",      currentLevel: 3, targetLevel: 3 },
-  { skill: "GraphQL",    currentLevel: 2, targetLevel: 2 },
-]
 
 const chartConfig: ChartConfig = {
   currentLevel: {
@@ -27,7 +16,7 @@ const chartConfig: ChartConfig = {
   },
   targetLevel: {
     label: "Target Level",
-    color: "hsl(var(--primary) / 0.25)",
+    color: "hsl(var(--primary) / 0.3)",
   },
 }
 
@@ -39,19 +28,36 @@ const Y_LABELS: Record<number, string> = {
   3: "Expert",
 }
 
-export function SkillGrowthChart() {
+const LEVEL_TO_NUMBER: Record<string, number> = {
+  no_experience: 0,
+  beginner: 1,
+  intermediate: 2,
+  expert: 3,
+}
+
+export function SkillGrowthChart({
+  skillsResult
+}: {
+  skillsResult: SkillResult[]
+}) {
+  const data = skillsResult?.map((s) => ({
+    skill: s.skillName,
+    currentLevel: LEVEL_TO_NUMBER[s.finalUserLevel] ?? 0,
+    targetLevel: LEVEL_TO_NUMBER[s.requiredLevel] ?? 0,
+  })) ?? []
+
   return (
     <div className="bg-white rounded-2xl border border-neutral-40 shadow-xs p-6 flex flex-col gap-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="font-semibold text-neutral-100 text-[20px]">Skill Growth</h2>
+          <h2 className="font-medium text-neutral-100 text-[20px]">Skill Growth</h2>
           <p className="text-base text-neutral-70 mt-0.5">Perbandingan level saat ini vs target</p>
         </div>
       </div>
- 
+
       <ChartContainer config={chartConfig} className="h-52 w-full">
         <AreaChart
-          data={SKILL_GROWTH_DATA}
+          data={data}
           margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
         >
           <defs>
@@ -60,8 +66,8 @@ export function SkillGrowthChart() {
               <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.02} />
             </linearGradient>
             <linearGradient id="gradTarget" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.15} />
-              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.01} />
+              <stop offset="5%" stopColor="#9ca3af" stopOpacity={0.15} />
+              <stop offset="95%" stopColor="#9ca3af" stopOpacity={0.01} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
@@ -83,23 +89,23 @@ export function SkillGrowthChart() {
             content={
               <ChartTooltipContent
                 formatter={(value, name) => [
-                  Y_LABELS[value as number] ?? value,
+                  <span key={name} className="ml-2">
+                    {Y_LABELS[value as number] ?? value}
+                  </span>,
                   name === "currentLevel" ? "Level Saat Ini" : "Target Level",
                 ]}
               />
             }
           />
-          {/* Target area — rendered first so it sits behind */}
           <Area
             type="monotone"
             dataKey="targetLevel"
-            stroke="hsl(var(--primary) / 0.4)"
+            stroke="#9ca3af"
             strokeWidth={1.5}
             strokeDasharray="4 3"
             fill="url(#gradTarget)"
             dot={false}
           />
-          {/* Current level area */}
           <Area
             type="monotone"
             dataKey="currentLevel"
@@ -111,15 +117,14 @@ export function SkillGrowthChart() {
           />
         </AreaChart>
       </ChartContainer>
- 
-      {/* Legend */}
-      <div className="flex items-center gap-5 text-xs text-neutral-500">
-        <span className="flex items-center gap-1.5">
+
+      <div className="flex items-center gap-6 text-xs text-neutral-500 mt-1">
+        <span className="flex items-center gap-2">
           <span className="inline-block w-5 h-0.5 rounded bg-primary" />
           Level Saat Ini
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block w-5 h-px rounded border-t-2 border-dashed border-primary/50" />
+        <span className="flex items-center gap-2">
+          <span className="inline-block w-5 h-px rounded border-t-2 border-dashed border-neutral-400" />
           Target Level
         </span>
       </div>
